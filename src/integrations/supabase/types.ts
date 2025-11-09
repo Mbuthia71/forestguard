@@ -14,7 +14,129 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      alerts: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          latitude: number | null
+          location: string
+          longitude: number | null
+          metadata: Json | null
+          severity: Database["public"]["Enums"]["alert_severity"]
+          source: Database["public"]["Enums"]["alert_source"]
+          updated_at: string
+          verified: boolean | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          latitude?: number | null
+          location: string
+          longitude?: number | null
+          metadata?: Json | null
+          severity?: Database["public"]["Enums"]["alert_severity"]
+          source: Database["public"]["Enums"]["alert_source"]
+          updated_at?: string
+          verified?: boolean | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          latitude?: number | null
+          location?: string
+          longitude?: number | null
+          metadata?: Json | null
+          severity?: Database["public"]["Enums"]["alert_severity"]
+          source?: Database["public"]["Enums"]["alert_source"]
+          updated_at?: string
+          verified?: boolean | null
+        }
+        Relationships: []
+      }
+      blockchain_reports: {
+        Row: {
+          blockchain_tx_hash: string | null
+          created_at: string
+          description: string
+          evidence_url: string | null
+          id: string
+          ipfs_hash: string | null
+          latitude: number | null
+          location: string
+          longitude: number | null
+          reporter_anonymous_id: string | null
+          verified: boolean | null
+        }
+        Insert: {
+          blockchain_tx_hash?: string | null
+          created_at?: string
+          description: string
+          evidence_url?: string | null
+          id?: string
+          ipfs_hash?: string | null
+          latitude?: number | null
+          location: string
+          longitude?: number | null
+          reporter_anonymous_id?: string | null
+          verified?: boolean | null
+        }
+        Update: {
+          blockchain_tx_hash?: string | null
+          created_at?: string
+          description?: string
+          evidence_url?: string | null
+          id?: string
+          ipfs_hash?: string | null
+          latitude?: number | null
+          location?: string
+          longitude?: number | null
+          reporter_anonymous_id?: string | null
+          verified?: boolean | null
+        }
+        Relationships: []
+      }
+      sensor_data: {
+        Row: {
+          battery_level: number | null
+          created_at: string
+          humidity: number | null
+          id: string
+          location: string
+          motion_detected: boolean | null
+          node_id: string
+          signal_strength: number | null
+          sound_detected: boolean | null
+          temperature: number | null
+        }
+        Insert: {
+          battery_level?: number | null
+          created_at?: string
+          humidity?: number | null
+          id?: string
+          location: string
+          motion_detected?: boolean | null
+          node_id: string
+          signal_strength?: number | null
+          sound_detected?: boolean | null
+          temperature?: number | null
+        }
+        Update: {
+          battery_level?: number | null
+          created_at?: string
+          humidity?: number | null
+          id?: string
+          location?: string
+          motion_detected?: boolean | null
+          node_id?: string
+          signal_strength?: number | null
+          sound_detected?: boolean | null
+          temperature?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +145,8 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      alert_severity: "low" | "medium" | "high" | "critical"
+      alert_source: "satellite" | "iot_sensor" | "blockchain_report"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +273,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      alert_severity: ["low", "medium", "high", "critical"],
+      alert_source: ["satellite", "iot_sensor", "blockchain_report"],
+    },
   },
 } as const
