@@ -1,0 +1,97 @@
+import { Card } from "@/components/ui/card";
+import { Database, Waves, Link2, Cpu, Satellite, Radio } from "lucide-react";
+
+const TechnologyStack = () => {
+  const technologies = [
+    {
+      icon: Satellite,
+      name: "Google Earth Engine",
+      category: "Satellite Analysis",
+      description: "Sentinel-2 data processing",
+    },
+    {
+      icon: Radio,
+      name: "LoRaWAN",
+      category: "IoT Network",
+      description: "Long-range sensor connectivity",
+    },
+    {
+      icon: Link2,
+      name: "Polygon & IPFS",
+      category: "Blockchain",
+      description: "Decentralized reporting",
+    },
+    {
+      icon: Waves,
+      name: "Apache Kafka",
+      category: "Data Streaming",
+      description: "Real-time event processing",
+    },
+    {
+      icon: Database,
+      name: "FastAPI + PostgreSQL",
+      category: "Backend",
+      description: "High-performance API & database",
+    },
+    {
+      icon: Cpu,
+      name: "TensorFlow",
+      category: "AI/ML",
+      description: "Change detection & prediction",
+    },
+  ];
+
+  return (
+    <section id="technology" className="py-24 bg-background">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-16 animate-fade-in">
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+            Technology <span className="text-primary">Stack</span>
+          </h2>
+          <p className="text-lg text-foreground/70 max-w-2xl mx-auto">
+            Built on cutting-edge technologies for maximum reliability, scalability, and real-time performance.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          {technologies.map((tech, index) => {
+            const Icon = tech.icon;
+            return (
+              <Card
+                key={index}
+                className="group bg-card border-border hover:border-primary transition-all duration-300 hover-glow p-6 cursor-pointer animate-fade-in-up"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <div className="flex items-start space-x-4">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                    <Icon className="w-6 h-6 text-primary" />
+                  </div>
+                  <div className="flex-1 space-y-1">
+                    <div className="text-xs font-semibold text-primary/70 uppercase tracking-wide">
+                      {tech.category}
+                    </div>
+                    <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">
+                      {tech.name}
+                    </h3>
+                    <p className="text-sm text-foreground/70">{tech.description}</p>
+                  </div>
+                </div>
+              </Card>
+            );
+          })}
+        </div>
+
+        {/* Additional Tech Info */}
+        <div className="mt-16 text-center">
+          <Card className="inline-block bg-primary/5 border-primary/20 px-8 py-4">
+            <p className="text-sm text-foreground/80">
+              <span className="font-bold text-primary">Open Source</span> • Built with React, TypeScript & Tailwind CSS
+            </p>
+          </Card>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default TechnologyStack;
