@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Play } from "lucide-react";
 import forestGuardLogo from "@/assets/forestguard-logo.png";
+import { motion } from "framer-motion";
 
 const Hero = () => {
   return (
@@ -15,28 +16,49 @@ const Hero = () => {
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 text-center">
-        <div className="max-w-5xl mx-auto space-y-8 animate-fade-in-up">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="max-w-5xl mx-auto space-y-8"
+        >
           {/* Logo */}
-          <div className="flex justify-center mb-8">
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 1, delay: 0.2 }}
+            className="flex justify-center mb-8"
+          >
             <img
               src={forestGuardLogo}
               alt="ForestGuard - A Movement to Save What Still Breathes"
               className="w-full max-w-3xl h-auto animate-glow-pulse"
             />
-          </div>
+          </motion.div>
 
           {/* Mission Statement */}
-          <p className="text-lg md:text-xl text-foreground/90 max-w-3xl mx-auto leading-relaxed">
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
+            className="text-lg md:text-xl text-foreground/90 max-w-3xl mx-auto leading-relaxed"
+          >
             Real-time forest monitoring powered by satellite data, IoT sensors, and blockchain technology.
             <br />
             <span className="text-primary font-semibold">Protecting nature, one alert at a time.</span>
-          </p>
+          </motion.p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7, duration: 0.6 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4"
+          >
             <Button
               size="lg"
               className="bg-primary text-primary-foreground hover-glow text-lg px-8 py-6 group"
+              onClick={() => document.getElementById('dashboard')?.scrollIntoView({ behavior: 'smooth' })}
             >
               Explore Dashboard
               <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
@@ -49,7 +71,7 @@ const Hero = () => {
               <Play className="mr-2 group-hover:scale-110 transition-transform" size={20} />
               Watch Demo
             </Button>
-          </div>
+          </motion.div>
 
           {/* Stats */}
           <div className="grid grid-cols-3 gap-8 pt-12 max-w-3xl mx-auto">
@@ -66,7 +88,7 @@ const Hero = () => {
               <div className="text-sm text-foreground/70">Alerts Sent</div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* Scroll Indicator */}
