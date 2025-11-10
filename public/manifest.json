@@ -1,0 +1,21 @@
+{
+  "name": "ForestGuard - Save What Still Breathes",
+  "short_name": "ForestGuard",
+  "description": "Real-time forest monitoring using satellite, IoT sensors, and blockchain",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a1f0f",
+  "theme_color": "#bef264",
+  "icons": [
+    {
+      "src": "/forestguard-logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/forestguard-logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
