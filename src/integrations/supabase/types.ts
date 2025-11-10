@@ -59,6 +59,7 @@ export type Database = {
       blockchain_reports: {
         Row: {
           blockchain_tx_hash: string | null
+          coordinates_text: string | null
           created_at: string
           description: string
           evidence_url: string | null
@@ -66,12 +67,14 @@ export type Database = {
           ipfs_hash: string | null
           latitude: number | null
           location: string
+          location_name: string | null
           longitude: number | null
           reporter_anonymous_id: string | null
           verified: boolean | null
         }
         Insert: {
           blockchain_tx_hash?: string | null
+          coordinates_text?: string | null
           created_at?: string
           description: string
           evidence_url?: string | null
@@ -79,12 +82,14 @@ export type Database = {
           ipfs_hash?: string | null
           latitude?: number | null
           location: string
+          location_name?: string | null
           longitude?: number | null
           reporter_anonymous_id?: string | null
           verified?: boolean | null
         }
         Update: {
           blockchain_tx_hash?: string | null
+          coordinates_text?: string | null
           created_at?: string
           description?: string
           evidence_url?: string | null
@@ -92,9 +97,37 @@ export type Database = {
           ipfs_hash?: string | null
           latitude?: number | null
           location?: string
+          location_name?: string | null
           longitude?: number | null
           reporter_anonymous_id?: string | null
           verified?: boolean | null
+        }
+        Relationships: []
+      }
+      contact_messages: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+          message: string
+          name: string
+          status: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+          message: string
+          name: string
+          status?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+          status?: string | null
         }
         Relationships: []
       }
@@ -137,16 +170,44 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
       alert_severity: "low" | "medium" | "high" | "critical"
       alert_source: "satellite" | "iot_sensor" | "blockchain_report"
+      app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -276,6 +337,7 @@ export const Constants = {
     Enums: {
       alert_severity: ["low", "medium", "high", "critical"],
       alert_source: ["satellite", "iot_sensor", "blockchain_report"],
+      app_role: ["admin", "moderator", "user"],
     },
   },
 } as const
