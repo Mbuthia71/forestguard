@@ -1,13 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { useWebAuthn } from '@/hooks/useWebAuthn';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
-import { Shield, Lock, Mail } from 'lucide-react';
+import { Shield, Lock, Mail, Fingerprint } from 'lucide-react';
 import { z } from 'zod';
 
 const authSchema = z.object({
@@ -20,8 +21,18 @@ export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [useBiometric, setUseBiometric] = useState(false);
   const { signIn, signUp, user } = useAuth();
+  const { isSupported, registerBiometric, loginWithBiometric } = useWebAuthn();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if running on HTTPS or localhost
+    const isSecure = window.location.protocol === 'https:' || window.location.hostname === 'localhost';
+    if (!isSecure && isSupported) {
+      toast.error('Biometric authentication requires HTTPS');
+    }
+  }, [isSupported]);
 
   // Redirect if already logged in
   if (user) {
@@ -37,21 +48,28 @@ export default function Auth() {
       // Validate input
       authSchema.parse({ email, password });
 
-      const { error } = isLogin 
-        ? await signIn(email, password) 
-        : await signUp(email, password);
-
-      if (error) {
-        if (error.message.includes('Invalid login credentials')) {
-          toast.error('Invalid email or password');
-        } else if (error.message.includes('already registered')) {
-          toast.error('This email is already registered. Please login instead.');
-        } else {
-          toast.error(error.message);
-        }
-      } else {
-        toast.success(isLogin ? 'Welcome back!' : 'Account created! Please check your email.');
+      if (useBiometric && !isLogin) {
+        // Register with biometric
+        await registerBiometric(email, password);
+        toast.success('Biometric registration successful! You can now login with your fingerprint.');
         navigate('/');
+      } else {
+        const { error } = isLogin 
+          ? await signIn(email, password) 
+          : await signUp(email, password);
+
+        if (error) {
+          if (error.message.includes('Invalid login credentials')) {
+            toast.error('Invalid email or password');
+          } else if (error.message.includes('already registered')) {
+            toast.error('This email is already registered. Please login instead.');
+          } else {
+            toast.error(error.message);
+          }
+        } else {
+          toast.success(isLogin ? 'Welcome back!' : 'Account created! Please check your email.');
+          navigate('/');
+        }
       }
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -59,6 +77,24 @@ export default function Auth() {
       } else {
         toast.error('An error occurred. Please try again.');
       }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleBiometricLogin = async () => {
+    if (!email) {
+      toast.error('Please enter your email first');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await loginWithBiometric(email);
+      toast.success('Welcome back!');
+      navigate('/');
+    } catch (error: any) {
+      toast.error(error.message || 'Biometric authentication failed');
     } finally {
       setLoading(false);
     }
@@ -122,6 +158,21 @@ export default function Auth() {
               />
             </div>
 
+            {!isLogin && isSupported && (
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="useBiometric"
+                  checked={useBiometric}
+                  onChange={(e) => setUseBiometric(e.target.checked)}
+                  className="rounded border-border"
+                />
+                <Label htmlFor="useBiometric" className="text-sm">
+                  Enable biometric authentication
+                </Label>
+              </div>
+            )}
+
             <Button
               type="submit"
               disabled={loading}
@@ -130,6 +181,29 @@ export default function Auth() {
               {loading ? 'Processing...' : isLogin ? 'Sign In' : 'Sign Up'}
             </Button>
           </form>
+
+          {isLogin && isSupported && (
+            <>
+              <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t border-border" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-card px-2 text-foreground/60">Or continue with</span>
+                </div>
+              </div>
+
+              <Button
+                type="button"
+                onClick={handleBiometricLogin}
+                disabled={loading || !email}
+                className="w-full bg-primary/20 hover:bg-primary/30 text-primary border border-primary"
+              >
+                <Fingerprint className="w-5 h-5 mr-2" />
+                Login with Fingerprint
+              </Button>
+            </>
+          )}
 
           <div className="mt-6 text-center">
             <button

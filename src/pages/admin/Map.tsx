@@ -34,11 +34,50 @@ export default function AdminMap() {
     setLocations([...(alerts || []), ...(reports || [])]);
   };
 
-  const handleConfigure = () => {
+  const handleConfigure = async () => {
     if (apiKey.length > 0) {
       setIsConfigured(true);
-      toast.success('Mapbox API configured!');
-      // TODO: Initialize Mapbox when API key is provided
+      toast.success('Mapbox API configured! Map will initialize shortly.');
+      
+      // Initialize Mapbox
+      setTimeout(async () => {
+        if (!mapContainer.current) return;
+
+        const mapboxgl = (await import('mapbox-gl')).default;
+        mapboxgl.accessToken = apiKey;
+
+        const map = new mapboxgl.Map({
+          container: mapContainer.current,
+          style: 'mapbox://styles/mapbox/satellite-streets-v12',
+          center: [0, 20],
+          zoom: 2,
+          projection: 'globe' as any,
+        });
+
+        map.on('load', () => {
+          map.setFog({
+            color: 'rgb(186, 210, 235)',
+            'high-color': 'rgb(36, 92, 223)',
+            'horizon-blend': 0.02,
+          });
+
+          // Add markers for locations
+          locations.forEach((loc) => {
+            if (loc.latitude && loc.longitude) {
+              new mapboxgl.Marker({ color: '#bef264' })
+                .setLngLat([loc.longitude, loc.latitude])
+                .setPopup(
+                  new mapboxgl.Popup().setHTML(
+                    `<strong>${loc.location || loc.location_name}</strong><br/>${loc.description || ''}`
+                  )
+                )
+                .addTo(map);
+            }
+          });
+        });
+
+        map.addControl(new mapboxgl.NavigationControl());
+      }, 100);
     } else {
       toast.error('Please enter a valid API key');
     }

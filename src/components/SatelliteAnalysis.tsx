@@ -1,24 +1,54 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Satellite, AlertTriangle, TrendingUp, MapPin, Settings } from 'lucide-react';
+import { Satellite, AlertTriangle, TrendingUp, MapPin, Settings, Activity } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 
 export default function SatelliteAnalysis() {
   const [apiKey, setApiKey] = useState('');
   const [isConfigured, setIsConfigured] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
+  const [alertCount, setAlertCount] = useState(0);
 
   const mockData = {
     lastScan: new Date().toISOString(),
     areasMonitored: 2847,
-    deforestationDetected: 12,
     fireRisk: 'Medium',
     changePercentage: -3.2,
+  };
+
+  useEffect(() => {
+    fetchAlertCount();
+    
+    // Subscribe to real-time updates
+    const channel = supabase
+      .channel('alerts')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'alerts',
+        },
+        () => fetchAlertCount()
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const fetchAlertCount = async () => {
+    const { count } = await supabase
+      .from('alerts')
+      .select('*', { count: 'exact', head: true });
+    setAlertCount(count || 0);
   };
 
   const handleConfigure = () => {
@@ -128,8 +158,11 @@ export default function SatelliteAnalysis() {
                   <Card className="p-6 bg-card/50 backdrop-blur-sm border-border hover-glow">
                     <div className="flex items-center justify-between">
                       <div>
-                        <div className="text-3xl font-bold text-destructive">{mockData.deforestationDetected}</div>
-                        <div className="text-sm text-foreground/70">Alerts This Week</div>
+                        <div className="text-3xl font-bold text-destructive flex items-center gap-2">
+                          {alertCount}
+                          <Activity className="w-6 h-6 animate-pulse" />
+                        </div>
+                        <div className="text-sm text-foreground/70">Total Alerts</div>
                       </div>
                       <AlertTriangle className="w-8 h-8 text-destructive opacity-50" />
                     </div>
