@@ -9,7 +9,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const navigate = useNavigate();
   const images = [forestRiver, forestStream, forestCenote];
   const randomImage = images[Math.floor(Math.random() * images.length)];
@@ -59,9 +59,9 @@ const Hero = () => {
             <Button 
               size="lg" 
               className="bg-primary text-primary-foreground hover:bg-primary/90 hover-glow group"
-              onClick={() => user ? navigate('/admin') : navigate('/auth')}
+              onClick={() => (isAdmin ? navigate('/admin') : navigate('/auth'))}
             >
-              {user ? 'Go to Dashboard' : 'Join the Movement'}
+              {isAdmin ? 'Admin Dashboard' : 'Join the Movement'}
               <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button

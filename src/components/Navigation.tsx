@@ -1,17 +1,29 @@
 import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Menu, X, ShieldCheck, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const { isAdmin } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
+    const handleBeforeInstall = (e: any) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener('beforeinstallprompt', handleBeforeInstall as any);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstall as any);
+    };
   }, []);
 
   const navLinks = [
@@ -21,6 +33,16 @@ const Navigation = () => {
     { href: "#about", label: "About" },
     { href: "#contact", label: "Contact" },
   ];
+
+  const handleInstall = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    try {
+      await deferredPrompt.userChoice;
+    } finally {
+      setDeferredPrompt(null);
+    }
+  };
 
   return (
     <nav
@@ -36,7 +58,7 @@ const Navigation = () => {
           </a>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-4">
             {navLinks.map((link) => (
               <a
                 key={link.href}
@@ -46,9 +68,23 @@ const Navigation = () => {
                 {link.label}
               </a>
             ))}
-            <Button variant="default" className="bg-primary text-primary-foreground hover-glow">
-              Join Movement
-            </Button>
+            {isAdmin && (
+              <Link to="/admin">
+                <Button variant="outline" className="border-primary text-primary">
+                  <ShieldCheck className="mr-2 h-4 w-4" /> Admin
+                </Button>
+              </Link>
+            )}
+            {deferredPrompt && (
+              <Button variant="outline" onClick={handleInstall} className="border-primary text-primary">
+                <Download className="mr-2 h-4 w-4" /> Install App
+              </Button>
+            )}
+            <Link to="/auth">
+              <Button variant="default" className="bg-primary text-primary-foreground hover-glow">
+                Join Movement
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -74,9 +110,23 @@ const Navigation = () => {
                   {link.label}
                 </a>
               ))}
-              <Button variant="default" className="bg-primary text-primary-foreground w-full">
-                Join Movement
-              </Button>
+              {isAdmin && (
+                <Link to="/admin" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Button variant="outline" className="border-primary text-primary w-full">
+                    <ShieldCheck className="mr-2 h-4 w-4" /> Admin
+                  </Button>
+                </Link>
+              )}
+              {deferredPrompt && (
+                <Button variant="outline" onClick={() => { handleInstall(); setIsMobileMenuOpen(false); }} className="border-primary text-primary w-full">
+                  <Download className="mr-2 h-4 w-4" /> Install App
+                </Button>
+              )}
+              <Link to="/auth" onClick={() => setIsMobileMenuOpen(false)}>
+                <Button variant="default" className="bg-primary text-primary-foreground w-full">
+                  Join Movement
+                </Button>
+              </Link>
             </div>
           </div>
         )}
