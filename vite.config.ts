@@ -9,6 +9,9 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    headers: {
+      'Permissions-Policy': 'publickey-credentials-create=(self), publickey-credentials-get=(self)',
+    },
   },
   plugins: [
     react(), 
