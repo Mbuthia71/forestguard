@@ -56,12 +56,13 @@ const Hero = () => {
             transition={{ delay: 0.7, duration: 0.6 }}
             className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4"
           >
-            <Button 
-              size="lg" 
-              className="bg-primary text-primary-foreground hover:bg-primary/90 hover-glow group"
-              onClick={() => (isAdmin ? navigate('/admin') : navigate('/auth'))}
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-primary text-primary hover:bg-primary/10 group"
+              onClick={() => (isAdmin ? navigate('/admin') : navigate('/admin-auth'))}
             >
-              {isAdmin ? 'Admin Dashboard' : 'Join the Movement'}
+              {isAdmin ? 'Go to Admin' : 'Admin Login'}
               <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button

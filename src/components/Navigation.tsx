@@ -68,23 +68,16 @@ const Navigation = () => {
                 {link.label}
               </a>
             ))}
-            {isAdmin && (
-              <Link to="/admin">
-                <Button variant="outline" className="border-primary text-primary">
-                  <ShieldCheck className="mr-2 h-4 w-4" /> Admin
-                </Button>
-              </Link>
-            )}
+            <Link to={isAdmin ? "/admin" : "/admin-auth"}>
+              <Button variant="outline" className="border-primary text-primary">
+                <ShieldCheck className="mr-2 h-4 w-4" /> {isAdmin ? 'Admin' : 'Admin Login'}
+              </Button>
+            </Link>
             {deferredPrompt && (
               <Button variant="outline" onClick={handleInstall} className="border-primary text-primary">
                 <Download className="mr-2 h-4 w-4" /> Install App
               </Button>
             )}
-            <Link to="/auth">
-              <Button variant="default" className="bg-primary text-primary-foreground hover-glow">
-                Join Movement
-              </Button>
-            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -110,23 +103,16 @@ const Navigation = () => {
                   {link.label}
                 </a>
               ))}
-              {isAdmin && (
-                <Link to="/admin" onClick={() => setIsMobileMenuOpen(false)}>
-                  <Button variant="outline" className="border-primary text-primary w-full">
-                    <ShieldCheck className="mr-2 h-4 w-4" /> Admin
-                  </Button>
-                </Link>
-              )}
+              <Link to={isAdmin ? "/admin" : "/admin-auth"} onClick={() => setIsMobileMenuOpen(false)}>
+                <Button variant="outline" className="border-primary text-primary w-full">
+                  <ShieldCheck className="mr-2 h-4 w-4" /> {isAdmin ? 'Admin' : 'Admin Login'}
+                </Button>
+              </Link>
               {deferredPrompt && (
                 <Button variant="outline" onClick={() => { handleInstall(); setIsMobileMenuOpen(false); }} className="border-primary text-primary w-full">
                   <Download className="mr-2 h-4 w-4" /> Install App
                 </Button>
               )}
-              <Link to="/auth" onClick={() => setIsMobileMenuOpen(false)}>
-                <Button variant="default" className="bg-primary text-primary-foreground w-full">
-                  Join Movement
-                </Button>
-              </Link>
             </div>
           </div>
         )}

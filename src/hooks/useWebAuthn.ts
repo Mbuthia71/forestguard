@@ -1,9 +1,18 @@
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
-// Helper to convert base64 to ArrayBuffer
+// Helper: normalize base64url to base64 and convert to ArrayBuffer
 const base64ToArrayBuffer = (base64: string): ArrayBuffer => {
-  const binaryString = atob(base64);
+  const normalize = (input: string) => {
+    let s = (input || '').replace(/\s/g, '').replace(/-/g, '+').replace(/_/g, '/');
+    const pad = s.length % 4;
+    if (pad === 2) s += '==';
+    else if (pad === 3) s += '=';
+    else if (pad === 1) throw new Error('Invalid base64 string');
+    return s;
+  };
+  const b64 = normalize(base64);
+  const binaryString = atob(b64);
   const bytes = new Uint8Array(binaryString.length);
   for (let i = 0; i < binaryString.length; i++) {
     bytes[i] = binaryString.charCodeAt(i);
