@@ -12,10 +12,10 @@ serve(async (req) => {
   }
 
   try {
-    const { email, password, credential, challenge } = await req.json()
+    const { email, credential, challenge } = await req.json()
 
-    if (!email || !password || !credential) {
-      throw new Error('Email, password, and credential are required')
+    if (!email || !credential) {
+      throw new Error('Email and credential are required')
     }
 
     const supabaseClient = createClient(
@@ -23,19 +23,25 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    // Sign up the user with email/password
-    const { data: authData, error: authError } = await supabaseClient.auth.signUp({
-      email,
-      password,
-    })
+    // Ensure user exists (no password required), auto-confirmed
+    const { data: users, error: listErr } = await supabaseClient.auth.admin.listUsers()
+    if (listErr) throw listErr
+    let user = users.users.find(u => u.email === email)
 
-    if (authError) throw authError
+    if (!user) {
+      const { data: created, error: createErr } = await supabaseClient.auth.admin.createUser({
+        email,
+        email_confirm: true,
+      })
+      if (createErr) throw createErr
+      user = created.user!
+    }
 
     // Store the WebAuthn credential
     const { error: credError } = await supabaseClient
       .from('webauthn_credentials')
       .insert({
-        user_id: authData.user!.id,
+        user_id: user!.id,
         credential_id: credential.id,
         public_key: credential.publicKey,
         counter: 0,
@@ -45,7 +51,7 @@ serve(async (req) => {
     if (credError) throw credError
 
     return new Response(
-      JSON.stringify({ success: true, user: authData.user }),
+      JSON.stringify({ success: true, user }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 200,

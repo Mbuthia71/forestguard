@@ -46,7 +46,7 @@ export default function AdminAuth() {
     try {
       // generate a random strong secret; not shown to user
       const secret = crypto.getRandomValues(new Uint8Array(16)).reduce((s, b) => s + b.toString(16).padStart(2, "0"), "");
-      await registerBiometric(ADMIN_EMAIL, secret);
+      await registerBiometric(ADMIN_EMAIL);
       playTone("success");
       toast({ title: "Fingerprint enrolled", description: "Admin fingerprint registered successfully." });
     } catch (e: any) {
@@ -81,7 +81,7 @@ export default function AdminAuth() {
       >
         <div className="flex items-center justify-center mb-6">
           <ShieldCheck className="h-6 w-6 text-primary mr-2" />
-          <h1 className="text-xl font-semibold text-foreground">Admin Access</h1>
+          <h1 className="text-xl font-semibold text-foreground">Login / Signup with Fingerprint</h1>
         </div>
 
         <motion.div

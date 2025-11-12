@@ -35,7 +35,7 @@ export const useWebAuthn = () => {
     window.PublicKeyCredential !== undefined
   );
 
-  const registerBiometric = async (email: string, password: string) => {
+  const registerBiometric = async (email: string, _password?: string) => {
     if (!isSupported) {
       throw new Error('WebAuthn is not supported on this device');
     }
@@ -57,7 +57,7 @@ export const useWebAuthn = () => {
           ...challengeData.user,
           id: base64ToArrayBuffer(challengeData.user.id),
         },
-      };
+      } as PublicKeyCredentialCreationOptions;
 
       // Create credential
       const credential = await navigator.credentials.create({
@@ -76,7 +76,6 @@ export const useWebAuthn = () => {
         {
           body: {
             email,
-            password,
             credential: {
               id: credential.id,
               publicKey: arrayBufferToBase64(attestationResponse.getPublicKey()!),
@@ -144,14 +143,14 @@ export const useWebAuthn = () => {
 
       if (error) throw error;
 
-      // Sign in with the generated session
-      if (data.accessToken) {
-        const { error: signInError } = await supabase.auth.setSession({
-          access_token: data.accessToken.properties.hashed_token,
-          refresh_token: data.accessToken.properties.hashed_token,
+      // Create a session by verifying the magiclink token hash
+      if (data.token_hash) {
+        const { error: otpError } = await (supabase.auth as any).verifyOtp({
+          email,
+          type: 'magiclink',
+          token_hash: data.token_hash,
         });
-        
-        if (signInError) throw signInError;
+        if (otpError) throw otpError;
       }
 
       return { success: true, user: data.user };

@@ -58,6 +58,7 @@ serve(async (req) => {
       })),
       timeout: 60000,
       userVerification: 'required',
+      rpId: new URL(req.headers.get('origin') || 'https://'+(Deno.env.get('SUPABASE_URL')||'')).hostname,
     }
 
     return new Response(

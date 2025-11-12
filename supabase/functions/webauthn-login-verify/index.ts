@@ -51,8 +51,8 @@ serve(async (req) => {
       .update({ last_used_at: new Date().toISOString() })
       .eq('id', credential.id)
 
-    // Generate session token
-    const { data: session, error: sessionError } = await supabaseClient.auth.admin.generateLink({
+    // Generate a one-time magiclink token (no email is actually sent)
+    const { data: linkData, error: sessionError } = await supabaseClient.auth.admin.generateLink({
       type: 'magiclink',
       email: user.email!,
     })
@@ -60,7 +60,7 @@ serve(async (req) => {
     if (sessionError) throw sessionError
 
     return new Response(
-      JSON.stringify({ success: true, user, accessToken: session }),
+      JSON.stringify({ success: true, user, token_hash: linkData?.properties.hashed_token, verification_type: linkData?.properties.verification_type || 'magiclink' }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 200,
