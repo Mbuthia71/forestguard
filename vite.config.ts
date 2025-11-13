@@ -18,7 +18,7 @@ export default defineConfig(({ mode }) => ({
     mode === "development" && componentTagger(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['forestguard-logo.png'],
+      includeAssets: ['icons/forestguard-icon-192.png','icons/forestguard-icon-512.png'],
       manifest: {
         name: 'ForestGuard - Save What Still Breathes',
         short_name: 'ForestGuard',
@@ -28,14 +28,16 @@ export default defineConfig(({ mode }) => ({
         display: 'standalone',
         icons: [
           {
-            src: 'forestguard-logo.png',
+            src: 'icons/forestguard-icon-512.png',
             sizes: '192x192',
-            type: 'image/png'
+            type: 'image/png',
+            purpose: 'any maskable'
           },
           {
-            src: 'forestguard-logo.png',
+            src: 'icons/forestguard-icon-512.png',
             sizes: '512x512',
-            type: 'image/png'
+            type: 'image/png',
+            purpose: 'any maskable'
           }
         ]
       },

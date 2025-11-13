@@ -145,11 +145,14 @@ export const useWebAuthn = () => {
 
       // Create a session by verifying the magiclink token hash
       if (data.token_hash) {
-        const { error: otpError } = await supabase.auth.verifyOtp({
-          type: 'magiclink',
-          token_hash: data.token_hash,
-        });
-        if (otpError) throw otpError;
+        const payload = { type: 'magiclink', token_hash: data.token_hash } as const;
+        console.debug('[WebAuthn] verifyOtp payload', payload);
+        const { data: sessionData, error: otpError } = await supabase.auth.verifyOtp(payload as any);
+        if (otpError) {
+          console.error('[WebAuthn] verifyOtp error', otpError);
+          throw otpError;
+        }
+        console.debug('[WebAuthn] verifyOtp success', !!sessionData?.session);
       }
 
       return { success: true, user: data.user };

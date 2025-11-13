@@ -13,6 +13,8 @@ interface Message {
   message: string;
   status: string;
   created_at: string;
+  blockchain_tx_hash?: string | null;
+  ipfs_hash?: string | null;
 }
 
 export default function AdminMessages() {
@@ -132,6 +134,21 @@ export default function AdminMessages() {
                   <Clock className="w-4 h-4" />
                   {new Date(msg.created_at).toLocaleString()}
                 </div>
+
+                {(msg.blockchain_tx_hash || msg.ipfs_hash) && (
+                  <div className="pl-8 mt-2 space-y-1">
+                    {msg.blockchain_tx_hash && (
+                      <div className="text-xs text-foreground/70 font-mono">
+                        TX: {msg.blockchain_tx_hash.slice(0, 18)}...
+                      </div>
+                    )}
+                    {msg.ipfs_hash && (
+                      <div className="text-xs text-foreground/70 font-mono">
+                        IPFS: {msg.ipfs_hash.slice(0, 18)}...
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               {msg.status === 'unread' && (
