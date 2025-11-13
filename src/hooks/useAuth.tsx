@@ -11,6 +11,7 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signUp: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
+  refreshRole: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -105,8 +106,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     navigate('/');
   };
 
+  const refreshRole = async () => {
+    const uid = supabase.auth.getUser ? (await supabase.auth.getUser()).data.user?.id : user?.id;
+    if (uid) await checkAdminRole(uid);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, session, loading, isAdmin, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={{ user, session, loading, isAdmin, signIn, signUp, signOut, refreshRole }}>
       {children}
     </AuthContext.Provider>
   );

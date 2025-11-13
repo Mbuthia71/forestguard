@@ -5,11 +5,14 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useWebAuthn } from "@/hooks/useWebAuthn";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function AdminAuth() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { isSupported, registerBiometric, loginWithBiometric } = useWebAuthn();
+  const { refreshRole } = useAuth();
   const [loading, setLoading] = useState<"idle" | "signup" | "login">("idle");
 
   // Futuristic sound cues using WebAudio
@@ -61,8 +64,13 @@ export default function AdminAuth() {
     setLoading("login");
     try {
       await loginWithBiometric(ADMIN_EMAIL);
+      // Bootstrap admin role if none exists, then confirm role
+      await supabase.functions.invoke('bootstrap-admin');
+      // Refresh role in auth context so ProtectedRoute passes
+      await refreshRole();
+
       playTone("success");
-      toast({ title: "Welcome", description: "Fingerprint verified. Redirecting to admin..." });
+      toast({ title: "Admin access granted", description: "Redirecting to admin..." });
       navigate("/admin", { replace: true });
     } catch (e: any) {
       playTone("error");
