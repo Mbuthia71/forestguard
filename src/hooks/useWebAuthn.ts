@@ -145,8 +145,7 @@ export const useWebAuthn = () => {
 
       // Create a session by verifying the magiclink token hash
       if (data.token_hash) {
-        const { error: otpError } = await (supabase.auth as any).verifyOtp({
-          email,
+        const { error: otpError } = await supabase.auth.verifyOtp({
           type: 'magiclink',
           token_hash: data.token_hash,
         });

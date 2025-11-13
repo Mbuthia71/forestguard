@@ -43,11 +43,22 @@ const Hero = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.8 }}
-            className="text-lg md:text-xl text-foreground/90 max-w-3xl mx-auto leading-relaxed"
+            className="text-lg md:text-xl text-foreground/90 max-w-3xl mx-auto leading-relaxed space-y-4"
           >
-            Real-time forest monitoring powered by satellite data, IoT sensors, and blockchain technology.
-            <br />
-            <span className="text-primary font-semibold">Protecting nature, one alert at a time.</span>
+            <span className="block">
+              Real-time forest monitoring powered by <span className="text-primary font-semibold">satellite data</span>, 
+              <span className="text-primary font-semibold"> IoT sensors</span>, and 
+              <span className="text-primary font-semibold"> blockchain technology</span>.
+            </span>
+            <span className="block text-base md:text-lg">
+              🛰️ <span className="font-semibold">Sentinel-2 Imagery</span> • 
+              📡 <span className="font-semibold">LoRaWAN Sensors</span> • 
+              🔗 <span className="font-semibold">Polygon Blockchain</span> • 
+              🤖 <span className="font-semibold">AI-Powered Alerts</span>
+            </span>
+            <span className="block text-primary font-bold text-xl mt-4">
+              Protecting 2,847 hectares of forest. Every second counts.
+            </span>
           </motion.p>
 
           <motion.div

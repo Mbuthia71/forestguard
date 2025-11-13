@@ -106,25 +106,31 @@ export type Database = {
       }
       contact_messages: {
         Row: {
+          blockchain_tx_hash: string | null
           created_at: string | null
           email: string
           id: string
+          ipfs_hash: string | null
           message: string
           name: string
           status: string | null
         }
         Insert: {
+          blockchain_tx_hash?: string | null
           created_at?: string | null
           email: string
           id?: string
+          ipfs_hash?: string | null
           message: string
           name: string
           status?: string | null
         }
         Update: {
+          blockchain_tx_hash?: string | null
           created_at?: string | null
           email?: string
           id?: string
+          ipfs_hash?: string | null
           message?: string
           name?: string
           status?: string | null

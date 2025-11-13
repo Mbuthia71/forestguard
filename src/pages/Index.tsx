@@ -1,6 +1,7 @@
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
 import HowItWorks from "@/components/HowItWorks";
+import ImpactMetrics from "@/components/ImpactMetrics";
 import TechnologyStack from "@/components/TechnologyStack";
 import RealTimeDashboard from "@/components/RealTimeDashboard";
 import IoTSimulator from "@/components/IoTSimulator";
@@ -16,6 +17,7 @@ const Index = () => {
       <Navigation />
       <Hero />
       <HowItWorks />
+      <ImpactMetrics />
       <TechnologyStack />
       <SatelliteAnalysis />
       <RealTimeDashboard />

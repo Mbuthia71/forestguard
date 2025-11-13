@@ -7,37 +7,43 @@ const TechnologyStack = () => {
       icon: Satellite,
       name: "Google Earth Engine",
       category: "Satellite Analysis",
-      description: "Sentinel-2 data processing",
+      description: "Sentinel-2 multispectral data (13 bands, 10m resolution)",
+      details: "NDVI, EVI change detection",
     },
     {
       icon: Radio,
-      name: "LoRaWAN",
-      category: "IoT Network",
-      description: "Long-range sensor connectivity",
+      name: "LoRaWAN Network",
+      category: "IoT Protocol",
+      description: "868/915 MHz ISM band, 10km range, <50mA consumption",
+      details: "TTN/ChirpStack gateway",
     },
     {
       icon: Link2,
-      name: "Polygon & IPFS",
-      category: "Blockchain",
-      description: "Decentralized reporting",
+      name: "Polygon + IPFS",
+      category: "Blockchain Layer",
+      description: "Testnet deployment (Mumbai), decentralized file storage",
+      details: "0.001 MATIC per tx",
     },
     {
       icon: Waves,
       name: "Apache Kafka",
-      category: "Data Streaming",
-      description: "Real-time event processing",
+      category: "Event Streaming",
+      description: "Real-time data pipelines, 100k+ msgs/sec throughput",
+      details: "Zookeeper coordination",
     },
     {
       icon: Database,
       name: "FastAPI + PostgreSQL",
-      category: "Backend",
-      description: "High-performance API & database",
+      category: "Backend Stack",
+      description: "Python async API (Pydantic validation) + PostGIS extension",
+      details: "REST + WebSocket APIs",
     },
     {
       icon: Cpu,
-      name: "TensorFlow",
-      category: "AI/ML",
-      description: "Change detection & prediction",
+      name: "TensorFlow 2.x",
+      category: "AI/ML Framework",
+      description: "CNN-based change detection, LSTM time-series prediction",
+      details: "GPU-accelerated inference",
     },
   ];
 
@@ -73,7 +79,8 @@ const TechnologyStack = () => {
                     <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">
                       {tech.name}
                     </h3>
-                    <p className="text-sm text-foreground/70">{tech.description}</p>
+                    <p className="text-sm text-foreground/70 leading-relaxed">{tech.description}</p>
+                    <p className="text-xs text-foreground/50 font-mono">{tech.details}</p>
                   </div>
                 </div>
               </Card>
