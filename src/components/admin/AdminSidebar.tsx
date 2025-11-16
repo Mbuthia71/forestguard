@@ -26,6 +26,7 @@ const navigation = [
   { name: 'Alerts', href: '/admin/alerts', icon: AlertCircle },
   { name: 'Reports', href: '/admin/reports', icon: FileText },
   { name: 'Messages', href: '/admin/messages', icon: MessageSquare },
+  { name: 'Forum', href: '/admin/forum', icon: MessageSquare },
 ];
 
 export default function AdminSidebar() {
