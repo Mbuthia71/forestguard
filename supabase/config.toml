@@ -1,1 +1,4 @@
 project_id = "nsguyphwkmvtxczfabts"
+
+[functions.get-mapbox-key]
+verify_jwt = false
