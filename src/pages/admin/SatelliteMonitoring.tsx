@@ -72,10 +72,10 @@ export default function SatelliteMonitoring() {
           <h3 className="text-lg font-semibold text-foreground">Select Forest</h3>
         </div>
         <Select value={selectedForest} onValueChange={setSelectedForest}>
-          <SelectTrigger className="w-full md:w-[300px]">
+          <SelectTrigger className="w-full md:w-[300px] bg-background">
             <SelectValue placeholder="Choose a forest" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="z-50 bg-popover text-popover-foreground shadow-lg">
             <SelectItem value="kakamega">Kakamega Forest</SelectItem>
             <SelectItem value="mau">Mau Forest Complex</SelectItem>
             <SelectItem value="karura">Karura Forest</SelectItem>
@@ -88,23 +88,22 @@ export default function SatelliteMonitoring() {
       <Card className="p-6 bg-card/50 backdrop-blur-sm border-border">
         <div className="flex items-center gap-3 mb-4">
           <Satellite className="w-6 h-6 text-primary" />
-          <h2 className="text-2xl font-bold text-foreground">Recent Satellite Imagery (2020–Present)</h2>
+          <h2 className="text-2xl font-bold text-foreground">Real-Time Satellite Imagery (Google Earth Engine — {currentForest.name})</h2>
         </div>
         <p className="text-sm text-foreground/60 mb-4">
-          Powered by Google Earth Engine. View recent forest changes in{' '}
-          <span className="text-primary font-semibold">{currentForest.name}</span> with high-performance satellite timelapse.
+          Powered by Google Earth Engine Timelapse. View recent imagery without login.
         </p>
         <div className="relative rounded-lg overflow-hidden border border-border">
           {isLoadingRealtime && (
             <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/80">
-              <Skeleton className="w-full h-[650px]" />
+              <Skeleton className="w-full h-[60vh] md:h-[650px]" />
             </div>
           )}
           <iframe
             key={`realtime-${selectedForest}`}
-            src={`https://earthengine.google.com/timelapse/embed/#v=${currentForest.lat},${currentForest.lng},11,latLng&t=3.50&ps=50&bt=20200101&et=20250101&startDwell=0&endDwell=0`}
-            className="w-full h-[650px]"
-            title={`Recent Satellite - ${currentForest.name}`}
+            src={`https://earthengine.google.com/timelapse/embed/#v=${currentForest.lat},${currentForest.lng},11,latLng&t=0.00`}
+            className="w-full h-[60vh] md:h-[650px]"
+            title={`Real-Time Satellite - ${currentForest.name}`}
             onLoad={() => setIsLoadingRealtime(false)}
             loading="lazy"
             style={{ border: 'none', borderRadius: '14px' }}
@@ -130,8 +129,8 @@ export default function SatelliteMonitoring() {
           )}
           <iframe
             key={`historical-${selectedForest}`}
-            src={`https://earthengine.google.com/timelapse/embed/#v=${currentForest.lat},${currentForest.lng},10,latLng&t=0.00&ps=50&bt=19840101&et=20231231&startDwell=0&endDwell=0`}
-            className="w-full h-[650px]"
+            src={`https://earthengine.google.com/timelapse/embed/#v=${currentForest.lat},${currentForest.lng},10,latLng&t=0.00`}
+            className="w-full h-[60vh] md:h-[650px]"
             title={`Historical Change - ${currentForest.name}`}
             onLoad={() => setIsLoadingHistorical(false)}
             loading="lazy"
