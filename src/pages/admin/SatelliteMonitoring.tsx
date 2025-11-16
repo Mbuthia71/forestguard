@@ -2,9 +2,18 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Satellite, Clock } from "lucide-react";
+import { Satellite, Clock, Flame, CloudRain, AlertTriangle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+
+interface NASAEvent {
+  id: string;
+  title: string;
+  description: string;
+  categories: Array<{ id: string; title: string }>;
+  geometry: Array<{ date: string; coordinates: [number, number] }>;
+}
 
 const forests = {
   "Kakamega Forest": { lat: -0.290, lng: 34.856, zoom: 10 },
@@ -37,6 +46,8 @@ export default function SatelliteMonitoring() {
   const [realTimeLoading, setRealTimeLoading] = useState(true);
   const [historicalLoading, setHistoricalLoading] = useState(true);
   const [alertsByForest, setAlertsByForest] = useState<Record<string, { last7: number; prev7: number }>>({});
+  const [nasaEvents, setNasaEvents] = useState<NASAEvent[]>([]);
+  const [loadingEvents, setLoadingEvents] = useState(true);
 
   useEffect(() => {
     const fetchAlerts = async () => {
@@ -69,7 +80,36 @@ export default function SatelliteMonitoring() {
 
       setAlertsByForest(map);
     };
+
+    const fetchNASAEvents = async () => {
+      try {
+        const response = await fetch(
+          'https://eonet.gsfc.nasa.gov/api/v3/events?category=wildfires,severeStorms&status=open&limit=50'
+        );
+        const data = await response.json();
+        
+        // Filter events near Kenya (approx bounds: lat -5 to 5, lng 33 to 42)
+        const kenyaEvents = (data.events || []).filter((event: any) => {
+          const latestGeometry = event.geometry?.[0];
+          if (!latestGeometry) return false;
+          const [lng, lat] = latestGeometry.coordinates;
+          return lat >= -5 && lat <= 5 && lng >= 33 && lng <= 42;
+        });
+        
+        setNasaEvents(kenyaEvents);
+        if (kenyaEvents.length > 0) {
+          toast.success(`Loaded ${kenyaEvents.length} active NASA events near Kenya`);
+        }
+      } catch (error) {
+        console.error("Failed to fetch NASA EONET data:", error);
+        toast.error("Could not load NASA event data");
+      } finally {
+        setLoadingEvents(false);
+      }
+    };
+
     fetchAlerts();
+    fetchNASAEvents();
   }, []);
 
   const currentForest = forests[selectedForest as keyof typeof forests];
@@ -110,6 +150,71 @@ export default function SatelliteMonitoring() {
               ))}
             </SelectContent>
           </Select>
+        </CardContent>
+      </Card>
+
+      {/* NASA EONET Real-Time Events */}
+      <Card className="border-2 border-destructive/30 bg-card/50 backdrop-blur">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <AlertTriangle className="h-5 w-5 text-destructive" />
+            NASA EONET Live Events (Kenya Region)
+          </CardTitle>
+          <CardDescription>
+            Real-time wildfires and severe storms detected by NASA Earth Observatory Natural Event Tracker
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {loadingEvents ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <Skeleton key={i} className="h-24 w-full" />
+              ))}
+            </div>
+          ) : nasaEvents.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground">
+              <Satellite className="h-12 w-12 mx-auto mb-2 opacity-50" />
+              <p>No active NASA events detected in Kenya region</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {nasaEvents.map((event) => {
+                const category = event.categories[0]?.title || "Unknown";
+                const isWildfire = category.toLowerCase().includes("wildfire");
+                const latestGeometry = event.geometry[0];
+                const [lng, lat] = latestGeometry.coordinates;
+                
+                return (
+                  <div key={event.id} className="rounded-lg border-2 border-destructive/20 bg-destructive/5 p-4">
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        {isWildfire ? (
+                          <Flame className="h-5 w-5 text-destructive" />
+                        ) : (
+                          <CloudRain className="h-5 w-5 text-primary" />
+                        )}
+                        <Badge variant={isWildfire ? "destructive" : "secondary"}>
+                          {category}
+                        </Badge>
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {new Date(latestGeometry.date).toLocaleDateString()}
+                      </div>
+                    </div>
+                    <h4 className="font-semibold mb-1">{event.title}</h4>
+                    <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
+                      {event.description || "No description available"}
+                    </p>
+                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                      <span>📍 {lat.toFixed(3)}°, {lng.toFixed(3)}°</span>
+                      <span>•</span>
+                      <span>{event.geometry.length} observation{event.geometry.length > 1 ? "s" : ""}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </CardContent>
       </Card>
 

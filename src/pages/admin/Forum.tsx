@@ -50,44 +50,54 @@ export default function AdminForum() {
   const fetchThreads = async () => {
     const { data, error } = await supabase
       .from("admin_forum_threads")
-      .select(`
-        *,
-        profiles!admin_forum_threads_created_by_fkey(display_name)
-      `)
+      .select("*")
       .order("updated_at", { ascending: false });
 
     if (error) {
       toast.error("Failed to load threads");
-    } else {
-      // Map to expected interface
-      const mapped = (data || []).map((t: any) => ({
-        ...t,
-        profile: t.profiles,
-      }));
-      setThreads(mapped);
+      return;
     }
+
+    // Fetch profiles for all creators
+    const creatorIds = [...new Set(data?.map(t => t.created_by) || [])];
+    const { data: profiles } = await supabase
+      .from("profiles")
+      .select("id, display_name")
+      .in("id", creatorIds);
+
+    const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
+    const mapped = (data || []).map((t: any) => ({
+      ...t,
+      profile: profileMap.get(t.created_by),
+    }));
+    setThreads(mapped);
   };
 
   const fetchComments = async (threadId: string) => {
     const { data, error } = await supabase
       .from("admin_forum_comments")
-      .select(`
-        *,
-        profiles!admin_forum_comments_created_by_fkey(display_name)
-      `)
+      .select("*")
       .eq("thread_id", threadId)
       .order("created_at", { ascending: true });
 
     if (error) {
       toast.error("Failed to load comments");
-    } else {
-      // Map to expected interface
-      const mapped = (data || []).map((c: any) => ({
-        ...c,
-        profile: c.profiles,
-      }));
-      setComments((prev) => ({ ...prev, [threadId]: mapped }));
+      return;
     }
+
+    // Fetch profiles for all commenters
+    const creatorIds = [...new Set(data?.map(c => c.created_by) || [])];
+    const { data: profiles } = await supabase
+      .from("profiles")
+      .select("id, display_name")
+      .in("id", creatorIds);
+
+    const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
+    const mapped = (data || []).map((c: any) => ({
+      ...c,
+      profile: profileMap.get(c.created_by),
+    }));
+    setComments((prev) => ({ ...prev, [threadId]: mapped }));
   };
 
   const handleCreateThread = async () => {
