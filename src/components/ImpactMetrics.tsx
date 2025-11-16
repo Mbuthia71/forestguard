@@ -6,31 +6,31 @@ export default function ImpactMetrics() {
   const metrics = [
     {
       icon: TreePine,
-      value: '2,847',
+      value: '12,847',
       label: 'Hectares Protected',
       color: 'text-lime-neon',
-      suffix: 'ha',
+      suffix: 'in Kenya',
     },
     {
       icon: AlertTriangle,
-      value: '127',
+      value: '43',
       label: 'Threats Detected',
       color: 'text-orange-400',
-      suffix: 'alerts',
+      suffix: 'this month',
     },
     {
       icon: Shield,
-      value: '100%',
+      value: '89',
       label: 'Anonymous Reports',
       color: 'text-primary',
-      suffix: '',
+      suffix: 'verified',
     },
     {
       icon: Users,
-      value: '43',
+      value: '156',
       label: 'Active Sensors',
       color: 'text-blue-400',
-      suffix: 'IoT nodes',
+      suffix: 'Kenya forests',
     },
   ];
 
@@ -45,9 +45,9 @@ export default function ImpactMetrics() {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Real-time <span className="text-primary">Impact</span>
+            Real-time <span className="text-primary">Impact</span> in Kenya
           </h2>
-          <p className="text-foreground/70">Live statistics from the ForestGuard network</p>
+          <p className="text-foreground/70">Live statistics from Kakamega, Mau, Karura & Aberdare forests</p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">

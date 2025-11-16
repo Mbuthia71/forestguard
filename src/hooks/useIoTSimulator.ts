@@ -14,10 +14,18 @@ export interface SensorReading {
 }
 
 const SENSOR_NODES = [
-  { id: "NODE-001", location: "Amazon Sector Alpha" },
-  { id: "NODE-002", location: "Congo Basin Beta" },
-  { id: "NODE-003", location: "Borneo Gamma" },
-  { id: "NODE-004", location: "Amazon Sector Delta" },
+  { id: 'KK-N001', location: 'Kakamega Forest - Isecheno Station' },
+  { id: 'KK-N002', location: 'Kakamega Forest - Buyangu Area' },
+  { id: 'KK-N003', location: 'Kakamega Forest - Yala River Zone' },
+  { id: 'MF-N001', location: 'Mau Forest - Kiptunga Area' },
+  { id: 'MF-N002', location: 'Mau Forest - Mau Summit' },
+  { id: 'AB-N001', location: 'Aberdare Forest - Kinale Region' },
+  { id: 'KR-N001', location: 'Karura Forest - Southern Gate' },
+  { id: 'KR-N002', location: 'Karura Forest - Central Trail' },
+  { id: 'NG-N001', location: 'Ngong Road Forest Reserve' },
+  { id: 'KK-N004', location: 'Kakamega Forest - Bunyala Zone' },
+  { id: 'MF-N003', location: 'Mau Forest - Eastern Block' },
+  { id: 'AB-N002', location: 'Aberdare Forest - Ndaragwa Region' },
 ];
 
 export const useIoTSimulator = (isRunning: boolean) => {
@@ -56,13 +64,17 @@ export const useIoTSimulator = (isRunning: boolean) => {
 
     // Generate alert if conditions warrant it
     if (reading.sound_detected || reading.motion_detected) {
+      const alertType = reading.motion_detected && reading.sound_detected 
+        ? "Illegal logging activity"
+        : reading.sound_detected 
+        ? "Chainsaw-like acoustic signature"
+        : "Unauthorized movement";
+      
       await supabase.from("alerts").insert({
         location: reading.location,
         severity: reading.motion_detected && reading.sound_detected ? "high" : "medium",
         source: "iot_sensor",
-        description: `IoT Alert: ${reading.motion_detected ? "Motion" : ""} ${
-          reading.sound_detected ? "Sound" : ""
-        } detected at ${reading.location}`,
+        description: `${alertType} detected at ${reading.location}`,
         metadata: {
           node_id: reading.node_id,
           temperature: reading.temperature,
@@ -83,9 +95,15 @@ export const useIoTSimulator = (isRunning: boolean) => {
       
       const success = await sendReading(reading);
       if (success && (reading.sound_detected || reading.motion_detected)) {
+        const alertType = reading.motion_detected && reading.sound_detected 
+          ? "🚨 Illegal Logging Alert"
+          : reading.sound_detected 
+          ? "🔊 Acoustic Alert"
+          : "👤 Movement Alert";
+        
         toast({
-          title: "🚨 IoT Alert Generated",
-          description: `${reading.location}: Suspicious activity detected`,
+          title: alertType,
+          description: `${reading.location}: Immediate ranger response required`,
         });
       }
     }, 3000);
