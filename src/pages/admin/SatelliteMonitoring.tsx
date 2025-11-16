@@ -88,11 +88,11 @@ export default function SatelliteMonitoring() {
       <Card className="p-6 bg-card/50 backdrop-blur-sm border-border">
         <div className="flex items-center gap-3 mb-4">
           <Satellite className="w-6 h-6 text-primary" />
-          <h2 className="text-2xl font-bold text-foreground">Real-Time Satellite Imagery</h2>
+          <h2 className="text-2xl font-bold text-foreground">Recent Satellite Imagery (2020–Present)</h2>
         </div>
         <p className="text-sm text-foreground/60 mb-4">
-          Powered by Planet Insights Browser. View recent multispectral satellite data of{' '}
-          <span className="text-primary font-semibold">{currentForest.name}</span> without login.
+          Powered by Google Earth Engine. View recent forest changes in{' '}
+          <span className="text-primary font-semibold">{currentForest.name}</span> with high-performance satellite timelapse.
         </p>
         <div className="relative rounded-lg overflow-hidden border border-border">
           {isLoadingRealtime && (
@@ -102,10 +102,11 @@ export default function SatelliteMonitoring() {
           )}
           <iframe
             key={`realtime-${selectedForest}`}
-            src={`https://apps.sentinel-hub.com/planet-insights-browser/?lat=${currentForest.lat}&lng=${currentForest.lng}&zoom=11`}
+            src={`https://earthengine.google.com/timelapse/embed/#v=${currentForest.lat},${currentForest.lng},11,latLng&t=3.50&ps=50&bt=20200101&et=20250101&startDwell=0&endDwell=0`}
             className="w-full h-[650px]"
-            title={`Real-Time Satellite - ${currentForest.name}`}
+            title={`Recent Satellite - ${currentForest.name}`}
             onLoad={() => setIsLoadingRealtime(false)}
+            loading="lazy"
             style={{ border: 'none', borderRadius: '14px' }}
           />
         </div>
@@ -129,10 +130,11 @@ export default function SatelliteMonitoring() {
           )}
           <iframe
             key={`historical-${selectedForest}`}
-            src={`https://earthengine.google.com/timelapse/embed/#v=${currentForest.lat},${currentForest.lng},10,latLng&t=0.00`}
+            src={`https://earthengine.google.com/timelapse/embed/#v=${currentForest.lat},${currentForest.lng},10,latLng&t=0.00&ps=50&bt=19840101&et=20231231&startDwell=0&endDwell=0`}
             className="w-full h-[650px]"
             title={`Historical Change - ${currentForest.name}`}
             onLoad={() => setIsLoadingHistorical(false)}
+            loading="lazy"
             style={{ border: 'none', borderRadius: '14px', marginTop: '0' }}
           />
         </div>
