@@ -31,44 +31,59 @@ export default function AdminMap() {
       .not('latitude', 'is', null)
       .not('longitude', 'is', null);
 
-    setLocations([...(alerts || []), ...(reports || [])]);
+    const { data: sensors } = await supabase
+      .from('sensors_kenya')
+      .select('*')
+      .not('latitude', 'is', null)
+      .not('longitude', 'is', null);
+
+    setLocations([...(alerts || []), ...(reports || []), ...(sensors || [])]);
   };
 
   const handleConfigure = async () => {
     if (apiKey.length > 0) {
       setIsConfigured(true);
-      toast.success('Mapbox API configured! Map will initialize shortly.');
+      toast.success('Mapbox API configured! Initializing Kenya forest map...');
       
-      // Initialize Mapbox
+      // Initialize Mapbox immediately
       setTimeout(async () => {
         if (!mapContainer.current) return;
 
         const mapboxgl = (await import('mapbox-gl')).default;
+        await import('mapbox-gl/dist/mapbox-gl.css');
+        
         mapboxgl.accessToken = apiKey;
 
         const map = new mapboxgl.Map({
           container: mapContainer.current,
-          style: 'mapbox://styles/mapbox/satellite-streets-v12',
-          center: [0, 20],
-          zoom: 2,
-          projection: 'globe' as any,
+          style: 'mapbox://styles/mapbox/streets-v12',
+          center: [36.0, -0.5], // Center on Kenya
+          zoom: 6.5,
         });
 
         map.on('load', () => {
-          map.setFog({
-            color: 'rgb(186, 210, 235)',
-            'high-color': 'rgb(36, 92, 223)',
-            'horizon-blend': 0.02,
-          });
-
-          // Add markers for locations
+          // Add markers for Kenya sensor locations
           locations.forEach((loc) => {
             if (loc.latitude && loc.longitude) {
-              new mapboxgl.Marker({ color: '#bef264' })
+              const el = document.createElement('div');
+              el.className = 'custom-marker';
+              el.style.backgroundColor = loc.verified ? '#10b981' : '#ef4444';
+              el.style.width = '30px';
+              el.style.height = '30px';
+              el.style.borderRadius = '50%';
+              el.style.border = '3px solid white';
+              el.style.cursor = 'pointer';
+              el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
+
+              new mapboxgl.Marker({ element: el, anchor: 'center' })
                 .setLngLat([loc.longitude, loc.latitude])
                 .setPopup(
-                  new mapboxgl.Popup().setHTML(
-                    `<strong>${loc.location || loc.location_name}</strong><br/>${loc.description || ''}`
+                  new mapboxgl.Popup({ offset: 25 }).setHTML(
+                    `<div style="padding: 8px;">
+                      <strong style="color: #047857;">${loc.location || loc.location_name || loc.zone_name}</strong><br/>
+                      <span style="font-size: 12px; color: #666;">${loc.description || loc.purpose || 'Forest monitoring point'}</span><br/>
+                      <span style="font-size: 11px; color: #999;">${loc.forest_name || ''}</span>
+                    </div>`
                   )
                 )
                 .addTo(map);
@@ -76,7 +91,8 @@ export default function AdminMap() {
           });
         });
 
-        map.addControl(new mapboxgl.NavigationControl());
+        map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+        map.addControl(new mapboxgl.FullscreenControl(), 'top-right');
       }, 100);
     } else {
       toast.error('Please enter a valid API key');
@@ -135,20 +151,17 @@ export default function AdminMap() {
         </Card>
       ) : (
         <Card className="p-6 bg-card/50 backdrop-blur-sm border-border">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-2xl font-bold text-foreground">Kenya Forest Monitoring Map</h2>
+            <Badge variant="outline" className="bg-primary/10">
+              {locations.length} tracking points
+            </Badge>
+          </div>
           <div 
             ref={mapContainer} 
-            className="w-full h-[600px] rounded-lg bg-background/50 flex items-center justify-center"
-          >
-            <div className="text-center">
-              <MapPin className="w-16 h-16 text-primary mx-auto mb-4" />
-              <p className="text-foreground/70">
-                Map visualization will appear here once Mapbox GL is initialized
-              </p>
-              <Badge variant="outline" className="mt-4">
-                {locations.length} locations tracked
-              </Badge>
-            </div>
-          </div>
+            className="w-full h-[600px] rounded-lg overflow-hidden border border-border shadow-lg"
+            style={{ minHeight: '600px' }}
+          />
         </Card>
       )}
 

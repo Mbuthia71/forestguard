@@ -8,7 +8,10 @@ import {
   MessageSquare,
   LogOut,
   Menu,
-  X
+  X,
+  Radio,
+  MapPin,
+  Satellite
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
@@ -16,7 +19,10 @@ import { useState } from 'react';
 
 const navigation = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+  { name: 'Kenya Dashboard', href: '/admin/kenya-dashboard', icon: MapPin },
   { name: 'Live Map', href: '/admin/map', icon: Map },
+  { name: 'Live Sensors', href: '/admin/live-sensors', icon: Radio },
+  { name: 'Satellite', href: '/admin/satellite', icon: Satellite },
   { name: 'Alerts', href: '/admin/alerts', icon: AlertCircle },
   { name: 'Reports', href: '/admin/reports', icon: FileText },
   { name: 'Messages', href: '/admin/messages', icon: MessageSquare },
