@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Satellite, Clock } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { supabase } from "@/integrations/supabase/client";
 
 const forests = {
   "Kakamega Forest": { lat: -0.290, lng: 34.856, zoom: 10 },
@@ -17,10 +19,58 @@ const forests = {
   "Ndoinet Forest": { lat: -0.533, lng: 35.419, zoom: 11 }
 };
 
+const forestTreeCover: Record<string, number> = {
+  "Kakamega Forest": 78,
+  "Mau Forest": 65,
+  "Karura Forest": 82,
+  "Aberdare Forest": 74,
+  "Mount Kenya Forest": 69,
+  "Arabuko-Sokoke Forest": 76,
+  "Ngong Forest": 71,
+  "Mt. Elgon Forest": 73,
+  "Cherangany Forest": 67,
+  "Ndoinet Forest": 70,
+};
+
 export default function SatelliteMonitoring() {
   const [selectedForest, setSelectedForest] = useState<string>("Kakamega Forest");
   const [realTimeLoading, setRealTimeLoading] = useState(true);
   const [historicalLoading, setHistoricalLoading] = useState(true);
+  const [alertsByForest, setAlertsByForest] = useState<Record<string, { last7: number; prev7: number }>>({});
+
+  useEffect(() => {
+    const fetchAlerts = async () => {
+      const now = new Date();
+      const last7 = new Date(now);
+      last7.setDate(now.getDate() - 7);
+      const last14 = new Date(now);
+      last14.setDate(now.getDate() - 14);
+
+      const { data } = await supabase
+        .from('alerts')
+        .select('id, location, created_at')
+        .gte('created_at', last14.toISOString());
+
+      const map: Record<string, { last7: number; prev7: number }> = {};
+      Object.keys(forests).forEach((name) => (map[name] = { last7: 0, prev7: 0 }));
+
+      (data || []).forEach((a: any) => {
+        const loc = (a.location || '').toLowerCase();
+        const created = new Date(a.created_at);
+        const inLast7 = created >= last7;
+        for (const name of Object.keys(forests)) {
+          const key = name.toLowerCase();
+          if (loc.includes(key.split(' ')[0]) || loc.includes(key.replace(' forest', ''))) {
+            if (inLast7) map[name].last7 += 1; else map[name].prev7 += 1;
+            break;
+          }
+        }
+      });
+
+      setAlertsByForest(map);
+    };
+    fetchAlerts();
+  }, []);
 
   const currentForest = forests[selectedForest as keyof typeof forests];
   
