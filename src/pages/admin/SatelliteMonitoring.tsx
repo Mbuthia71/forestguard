@@ -113,6 +113,63 @@ export default function SatelliteMonitoring() {
         </CardContent>
       </Card>
 
+      {/* Forest Health Metrics */}
+      <Card className="border-2 border-primary/20 bg-card/50 backdrop-blur">
+        <CardHeader>
+          <CardTitle>Forest Health Metrics</CardTitle>
+          <CardDescription>
+            Estimated deforestation trend, tree cover, and alert activity for Kenyan forests (last 7 days vs previous 7)
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {!Object.keys(alertsByForest || {}).length ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <Skeleton key={i} className="h-28 w-full" />
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {Object.keys(forests).map((name) => {
+                const metrics = alertsByForest[name] || { last7: 0, prev7: 0 };
+                const { last7, prev7 } = metrics;
+                const changePct = prev7 === 0 ? (last7 > 0 ? 100 : 0) : Math.round(((last7 - prev7) / Math.max(prev7, 1)) * 100);
+                const status = (changePct >= 50 || last7 >= 8)
+                  ? 'critical'
+                  : (changePct > 20 || last7 >= 3)
+                    ? 'warning'
+                    : 'stable';
+                const badgeVariant = status === 'critical' ? 'destructive' : status === 'warning' ? 'secondary' : 'default';
+                const treeCover = forestTreeCover[name] ?? 0;
+
+                return (
+                  <div key={name} className="rounded-lg border bg-card/60 p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="font-medium">{name}</div>
+                      <Badge variant={badgeVariant} className="capitalize">{status}</Badge>
+                    </div>
+                    <div className="mt-3 grid grid-cols-3 gap-3 text-sm">
+                      <div>
+                        <div className="text-muted-foreground">Tree cover</div>
+                        <div className="font-semibold">{treeCover}%</div>
+                      </div>
+                      <div>
+                        <div className="text-muted-foreground">Alerts (7d)</div>
+                        <div className="font-semibold">{last7} <span className="text-xs text-muted-foreground">vs {prev7}</span></div>
+                      </div>
+                      <div>
+                        <div className="text-muted-foreground">Deforestation</div>
+                        <div className="font-semibold">{changePct > 0 ? `+${changePct}%` : `${changePct}%`}</div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
       {/* Real-Time Viewer */}
       <Card className="border-2 border-primary/20 overflow-hidden bg-card/50 backdrop-blur">
         <CardHeader className="bg-gradient-to-r from-primary/10 to-primary/5">
