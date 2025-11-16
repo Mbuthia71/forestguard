@@ -14,6 +14,65 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_forum_comments: {
+        Row: {
+          comment_text: string
+          created_at: string | null
+          created_by: string
+          id: string
+          thread_id: string
+        }
+        Insert: {
+          comment_text: string
+          created_at?: string | null
+          created_by: string
+          id?: string
+          thread_id: string
+        }
+        Update: {
+          comment_text?: string
+          created_at?: string | null
+          created_by?: string
+          id?: string
+          thread_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_forum_comments_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "admin_forum_threads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      admin_forum_threads: {
+        Row: {
+          created_at: string | null
+          created_by: string
+          description: string | null
+          id: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by: string
+          description?: string | null
+          id?: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string
+          description?: string | null
+          id?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       alerts: {
         Row: {
           created_at: string
@@ -180,6 +239,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      profiles: {
+        Row: {
+          created_at: string | null
+          display_name: string | null
+          id: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          display_name?: string | null
+          id: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          display_name?: string | null
+          id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       sensor_data: {
         Row: {

@@ -20,6 +20,7 @@ export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [displayName, setDisplayName] = useState('');
   const [loading, setLoading] = useState(false);
   const [useBiometric, setUseBiometric] = useState(false);
   const { signIn, signUp, user } = useAuth();
@@ -54,9 +55,14 @@ export default function Auth() {
         toast.success('Biometric registration successful! You can now login with your fingerprint.');
         navigate('/');
       } else {
-        const { error } = isLogin 
-          ? await signIn(email, password) 
-          : await signUp(email, password);
+        let error;
+        if (isLogin) {
+          ({ error } = await signIn(email, password));
+        } else {
+          // Pass display_name as metadata during signup
+          const { error: signUpError } = await signUp(email, password, { display_name: displayName });
+          error = signUpError;
+        }
 
         if (error) {
           if (error.message.includes('Invalid login credentials')) {
@@ -139,6 +145,22 @@ export default function Auth() {
                 className="bg-background/50"
               />
             </div>
+
+            {!isLogin && (
+              <div className="space-y-2">
+                <Label htmlFor="displayName">Display Name</Label>
+                <Input
+                  id="displayName"
+                  type="text"
+                  placeholder="Your Name"
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                  required
+                  maxLength={100}
+                  className="bg-background/50"
+                />
+              </div>
+            )}
 
             <div className="space-y-2">
               <Label htmlFor="password" className="flex items-center gap-2">
