@@ -10,6 +10,10 @@ import SatelliteAnalysis from "@/components/SatelliteAnalysis";
 import ContactForm from "@/components/ContactForm";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import KenyaForestImpact from "@/components/KenyaForestImpact";
+import KenyaStakeholders from "@/components/KenyaStakeholders";
+import MVPDeployment from "@/components/MVPDeployment";
+import FundingCase from "@/components/FundingCase";
 
 const Index = () => {
   return (
@@ -18,11 +22,15 @@ const Index = () => {
       <Hero />
       <HowItWorks />
       <ImpactMetrics />
+      <KenyaForestImpact />
       <TechnologyStack />
       <SatelliteAnalysis />
       <RealTimeDashboard />
       <IoTSimulator />
       <BlockchainReporting />
+      <KenyaStakeholders />
+      <MVPDeployment />
+      <FundingCase />
       <ContactForm />
       <Contact />
       <Footer />

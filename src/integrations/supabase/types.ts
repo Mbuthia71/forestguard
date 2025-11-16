@@ -137,6 +137,50 @@ export type Database = {
         }
         Relationships: []
       }
+      forest_alerts_kenya: {
+        Row: {
+          alert_type: string
+          confidence_score: number | null
+          created_at: string | null
+          description: string
+          evidence_image_url: string | null
+          id: string
+          location: string
+          sensor_id: string | null
+          timestamp: string | null
+        }
+        Insert: {
+          alert_type: string
+          confidence_score?: number | null
+          created_at?: string | null
+          description: string
+          evidence_image_url?: string | null
+          id?: string
+          location: string
+          sensor_id?: string | null
+          timestamp?: string | null
+        }
+        Update: {
+          alert_type?: string
+          confidence_score?: number | null
+          created_at?: string | null
+          description?: string
+          evidence_image_url?: string | null
+          id?: string
+          location?: string
+          sensor_id?: string | null
+          timestamp?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "forest_alerts_kenya_sensor_id_fkey"
+            columns: ["sensor_id"]
+            isOneToOne: false
+            referencedRelation: "sensors_kenya"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       sensor_data: {
         Row: {
           battery_level: number | null
@@ -173,6 +217,51 @@ export type Database = {
           signal_strength?: number | null
           sound_detected?: boolean | null
           temperature?: number | null
+        }
+        Relationships: []
+      }
+      sensors_kenya: {
+        Row: {
+          battery_level: number | null
+          created_at: string | null
+          forest_name: string
+          gps_location: string
+          id: string
+          last_seen: string | null
+          latitude: number | null
+          longitude: number | null
+          purpose: string
+          sensor_type: string
+          status: string
+          zone_name: string
+        }
+        Insert: {
+          battery_level?: number | null
+          created_at?: string | null
+          forest_name: string
+          gps_location: string
+          id?: string
+          last_seen?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          purpose: string
+          sensor_type: string
+          status?: string
+          zone_name: string
+        }
+        Update: {
+          battery_level?: number | null
+          created_at?: string | null
+          forest_name?: string
+          gps_location?: string
+          id?: string
+          last_seen?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          purpose?: string
+          sensor_type?: string
+          status?: string
+          zone_name?: string
         }
         Relationships: []
       }

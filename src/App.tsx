@@ -15,6 +15,9 @@ import AdminMap from "./pages/admin/Map";
 import AdminAlerts from "./pages/admin/Alerts";
 import AdminReports from "./pages/admin/Reports";
 import AdminMessages from "./pages/admin/Messages";
+import KenyaDashboard from "./pages/admin/KenyaDashboard";
+import LiveSensorMap from "./pages/admin/LiveSensorMap";
+import SatelliteMonitoring from "./pages/admin/SatelliteMonitoring";
 
 const queryClient = new QueryClient();
 
@@ -30,7 +33,10 @@ const App = () => (
             <Route path="/admin-auth" element={<AdminAuth />} />
             <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
               <Route index element={<AdminDashboard />} />
+              <Route path="kenya-dashboard" element={<KenyaDashboard />} />
               <Route path="map" element={<AdminMap />} />
+              <Route path="live-sensors" element={<LiveSensorMap />} />
+              <Route path="satellite" element={<SatelliteMonitoring />} />
               <Route path="alerts" element={<AdminAlerts />} />
               <Route path="reports" element={<AdminReports />} />
               <Route path="messages" element={<AdminMessages />} />
