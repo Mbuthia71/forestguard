@@ -196,6 +196,65 @@ export type Database = {
         }
         Relationships: []
       }
+      field_reports: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          latitude: number
+          longitude: number
+          photos: Json | null
+          ranger_id: string
+          report_type: string
+          severity: string | null
+          status: string | null
+          synced_at: string | null
+          tags: string[] | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          latitude: number
+          longitude: number
+          photos?: Json | null
+          ranger_id: string
+          report_type: string
+          severity?: string | null
+          status?: string | null
+          synced_at?: string | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          latitude?: number
+          longitude?: number
+          photos?: Json | null
+          ranger_id?: string
+          report_type?: string
+          severity?: string | null
+          status?: string | null
+          synced_at?: string | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "field_reports_ranger_id_fkey"
+            columns: ["ranger_id"]
+            isOneToOne: false
+            referencedRelation: "rangers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       forest_alerts_kenya: {
         Row: {
           alert_type: string
@@ -240,6 +299,69 @@ export type Database = {
           },
         ]
       }
+      forest_summaries: {
+        Row: {
+          ai_summary: string | null
+          created_at: string | null
+          created_by: string | null
+          id: string
+          metrics: Json | null
+          period_end: string
+          period_start: string
+          summary_type: string
+        }
+        Insert: {
+          ai_summary?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          metrics?: Json | null
+          period_end: string
+          period_start: string
+          summary_type: string
+        }
+        Update: {
+          ai_summary?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          metrics?: Json | null
+          period_end?: string
+          period_start?: string
+          summary_type?: string
+        }
+        Relationships: []
+      }
+      forest_zones: {
+        Row: {
+          area_hectares: number | null
+          boundary_geojson: Json
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          area_hectares?: number | null
+          boundary_geojson: Json
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          area_hectares?: number | null
+          boundary_geojson?: Json
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string | null
@@ -258,6 +380,138 @@ export type Database = {
           display_name?: string | null
           id?: string
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      ranger_tasks: {
+        Row: {
+          assigned_to: string | null
+          completed_at: string | null
+          created_at: string | null
+          created_by: string
+          description: string | null
+          due_date: string | null
+          id: string
+          location_lat: number | null
+          location_lng: number | null
+          priority: string | null
+          status: string | null
+          title: string
+          updated_at: string | null
+          zone_id: string | null
+        }
+        Insert: {
+          assigned_to?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          created_by: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          location_lat?: number | null
+          location_lng?: number | null
+          priority?: string | null
+          status?: string | null
+          title: string
+          updated_at?: string | null
+          zone_id?: string | null
+        }
+        Update: {
+          assigned_to?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          created_by?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          location_lat?: number | null
+          location_lng?: number | null
+          priority?: string | null
+          status?: string | null
+          title?: string
+          updated_at?: string | null
+          zone_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ranger_tasks_assigned_to_fkey"
+            columns: ["assigned_to"]
+            isOneToOne: false
+            referencedRelation: "rangers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ranger_tasks_zone_id_fkey"
+            columns: ["zone_id"]
+            isOneToOne: false
+            referencedRelation: "forest_zones"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rangers: {
+        Row: {
+          assigned_zones: string[] | null
+          created_at: string | null
+          id: string
+          phone: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          assigned_zones?: string[] | null
+          created_at?: string | null
+          id?: string
+          phone?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          assigned_zones?: string[] | null
+          created_at?: string | null
+          id?: string
+          phone?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      satellite_layers: {
+        Row: {
+          created_at: string | null
+          date_captured: string
+          file_url: string | null
+          id: string
+          layer_type: string
+          metadata: Json | null
+          name: string
+          thumbnail_url: string | null
+          uploaded_by: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          date_captured: string
+          file_url?: string | null
+          id?: string
+          layer_type: string
+          metadata?: Json | null
+          name: string
+          thumbnail_url?: string | null
+          uploaded_by?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          date_captured?: string
+          file_url?: string | null
+          id?: string
+          layer_type?: string
+          metadata?: Json | null
+          name?: string
+          thumbnail_url?: string | null
+          uploaded_by?: string | null
         }
         Relationships: []
       }
@@ -416,6 +670,7 @@ export type Database = {
       alert_severity: "low" | "medium" | "high" | "critical"
       alert_source: "satellite" | "iot_sensor" | "blockchain_report"
       app_role: "admin" | "moderator" | "user"
+      user_role_type: "admin" | "ranger" | "stakeholder"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -546,6 +801,7 @@ export const Constants = {
       alert_severity: ["low", "medium", "high", "critical"],
       alert_source: ["satellite", "iot_sensor", "blockchain_report"],
       app_role: ["admin", "moderator", "user"],
+      user_role_type: ["admin", "ranger", "stakeholder"],
     },
   },
 } as const
