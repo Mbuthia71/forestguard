@@ -16,6 +16,7 @@ import StakeholderDashboard from "./pages/stakeholder/StakeholderDashboard";
 import AdminMap from "./pages/admin/Map";
 import AdminAlerts from "./pages/admin/Alerts";
 import AdminReports from "./pages/admin/Reports";
+import BlockchainTracking from "./pages/admin/BlockchainTracking";
 import AdminMessages from "./pages/admin/Messages";
 import KenyaDashboard from "./pages/admin/KenyaDashboard";
 import LiveSensorMap from "./pages/admin/LiveSensorMap";
@@ -46,6 +47,7 @@ const App = () => (
               <Route path="satellite-monitoring" element={<SatelliteMonitoring />} />
               <Route path="alerts" element={<AdminAlerts />} />
               <Route path="reports" element={<AdminReports />} />
+              <Route path="blockchain-tracking" element={<BlockchainTracking />} />
               <Route path="messages" element={<AdminMessages />} />
               <Route path="forum" element={<AdminForum />} />
             </Route>

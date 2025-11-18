@@ -31,6 +31,7 @@ const navigation = [
   { name: 'Satellite', href: '/admin/satellite-monitoring', icon: Satellite },
   { name: 'Alerts', href: '/admin/alerts', icon: AlertCircle },
   { name: 'Reports', href: '/admin/reports', icon: FileText },
+  { name: 'Blockchain Tracking', href: '/admin/blockchain-tracking', icon: Shield },
   { name: 'Messages', href: '/admin/messages', icon: MessageSquare },
   { name: 'Forum', href: '/admin/forum', icon: MessageSquare },
 ];

@@ -75,6 +75,10 @@ export type Database = {
       }
       alerts: {
         Row: {
+          action_notes: string | null
+          action_status: Database["public"]["Enums"]["action_status"] | null
+          action_taken_by: string | null
+          action_timestamp: string | null
           created_at: string
           description: string | null
           id: string
@@ -88,6 +92,10 @@ export type Database = {
           verified: boolean | null
         }
         Insert: {
+          action_notes?: string | null
+          action_status?: Database["public"]["Enums"]["action_status"] | null
+          action_taken_by?: string | null
+          action_timestamp?: string | null
           created_at?: string
           description?: string | null
           id?: string
@@ -101,6 +109,10 @@ export type Database = {
           verified?: boolean | null
         }
         Update: {
+          action_notes?: string | null
+          action_status?: Database["public"]["Enums"]["action_status"] | null
+          action_taken_by?: string | null
+          action_timestamp?: string | null
           created_at?: string
           description?: string | null
           id?: string
@@ -117,6 +129,10 @@ export type Database = {
       }
       blockchain_reports: {
         Row: {
+          action_notes: string | null
+          action_status: Database["public"]["Enums"]["action_status"] | null
+          action_taken_by: string | null
+          action_timestamp: string | null
           blockchain_tx_hash: string | null
           coordinates_text: string | null
           created_at: string
@@ -132,6 +148,10 @@ export type Database = {
           verified: boolean | null
         }
         Insert: {
+          action_notes?: string | null
+          action_status?: Database["public"]["Enums"]["action_status"] | null
+          action_taken_by?: string | null
+          action_timestamp?: string | null
           blockchain_tx_hash?: string | null
           coordinates_text?: string | null
           created_at?: string
@@ -147,6 +167,10 @@ export type Database = {
           verified?: boolean | null
         }
         Update: {
+          action_notes?: string | null
+          action_status?: Database["public"]["Enums"]["action_status"] | null
+          action_taken_by?: string | null
+          action_timestamp?: string | null
           blockchain_tx_hash?: string | null
           coordinates_text?: string | null
           created_at?: string
@@ -165,6 +189,10 @@ export type Database = {
       }
       contact_messages: {
         Row: {
+          action_notes: string | null
+          action_status: Database["public"]["Enums"]["action_status"] | null
+          action_taken_by: string | null
+          action_timestamp: string | null
           blockchain_tx_hash: string | null
           created_at: string | null
           email: string
@@ -175,6 +203,10 @@ export type Database = {
           status: string | null
         }
         Insert: {
+          action_notes?: string | null
+          action_status?: Database["public"]["Enums"]["action_status"] | null
+          action_taken_by?: string | null
+          action_timestamp?: string | null
           blockchain_tx_hash?: string | null
           created_at?: string | null
           email: string
@@ -185,6 +217,10 @@ export type Database = {
           status?: string | null
         }
         Update: {
+          action_notes?: string | null
+          action_status?: Database["public"]["Enums"]["action_status"] | null
+          action_taken_by?: string | null
+          action_timestamp?: string | null
           blockchain_tx_hash?: string | null
           created_at?: string | null
           email?: string
@@ -700,6 +736,12 @@ export type Database = {
       }
     }
     Enums: {
+      action_status:
+        | "received"
+        | "under_review"
+        | "in_progress"
+        | "resolved"
+        | "ignored"
       alert_severity: "low" | "medium" | "high" | "critical"
       alert_source: "satellite" | "iot_sensor" | "blockchain_report"
       app_role: "admin" | "moderator" | "user"
@@ -831,6 +873,13 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      action_status: [
+        "received",
+        "under_review",
+        "in_progress",
+        "resolved",
+        "ignored",
+      ],
       alert_severity: ["low", "medium", "high", "critical"],
       alert_source: ["satellite", "iot_sensor", "blockchain_report"],
       app_role: ["admin", "moderator", "user"],
