@@ -128,7 +128,7 @@ export default function AdminMap() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 h-full">
       <div>
         <h1 className="text-3xl font-bold mb-2">Forest Map</h1>
         <p className="text-muted-foreground">
@@ -136,15 +136,15 @@ export default function AdminMap() {
         </p>
       </div>
 
-      <Card className="p-6">
+      <Card className="p-6 h-[calc(100vh-12rem)]">
         {isLoading && (
-          <div className="flex items-center justify-center h-[600px]">
+          <div className="flex items-center justify-center h-full">
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
         )}
         <div 
           ref={mapContainer} 
-          className={`w-full h-[600px] rounded-lg ${isLoading ? 'hidden' : ''}`}
+          className={`w-full h-full rounded-lg ${isLoading ? 'hidden' : ''}`}
         />
       </Card>
 

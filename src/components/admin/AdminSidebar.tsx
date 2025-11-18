@@ -13,7 +13,8 @@ import {
   MapPin,
   Satellite,
   Users,
-  Activity
+  Activity,
+  Shield
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
@@ -21,6 +22,7 @@ import { useState } from 'react';
 
 const navigation = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+  { name: 'Admin Approvals', href: '/admin/approvals', icon: Shield },
   { name: 'Rangers', href: '/admin/rangers', icon: Users },
   { name: 'Field Reports', href: '/admin/field-reports', icon: FileText },
   { name: 'Tasks', href: '/admin/tasks', icon: Activity },

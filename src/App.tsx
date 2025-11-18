@@ -21,6 +21,7 @@ import KenyaDashboard from "./pages/admin/KenyaDashboard";
 import LiveSensorMap from "./pages/admin/LiveSensorMap";
 import SatelliteMonitoring from "./pages/admin/SatelliteMonitoring";
 import AdminForum from "./pages/admin/Forum";
+import AdminApprovals from "./pages/admin/AdminApprovals";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
             {/* Admin Routes */}
             <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
               <Route index element={<AdminDashboard />} />
+              <Route path="approvals" element={<AdminApprovals />} />
               <Route path="kenya-dashboard" element={<KenyaDashboard />} />
               <Route path="map" element={<AdminMap />} />
               <Route path="live-sensors" element={<LiveSensorMap />} />
