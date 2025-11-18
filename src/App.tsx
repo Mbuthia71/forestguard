@@ -10,7 +10,9 @@ import Auth from "./pages/Auth";
 import AdminAuth from "./pages/AdminAuth";
 import NotFound from "./pages/NotFound";
 import AdminLayout from "./components/admin/AdminLayout";
-import AdminDashboard from "./pages/admin/Dashboard";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import RangerDashboard from "./pages/ranger/RangerDashboard";
+import StakeholderDashboard from "./pages/stakeholder/StakeholderDashboard";
 import AdminMap from "./pages/admin/Map";
 import AdminAlerts from "./pages/admin/Alerts";
 import AdminReports from "./pages/admin/Reports";
@@ -32,17 +34,26 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/admin-auth" element={<AdminAuth />} />
+            
+            {/* Admin Routes */}
             <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
               <Route index element={<AdminDashboard />} />
               <Route path="kenya-dashboard" element={<KenyaDashboard />} />
               <Route path="map" element={<AdminMap />} />
               <Route path="live-sensors" element={<LiveSensorMap />} />
-              <Route path="satellite" element={<SatelliteMonitoring />} />
+              <Route path="satellite-monitoring" element={<SatelliteMonitoring />} />
               <Route path="alerts" element={<AdminAlerts />} />
               <Route path="reports" element={<AdminReports />} />
               <Route path="messages" element={<AdminMessages />} />
               <Route path="forum" element={<AdminForum />} />
             </Route>
+
+            {/* Ranger Routes */}
+            <Route path="/ranger" element={<RangerDashboard />} />
+
+            {/* Stakeholder Routes */}
+            <Route path="/stakeholder" element={<StakeholderDashboard />} />
+            
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
