@@ -49,6 +49,9 @@ export default function AdminMap() {
         style: 'mapbox://styles/mapbox/satellite-streets-v12',
         center: [36.0, -0.5],
         zoom: 6.5,
+        pitch: 60,
+        bearing: -17.6,
+        antialias: true,
       });
 
       mapRef.current = map;
@@ -57,6 +60,26 @@ export default function AdminMap() {
       map.addControl(new mapboxgl.FullscreenControl(), 'top-right');
 
       map.on('load', () => {
+        // Add 3D terrain
+        map.addSource('mapbox-dem', {
+          'type': 'raster-dem',
+          'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
+          'tileSize': 512,
+          'maxzoom': 14
+        });
+        map.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
+
+        // Add sky layer
+        map.addLayer({
+          'id': 'sky',
+          'type': 'sky',
+          'paint': {
+            'sky-type': 'atmosphere',
+            'sky-atmosphere-sun': [0.0, 0.0],
+            'sky-atmosphere-sun-intensity': 15
+          }
+        });
+
         // Add alert markers
         (alertsRes.data || []).forEach((alert: any) => {
           const el = document.createElement('div');
