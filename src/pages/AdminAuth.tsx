@@ -14,6 +14,8 @@ export default function AdminAuth() {
   const { isSupported, registerBiometric, loginWithBiometric } = useWebAuthn();
   const { refreshRole } = useAuth();
   const [loading, setLoading] = useState<"idle" | "signup" | "login">("idle");
+  const [displayName, setDisplayName] = useState("");
+  const [isSignupMode, setIsSignupMode] = useState(false);
 
   // Futuristic sound cues using WebAudio
   const playTone = (type: "success" | "error") => {
@@ -45,16 +47,48 @@ export default function AdminAuth() {
   const ADMIN_EMAIL = "admin@fg.local"; // pseudonymous identifier (no real email)
 
   const handleSignup = async () => {
+    if (!displayName.trim()) {
+      toast({ title: "Name required", description: "Please enter your display name.", variant: "destructive" });
+      return;
+    }
+    
     setLoading("signup");
     try {
-      // generate a random strong secret; not shown to user
-      const secret = crypto.getRandomValues(new Uint8Array(16)).reduce((s, b) => s + b.toString(16).padStart(2, "0"), "");
+      // First register biometric - this creates the auth user
       await registerBiometric(ADMIN_EMAIL);
+      
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("User not created");
+      
+      // Create profile with display name
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .insert({ id: user.id, display_name: displayName.trim() });
+      
+      if (profileError) throw profileError;
+      
+      // Create admin approval request
+      const { error: approvalError } = await supabase
+        .from("pending_admin_approvals")
+        .insert({ 
+          user_id: user.id, 
+          display_name: displayName.trim(),
+          status: 'pending'
+        });
+      
+      if (approvalError) throw approvalError;
+      
       playTone("success");
-      toast({ title: "Fingerprint enrolled", description: "Admin fingerprint registered successfully." });
+      toast({ 
+        title: "Registration submitted", 
+        description: "Your admin request is pending approval. You'll be able to login once approved." 
+      });
+      setIsSignupMode(false);
+      setDisplayName("");
     } catch (e: any) {
       playTone("error");
-      toast({ title: "Enrollment failed", description: e.message || "Could not register fingerprint.", variant: "destructive" });
+      toast({ title: "Registration failed", description: e.message || "Could not register.", variant: "destructive" });
     } finally {
       setLoading("idle");
     }
@@ -96,29 +130,78 @@ export default function AdminAuth() {
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.4 }}
-          className="relative mx-auto mb-8 h-32 w-32 rounded-full border border-primary/30 flex items-center justify-center"
+          className="relative mb-8"
         >
-          <motion.div
-            className="absolute inset-0 rounded-full"
-            animate={{ boxShadow: ["0 0 0 0 hsl(var(--primary)/0.2)", "0 0 30px 10px hsl(var(--primary)/0.25)", "0 0 0 0 hsl(var(--primary)/0.2)"] }}
-            transition={{ duration: 2.5, repeat: Infinity }}
-          />
-          <Fingerprint className="h-16 w-16 text-primary" />
+          <div className="w-32 h-32 mx-auto rounded-full border-4 border-primary/30 flex items-center justify-center bg-primary/5 shadow-md">
+            <Fingerprint className="h-16 w-16 text-primary animate-pulse" />
+          </div>
         </motion.div>
 
-        {!isSupported ? (
-          <p className="text-muted-foreground">Biometric authentication is not supported on this device or context. Use a secure browser over HTTPS.</p>
+        <p className="text-sm text-muted-foreground mb-6">
+          {isSupported ? "Touch your fingerprint sensor to authenticate" : "WebAuthn not supported on this device"}
+        </p>
+
+        {isSignupMode ? (
+          <div className="space-y-4">
+            <div className="space-y-2 text-left">
+              <label htmlFor="displayName" className="text-sm font-medium text-foreground">
+                Display Name
+              </label>
+              <input
+                id="displayName"
+                type="text"
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                placeholder="Enter your name"
+                className="w-full px-3 py-2 rounded-md border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                disabled={loading === "signup"}
+              />
+            </div>
+            <Button
+              onClick={handleSignup}
+              disabled={!isSupported || loading === "signup"}
+              className="w-full"
+            >
+              {loading === "signup" ? "Registering..." : "Register & Enroll Fingerprint"}
+            </Button>
+            <Button
+              onClick={() => {
+                setIsSignupMode(false);
+                setDisplayName("");
+              }}
+              variant="ghost"
+              className="w-full"
+              disabled={loading === "signup"}
+            >
+              Back to Login
+            </Button>
+          </div>
         ) : (
-          <div className="space-y-3">
-            <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90" onClick={handleLogin} disabled={loading !== "idle"}>
-              {loading === "login" ? "Authenticating..." : "Login with Fingerprint"}
+          <div className="flex flex-col gap-3">
+            <Button
+              onClick={handleLogin}
+              disabled={!isSupported || loading === "login"}
+              className="w-full"
+              size="lg"
+            >
+              {loading === "login" ? "Verifying..." : "Login with Fingerprint"}
             </Button>
-            <Button size="lg" variant="outline" className="w-full border-primary text-primary" onClick={handleSignup} disabled={loading !== "idle"}>
-              {loading === "signup" ? "Enrolling..." : "Sign up with Fingerprint"}
+            <Button
+              onClick={() => setIsSignupMode(true)}
+              variant="outline"
+              className="w-full"
+              size="lg"
+            >
+              New Admin? Register
             </Button>
-            <p className="text-xs text-muted-foreground pt-2">No emails. No passwords. Device biometrics only.</p>
           </div>
         )}
+
+        <div className="mt-6 pt-6 border-t border-border">
+          <p className="text-xs text-muted-foreground text-center">
+            Your biometric data is stored securely on this device and never sent to servers.
+          </p>
+        </div>
       </motion.article>
     </main>
   );
