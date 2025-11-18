@@ -20,6 +20,7 @@ interface Thread {
   profile?: {
     display_name: string | null;
   };
+  is_admin?: boolean;
 }
 
 interface Comment {
@@ -31,6 +32,7 @@ interface Comment {
   profile?: {
     display_name: string | null;
   };
+  is_admin?: boolean;
 }
 
 export default function AdminForum() {
@@ -58,17 +60,26 @@ export default function AdminForum() {
       return;
     }
 
-    // Fetch profiles for all creators
+    // Fetch profiles and roles for all creators
     const creatorIds = [...new Set(data?.map(t => t.created_by) || [])];
+    
     const { data: profiles } = await supabase
       .from("profiles")
       .select("id, display_name")
       .in("id", creatorIds);
 
+    const { data: roles } = await supabase
+      .from("user_roles")
+      .select("user_id, role")
+      .in("user_id", creatorIds);
+
     const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
+    const adminMap = new Map(roles?.filter(r => r.role === 'admin').map(r => [r.user_id, true]) || []);
+    
     const mapped = (data || []).map((t: any) => ({
       ...t,
       profile: profileMap.get(t.created_by),
+      is_admin: adminMap.get(t.created_by) || false,
     }));
     setThreads(mapped);
   };
@@ -85,17 +96,26 @@ export default function AdminForum() {
       return;
     }
 
-    // Fetch profiles for all commenters
+    // Fetch profiles and roles for all commenters
     const creatorIds = [...new Set(data?.map(c => c.created_by) || [])];
+    
     const { data: profiles } = await supabase
       .from("profiles")
       .select("id, display_name")
       .in("id", creatorIds);
 
+    const { data: roles } = await supabase
+      .from("user_roles")
+      .select("user_id, role")
+      .in("user_id", creatorIds);
+
     const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
+    const adminMap = new Map(roles?.filter(r => r.role === 'admin').map(r => [r.user_id, true]) || []);
+    
     const mapped = (data || []).map((c: any) => ({
       ...c,
       profile: profileMap.get(c.created_by),
+      is_admin: adminMap.get(c.created_by) || false,
     }));
     setComments((prev) => ({ ...prev, [threadId]: mapped }));
   };
@@ -219,8 +239,18 @@ export default function AdminForum() {
                 }`}
               >
                 <div className="font-medium">{thread.title}</div>
-                <div className="text-xs text-muted-foreground mt-1">
-                  By {thread.profile?.display_name || "Admin"} • {new Date(thread.updated_at).toLocaleDateString()}
+                <div className="flex items-center gap-2 mt-1">
+                  <span className="text-xs text-muted-foreground">
+                    {thread.profile?.display_name || "Forest Guardian"}
+                  </span>
+                  {thread.is_admin && (
+                    <span className="px-1.5 py-0.5 text-[10px] font-medium bg-primary/10 text-primary rounded-full">
+                      Admin
+                    </span>
+                  )}
+                  <span className="text-xs text-muted-foreground">
+                    • {new Date(thread.updated_at).toLocaleDateString()}
+                  </span>
                 </div>
               </button>
             ))}
@@ -256,9 +286,18 @@ export default function AdminForum() {
                   )}
                   {(comments[selectedThread] || []).map((comment) => (
                     <div key={comment.id} className="rounded-lg bg-card/60 border p-3">
-                      <div className="text-xs text-muted-foreground mb-1">
-                        {comment.profile?.display_name || "Admin"} •{" "}
-                        {new Date(comment.created_at).toLocaleString()}
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-xs font-medium text-muted-foreground">
+                          {comment.profile?.display_name || "Forest Guardian"}
+                        </span>
+                        {comment.is_admin && (
+                          <span className="px-1.5 py-0.5 text-[10px] font-medium bg-primary/10 text-primary rounded-full">
+                            Admin
+                          </span>
+                        )}
+                        <span className="text-xs text-muted-foreground">
+                          • {new Date(comment.created_at).toLocaleString()}
+                        </span>
                       </div>
                       <div className="text-sm">{comment.comment_text}</div>
                     </div>
