@@ -10,8 +10,9 @@ import RangerNavigation from "@/components/RangerNavigation";
 
 export default function RangerDashboard() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const [ranger, setRanger] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     assignedTasks: 0,
     completedToday: 0,
@@ -26,6 +27,8 @@ export default function RangerDashboard() {
 
   const fetchRangerData = async () => {
     if (!user) return;
+    
+    setLoading(true);
 
     // Get ranger profile
     const { data: rangerData } = await supabase
@@ -35,6 +38,7 @@ export default function RangerDashboard() {
       .maybeSingle();
 
     setRanger(rangerData);
+    setLoading(false);
 
     if (rangerData) {
       // Get stats
@@ -88,6 +92,35 @@ export default function RangerDashboard() {
       action: () => navigate('/ranger/map'),
     },
   ];
+
+  // Fallback UI for admin users without ranger profile
+  if (!loading && !ranger && isAdmin) {
+    return (
+      <div className="pb-20 lg:pt-20">
+        <div className="p-4 space-y-6 max-w-2xl mx-auto">
+          <Card className="p-8 text-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-amber-500/10 flex items-center justify-center">
+              <AlertTriangle className="w-8 h-8 text-amber-500" />
+            </div>
+            <h2 className="text-2xl font-bold mb-2">Admin Preview Mode</h2>
+            <p className="text-muted-foreground mb-6">
+              You're viewing the Ranger Dashboard as an admin without a ranger profile.
+              This is the interface rangers see when managing field operations.
+            </p>
+            <div className="space-y-2">
+              <Button onClick={() => navigate('/admin')} className="w-full">
+                Return to Admin Dashboard
+              </Button>
+              <Button onClick={() => navigate('/admin/rangers')} variant="outline" className="w-full">
+                Manage Rangers
+              </Button>
+            </div>
+          </Card>
+        </div>
+        <RangerNavigation />
+      </div>
+    );
+  }
 
   return (
     <div className="pb-20 lg:pt-20">
