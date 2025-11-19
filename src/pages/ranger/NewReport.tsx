@@ -173,18 +173,24 @@ export default function NewReport() {
   };
 
   return (
-    <div className="pb-20 lg:pt-20">
-      <div className="p-4 max-w-2xl mx-auto space-y-4">
-      <Button variant="ghost" onClick={() => navigate("/ranger")}>
-        <ArrowLeft className="w-4 h-4 mr-2" />
-        Back to Dashboard
-      </Button>
+    <div className="pb-24 lg:pt-20 min-h-screen bg-gradient-to-b from-background via-muted/5 to-background">
+      <div className="p-6 max-w-2xl mx-auto space-y-6">
+        <Button variant="ghost" size="lg" onClick={() => navigate("/ranger")} className="gap-2">
+          <ArrowLeft className="w-5 h-5" />
+          Back to Dashboard
+        </Button>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>New Field Report</CardTitle>
+      <Card className="border-border/50">
+        <CardHeader className="space-y-2">
+          <CardTitle className="text-2xl flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+              <Camera className="w-6 h-6 text-primary" />
+            </div>
+            New Field Report
+          </CardTitle>
+          <p className="text-sm text-muted-foreground">Document field observations and incidents</p>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-6">
           <div>
             <Label>Title</Label>
             <Input

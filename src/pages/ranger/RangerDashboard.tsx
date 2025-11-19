@@ -74,21 +74,21 @@ export default function RangerDashboard() {
       title: "New Report",
       description: "Log a field observation",
       icon: Camera,
-      color: "bg-green-500 hover:bg-green-600",
+      color: "bg-primary hover:bg-primary/90",
       action: () => navigate('/ranger/report/new'),
     },
     {
       title: "My Tasks",
       description: `${stats.assignedTasks} active`,
       icon: List,
-      color: "bg-blue-500 hover:bg-blue-600",
+      color: "bg-secondary hover:bg-secondary/90",
       action: () => navigate('/ranger/tasks'),
     },
     {
       title: "Map View",
       description: "See forest zones",
       icon: MapPin,
-      color: "bg-purple-500 hover:bg-purple-600",
+      color: "bg-accent hover:bg-accent/90",
       action: () => navigate('/ranger/map'),
     },
   ];
@@ -123,95 +123,116 @@ export default function RangerDashboard() {
   }
 
   return (
-    <div className="pb-20 lg:pt-20">
-      <div className="p-4 space-y-6 max-w-2xl mx-auto">
+    <div className="pb-24 lg:pt-20 min-h-screen bg-gradient-to-b from-background via-muted/5 to-background">
+      <div className="p-6 space-y-8 max-w-2xl mx-auto">
         {/* Header */}
-        <div className="text-center space-y-2">
-          <h1 className="text-3xl font-bold">🌲 Ranger Field Mode</h1>
-          <p className="text-muted-foreground">Welcome back, {ranger?.user_id || 'Ranger'}</p>
-          {!navigator.onLine && (
-            <Badge variant="secondary" className="mt-2">
-              📡 Offline Mode - Data will sync when online
-            </Badge>
+        <div className="text-center space-y-3 pt-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 mb-2">
+            <MapPin className="w-8 h-8 text-primary" />
+          </div>
+          <h1 className="text-4xl font-bold tracking-tight">
+            Field Operations
+          </h1>
+          {ranger && (
+            <p className="text-lg text-muted-foreground">
+              Welcome back, Ranger
+            </p>
           )}
         </div>
 
-      {/* Status Cards */}
-      <div className="grid grid-cols-3 gap-3">
-        <Card>
-          <CardContent className="pt-6 text-center">
-            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{stats.assignedTasks}</div>
-            <div className="text-xs text-muted-foreground mt-1">Active Tasks</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6 text-center">
-            <div className="text-2xl font-bold text-green-600 dark:text-green-400">{stats.completedToday}</div>
-            <div className="text-xs text-muted-foreground mt-1">Done Today</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6 text-center">
-            <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">{stats.pendingReports}</div>
-            <div className="text-xs text-muted-foreground mt-1">Pending</div>
-          </CardContent>
-        </Card>
-      </div>
+        {/* Status Cards */}
+        <div className="grid grid-cols-3 gap-4">
+          <Card className="text-center p-6 hover:shadow-lg hover:scale-105 transition-all duration-200 border-primary/20">
+            <div className="text-4xl font-bold text-primary mb-2">{stats.assignedTasks}</div>
+            <div className="text-sm font-medium text-muted-foreground">Active Tasks</div>
+          </Card>
+          <Card className="text-center p-6 hover:shadow-lg hover:scale-105 transition-all duration-200 border-primary/20">
+            <CheckCircle className="w-6 h-6 mx-auto mb-2 text-primary" />
+            <div className="text-3xl font-bold mb-2">{stats.completedToday}</div>
+            <div className="text-sm font-medium text-muted-foreground">Completed</div>
+          </Card>
+          <Card className="text-center p-6 hover:shadow-lg hover:scale-105 transition-all duration-200 border-primary/20">
+            <AlertTriangle className="w-6 h-6 mx-auto mb-2 text-accent" />
+            <div className="text-3xl font-bold mb-2">{stats.pendingReports}</div>
+            <div className="text-sm font-medium text-muted-foreground">Pending</div>
+          </Card>
+        </div>
 
-      {/* Quick Actions - Large Buttons */}
-      <div className="space-y-3">
-        {quickActions.map((action) => {
-          const Icon = action.icon;
-          return (
-            <Button
-              key={action.title}
+        {/* Quick Actions */}
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold px-1">Quick Actions</h2>
+          {quickActions.map((action, index) => (
+            <button
+              key={index}
               onClick={action.action}
-              className={`w-full h-24 text-lg ${action.color} text-white`}
-              size="lg"
+              className={`w-full group ${action.color} text-primary-foreground rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden`}
             >
-              <div className="flex items-center gap-4">
-                <Icon className="h-8 w-8" />
-                <div className="text-left">
-                  <div className="font-bold">{action.title}</div>
-                  <div className="text-sm opacity-90">{action.description}</div>
+              <div className="p-6 flex items-center gap-5">
+                <div className="w-16 h-16 rounded-xl bg-background/20 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <action.icon className="w-8 h-8" />
+                </div>
+                <div className="flex-1 text-left">
+                  <div className="text-xl font-bold mb-1">{action.title}</div>
+                  <div className="text-sm opacity-90 font-medium">{action.description}</div>
                 </div>
               </div>
-            </Button>
-          );
-        })}
-      </div>
+            </button>
+          ))}
+        </div>
 
-      {/* Recent Activity */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Recent Activity</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-            <CheckCircle className="h-5 w-5 text-green-500" />
-            <div className="flex-1">
-              <div className="text-sm font-medium">Task completed</div>
-              <div className="text-xs text-muted-foreground">Patrol Zone A - 2h ago</div>
+        {/* Recent Activity */}
+        <Card className="border-border/50">
+          <CardHeader>
+            <CardTitle className="text-xl flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+              Recent Activity
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {[
+                {
+                  action: "Completed patrol",
+                  location: "North Zone A",
+                  time: "2 hours ago",
+                  icon: CheckCircle,
+                  color: "bg-primary/10 text-primary",
+                },
+                {
+                  action: "Submitted report",
+                  location: "Central Trail",
+                  time: "5 hours ago",
+                  icon: Camera,
+                  color: "bg-secondary/10 text-secondary-foreground",
+                },
+                {
+                  action: "Updated task status",
+                  location: "East Boundary",
+                  time: "1 day ago",
+                  icon: AlertTriangle,
+                  color: "bg-accent/10 text-accent-foreground",
+                },
+              ].map((item, index) => (
+                <div
+                  key={index}
+                  className="flex items-start gap-4 p-4 rounded-xl hover:bg-muted/50 transition-all duration-200 border border-transparent hover:border-border"
+                >
+                  <div className={`w-10 h-10 rounded-xl ${item.color} flex items-center justify-center flex-shrink-0`}>
+                    <item.icon className="w-5 h-5" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold mb-1">{item.action}</p>
+                    <p className="text-sm text-muted-foreground flex items-center gap-1">
+                      <MapPin className="w-3 h-3" />
+                      {item.location}
+                    </p>
+                  </div>
+                  <span className="text-xs text-muted-foreground whitespace-nowrap">{item.time}</span>
+                </div>
+              ))}
             </div>
-          </div>
-          <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-            <AlertTriangle className="h-5 w-5 text-orange-500" />
-            <div className="flex-1">
-              <div className="text-sm font-medium">Report submitted</div>
-              <div className="text-xs text-muted-foreground">Possible logging - 5h ago</div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Offline Indicator */}
-      <div className="text-center text-xs text-muted-foreground">
-        {navigator.onLine ? (
-          <span className="text-green-600 dark:text-green-400">● Online</span>
-        ) : (
-          <span className="text-orange-600 dark:text-orange-400">● Offline - Data will sync when connected</span>
-        )}
-      </div>
+          </CardContent>
+        </Card>
       </div>
       <RangerNavigation />
     </div>
