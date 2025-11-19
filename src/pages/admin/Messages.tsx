@@ -55,18 +55,24 @@ export default function Messages() {
         .from("admin_messages")
         .select(`
           *,
-          profile:profiles!admin_messages_created_by_fkey(display_name)
+          profiles!admin_messages_created_by_fkey(display_name)
         `)
         .eq("channel", "general")
         .order("created_at", { ascending: true });
 
       if (error) {
         console.error("Error fetching messages:", error);
+        toast.error("Failed to load messages");
       } else if (data) {
-        setMessages(data as any);
+        const messagesWithProfiles = data.map((msg: any) => ({
+          ...msg,
+          profile: msg.profiles
+        }));
+        setMessages(messagesWithProfiles);
       }
     } catch (error) {
       console.error("Error in fetchMessages:", error);
+      toast.error("Failed to load messages");
     } finally {
       setLoading(false);
     }
