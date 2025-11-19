@@ -36,12 +36,18 @@ export default function AdminReports() {
   }, []);
 
   const fetchReports = async () => {
+    console.log('Fetching blockchain reports...');
     const { data, error } = await supabase
       .from('blockchain_reports')
       .select('*')
       .order('created_at', { ascending: false });
 
-    if (!error && data) {
+    console.log('Blockchain reports response:', { data, error });
+
+    if (error) {
+      console.error('Error fetching blockchain reports:', error);
+    } else if (data) {
+      console.log('Successfully fetched', data.length, 'reports');
       setReports(data);
     }
   };
