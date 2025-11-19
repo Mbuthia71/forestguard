@@ -26,6 +26,9 @@ import IncidentExplorer from "./pages/admin/IncidentExplorer";
 import BlockchainLookup from "./pages/admin/BlockchainLookup";
 import AdminForum from "./pages/admin/Forum";
 import AdminApprovals from "./pages/admin/AdminApprovals";
+import AdminRangers from "./pages/admin/Rangers";
+import AdminFieldReports from "./pages/admin/FieldReports";
+import AdminTasks from "./pages/admin/Tasks";
 import NewReport from "./pages/ranger/NewReport";
 import Tasks from "./pages/ranger/Tasks";
 import RangerMap from "./pages/ranger/RangerMap";
@@ -48,6 +51,9 @@ const App = () => (
             <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
               <Route index element={<AdminDashboard />} />
               <Route path="approvals" element={<AdminApprovals />} />
+              <Route path="rangers" element={<AdminRangers />} />
+              <Route path="field-reports" element={<AdminFieldReports />} />
+              <Route path="tasks" element={<AdminTasks />} />
               <Route path="kenya-dashboard" element={<KenyaDashboard />} />
               <Route path="map" element={<AdminMap />} />
               <Route path="live-sensors" element={<LiveSensorMap />} />
