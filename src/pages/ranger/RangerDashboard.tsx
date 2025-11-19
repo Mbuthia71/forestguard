@@ -32,7 +32,7 @@ export default function RangerDashboard() {
       .from('rangers')
       .select('*')
       .eq('user_id', user.id)
-      .single();
+      .maybeSingle();
 
     setRanger(rangerData);
 
