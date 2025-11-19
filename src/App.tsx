@@ -6,37 +6,50 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import ScrollToTop from "@/components/ScrollToTop";
+import { lazy, Suspense } from "react";
+
+// Eager load critical pages
 import Index from "./pages/Index";
-import HowItWorksPage from "./pages/HowItWorks";
-import TechnologyPage from "./pages/Technology";
 import Auth from "./pages/Auth";
 import AdminAuth from "./pages/AdminAuth";
 import NotFound from "./pages/NotFound";
-import AdminLayout from "./components/admin/AdminLayout";
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import RangerDashboard from "./pages/ranger/RangerDashboard";
-import StakeholderDashboard from "./pages/stakeholder/StakeholderDashboard";
-import AdminMap from "./pages/admin/Map";
-import AdminAlerts from "./pages/admin/Alerts";
-import AdminReports from "./pages/admin/Reports";
-import BlockchainTracking from "./pages/admin/BlockchainTracking";
-import AdminMessages from "./pages/admin/Messages";
-import KenyaDashboard from "./pages/admin/KenyaDashboard";
-import LiveSensorMap from "./pages/admin/LiveSensorMap";
-import SatelliteMonitoring from "./pages/admin/SatelliteMonitoring";
-import SatelliteIntelligence from "./pages/admin/SatelliteIntelligence";
-import IncidentExplorer from "./pages/admin/IncidentExplorer";
-import BlockchainLookup from "./pages/admin/BlockchainLookup";
-import AdminForum from "./pages/admin/Forum";
-import AdminApprovals from "./pages/admin/AdminApprovals";
-import AdminRangers from "./pages/admin/Rangers";
-import AdminFieldReports from "./pages/admin/FieldReports";
-import AdminTasks from "./pages/admin/Tasks";
-import NewReport from "./pages/ranger/NewReport";
-import Tasks from "./pages/ranger/Tasks";
-import RangerMap from "./pages/ranger/RangerMap";
+
+// Lazy load admin pages for better performance
+const HowItWorksPage = lazy(() => import("./pages/HowItWorks"));
+const TechnologyPage = lazy(() => import("./pages/Technology"));
+const AdminLayout = lazy(() => import("./components/admin/AdminLayout"));
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const RangerDashboard = lazy(() => import("./pages/ranger/RangerDashboard"));
+const StakeholderDashboard = lazy(() => import("./pages/stakeholder/StakeholderDashboard"));
+const AdminMap = lazy(() => import("./pages/admin/Map"));
+const AdminAlerts = lazy(() => import("./pages/admin/Alerts"));
+const AdminReports = lazy(() => import("./pages/admin/Reports"));
+const BlockchainTracking = lazy(() => import("./pages/admin/BlockchainTracking"));
+const AdminMessages = lazy(() => import("./pages/admin/Messages"));
+const KenyaDashboard = lazy(() => import("./pages/admin/KenyaDashboard"));
+const LiveSensorMap = lazy(() => import("./pages/admin/LiveSensorMap"));
+const SatelliteMonitoring = lazy(() => import("./pages/admin/SatelliteMonitoring"));
+const SatelliteIntelligence = lazy(() => import("./pages/admin/SatelliteIntelligence"));
+const IncidentExplorer = lazy(() => import("./pages/admin/IncidentExplorer"));
+const BlockchainLookup = lazy(() => import("./pages/admin/BlockchainLookup"));
+const AdminForum = lazy(() => import("./pages/admin/Forum"));
+const AdminApprovals = lazy(() => import("./pages/admin/AdminApprovals"));
+const AdminRangers = lazy(() => import("./pages/admin/Rangers"));
+const AdminFieldReports = lazy(() => import("./pages/admin/FieldReports"));
+const AdminTasks = lazy(() => import("./pages/admin/Tasks"));
+const NewReport = lazy(() => import("./pages/ranger/NewReport"));
+const Tasks = lazy(() => import("./pages/ranger/Tasks"));
+const RangerMap = lazy(() => import("./pages/ranger/RangerMap"));
 
 const queryClient = new QueryClient();
+
+const LoadingFallback = () => (
+  <div className="min-h-screen flex items-center justify-center bg-background">
+    <div className="animate-pulse">
+      <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+    </div>
+  </div>
+);
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -46,45 +59,47 @@ const App = () => (
       <BrowserRouter>
         <ScrollToTop />
         <AuthProvider>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/how-it-works" element={<HowItWorksPage />} />
-            <Route path="/technology" element={<TechnologyPage />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/admin-auth" element={<AdminAuth />} />
-            
-            {/* Admin Routes */}
-            <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
-              <Route index element={<AdminDashboard />} />
-              <Route path="approvals" element={<AdminApprovals />} />
-              <Route path="rangers" element={<AdminRangers />} />
-              <Route path="field-reports" element={<AdminFieldReports />} />
-              <Route path="tasks" element={<AdminTasks />} />
-              <Route path="kenya-dashboard" element={<KenyaDashboard />} />
-              <Route path="map" element={<AdminMap />} />
-              <Route path="live-sensors" element={<LiveSensorMap />} />
-              <Route path="satellite-monitoring" element={<SatelliteMonitoring />} />
-              <Route path="satellite-intelligence" element={<SatelliteIntelligence />} />
-              <Route path="incident-explorer" element={<IncidentExplorer />} />
-              <Route path="blockchain-lookup" element={<BlockchainLookup />} />
-              <Route path="alerts" element={<AdminAlerts />} />
-              <Route path="reports" element={<AdminReports />} />
-              <Route path="blockchain-tracking" element={<BlockchainTracking />} />
-              <Route path="messages" element={<AdminMessages />} />
-              <Route path="forum" element={<AdminForum />} />
-            </Route>
+          <Suspense fallback={<LoadingFallback />}>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/how-it-works" element={<HowItWorksPage />} />
+              <Route path="/technology" element={<TechnologyPage />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/admin-auth" element={<AdminAuth />} />
+              
+              {/* Admin Routes */}
+              <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
+                <Route index element={<AdminDashboard />} />
+                <Route path="approvals" element={<AdminApprovals />} />
+                <Route path="rangers" element={<AdminRangers />} />
+                <Route path="field-reports" element={<AdminFieldReports />} />
+                <Route path="tasks" element={<AdminTasks />} />
+                <Route path="kenya-dashboard" element={<KenyaDashboard />} />
+                <Route path="map" element={<AdminMap />} />
+                <Route path="live-sensors" element={<LiveSensorMap />} />
+                <Route path="satellite-monitoring" element={<SatelliteMonitoring />} />
+                <Route path="satellite-intelligence" element={<SatelliteIntelligence />} />
+                <Route path="incident-explorer" element={<IncidentExplorer />} />
+                <Route path="blockchain-lookup" element={<BlockchainLookup />} />
+                <Route path="alerts" element={<AdminAlerts />} />
+                <Route path="reports" element={<AdminReports />} />
+                <Route path="blockchain-tracking" element={<BlockchainTracking />} />
+                <Route path="messages" element={<AdminMessages />} />
+                <Route path="forum" element={<AdminForum />} />
+              </Route>
 
-            {/* Ranger Routes */}
-            <Route path="/ranger" element={<ProtectedRoute><RangerDashboard /></ProtectedRoute>} />
-            <Route path="/ranger/report/new" element={<ProtectedRoute><NewReport /></ProtectedRoute>} />
-            <Route path="/ranger/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
-            <Route path="/ranger/map" element={<ProtectedRoute><RangerMap /></ProtectedRoute>} />
+              {/* Ranger Routes */}
+              <Route path="/ranger" element={<ProtectedRoute><RangerDashboard /></ProtectedRoute>} />
+              <Route path="/ranger/report/new" element={<ProtectedRoute><NewReport /></ProtectedRoute>} />
+              <Route path="/ranger/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
+              <Route path="/ranger/map" element={<ProtectedRoute><RangerMap /></ProtectedRoute>} />
 
-            {/* Stakeholder Routes */}
-            <Route path="/stakeholder" element={<ProtectedRoute><StakeholderDashboard /></ProtectedRoute>} />
-            
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+              {/* Stakeholder Routes */}
+              <Route path="/stakeholder" element={<ProtectedRoute><StakeholderDashboard /></ProtectedRoute>} />
+
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>

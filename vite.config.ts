@@ -13,6 +13,27 @@ export default defineConfig(({ mode }) => ({
       'Permissions-Policy': 'publickey-credentials-create=(self), publickey-credentials-get=(self)',
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'ui-vendor': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-select'],
+          'utils': ['date-fns', 'clsx', 'tailwind-merge'],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 1000,
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: mode === 'production',
+      },
+    },
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-router-dom'],
+  },
   plugins: [
     react(), 
     mode === "development" && componentTagger(),

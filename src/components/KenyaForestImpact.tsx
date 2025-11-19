@@ -3,6 +3,7 @@ import { TreePine, Droplets, MapPin, AlertTriangle } from 'lucide-react';
 import forestWaterfall from '@/assets/forest-waterfall.jpg';
 import forestPath from '@/assets/forest-path.jpeg';
 import kenyaLandscape from '@/assets/kenya-landscape.jpg';
+import { OptimizedImage } from './OptimizedImage';
 
 const KenyaForestImpact = () => {
   const impacts = [
@@ -61,7 +62,7 @@ const KenyaForestImpact = () => {
           className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-16 rounded-2xl overflow-hidden"
         >
           <div className="relative h-64 md:h-80 overflow-hidden group">
-            <img 
+            <OptimizedImage 
               src={kenyaLandscape} 
               alt="Great Rift Valley Kenya" 
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
@@ -71,7 +72,7 @@ const KenyaForestImpact = () => {
             </div>
           </div>
           <div className="relative h-64 md:h-80 overflow-hidden group">
-            <img 
+            <OptimizedImage 
               src={forestWaterfall} 
               alt="Kakamega Forest Waterfall" 
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
@@ -81,7 +82,7 @@ const KenyaForestImpact = () => {
             </div>
           </div>
           <div className="relative h-64 md:h-80 overflow-hidden group">
-            <img 
+            <OptimizedImage 
               src={forestPath} 
               alt="Forest Conservation Path" 
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
