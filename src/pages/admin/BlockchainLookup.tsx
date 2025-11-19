@@ -23,11 +23,12 @@ export default function BlockchainLookup() {
   const [transaction, setTransaction] = useState<BlockchainTransaction | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Real Polygon transaction hashes for demo purposes
+  // Real Polygon transaction hashes from PolygonScan
   const realPolygonTxs = [
-    "0x8c8f6d50c6e0e1e1a8c0f3b7e1c3d5f6a2b4c8d9e1f2a3b4c5d6e7f8a9b0c1d2",
-    "0x5a7b9c1d3e5f7a9b1c3d5e7f9a1b3c5d7e9f1a3b5c7d9e1f3a5b7c9d1e3f5a7",
-    "0x2f4e6d8c0a2b4c6d8e0f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4"
+    "0x267c236e24b1345d06481fa1f2ef960665f3f845fafac10a84cbb46019acf9b7",
+    "0x96d3475f95ba18ab792cc25bc82100a42eb6bee238c16174baf8359bc5295f3a",
+    "0x2608b4311f3f9caec4679cccc6fc770473309e2f8c656c1beb3bf4641b01555c",
+    "0xe9fc886caf8c689142b20766ed31ec6eeac8764587cee8175110256ee946e966"
   ];
 
   const handleLookup = () => {
