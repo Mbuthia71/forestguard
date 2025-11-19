@@ -103,10 +103,20 @@ All colors MUST be HSL.
   }
   
   /* Responsive utilities for all screen sizes */
-  .safe-padding {
-    padding-left: max(1rem, env(safe-area-inset-left));
-    padding-right: max(1rem, env(safe-area-inset-right));
-  }
+.safe-padding {
+  padding-left: max(1rem, env(safe-area-inset-left));
+  padding-right: max(1rem, env(safe-area-inset-right));
+}
+
+/* Smooth card animations */
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px -8px hsl(var(--primary) / 0.15);
+}
   
   .max-screen {
     max-width: 100vw;
@@ -166,12 +176,26 @@ All colors MUST be HSL.
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     overflow-x: hidden;
     max-width: 100vw;
+    font-weight: 450;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
   
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-weight: 700;
+    font-weight: 750;
     letter-spacing: -0.02em;
+  }
+  
+  button, a, [role="button"] {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  button:hover:not(:disabled), a:hover, [role="button"]:hover {
+    transform: translateY(-1px);
+  }
+  
+  button:active:not(:disabled), a:active, [role="button"]:active {
+    transform: translateY(0);
   }
   
   img {
