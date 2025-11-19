@@ -23,7 +23,7 @@ export default function Auth() {
   const [displayName, setDisplayName] = useState('');
   const [loading, setLoading] = useState(false);
   const [useBiometric, setUseBiometric] = useState(false);
-  const { signIn, signUp, user } = useAuth();
+  const { signIn, signUp, user, userRole, isRanger, isAdmin } = useAuth();
   const { isSupported, registerBiometric, loginWithBiometric } = useWebAuthn();
   const navigate = useNavigate();
 
@@ -36,8 +36,19 @@ export default function Auth() {
   }, [isSupported]);
 
   // Redirect if already logged in
+  useEffect(() => {
+    if (user && userRole) {
+      if (isRanger) {
+        navigate('/ranger');
+      } else if (isAdmin) {
+        navigate('/admin');
+      } else {
+        navigate('/');
+      }
+    }
+  }, [user, userRole, isRanger, isAdmin, navigate]);
+
   if (user) {
-    navigate('/');
     return null;
   }
 
@@ -73,8 +84,8 @@ export default function Auth() {
             toast.error(error.message);
           }
         } else {
-          toast.success(isLogin ? 'Welcome back!' : 'Account created! Please check your email.');
-          navigate('/');
+          toast.success(isLogin ? 'Welcome back!' : 'Account created successfully!');
+          // Navigation will be handled by useEffect based on role
         }
       }
     } catch (error) {
