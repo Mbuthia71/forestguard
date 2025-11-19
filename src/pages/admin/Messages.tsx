@@ -53,22 +53,35 @@ export default function Messages() {
     try {
       const { data, error } = await supabase
         .from("admin_messages")
-        .select(`
-          *,
-          profiles!admin_messages_created_by_fkey(display_name)
-        `)
+        .select("*")
         .eq("channel", "general")
         .order("created_at", { ascending: true });
 
       if (error) {
         console.error("Error fetching messages:", error);
         toast.error("Failed to load messages");
-      } else if (data) {
-        const messagesWithProfiles = data.map((msg: any) => ({
+        return;
+      }
+
+      // Manually fetch profiles for all message creators
+      if (data && data.length > 0) {
+        const userIds = [...new Set(data.map(msg => msg.created_by))];
+        const { data: profilesData } = await supabase
+          .from("profiles")
+          .select("id, display_name")
+          .in("id", userIds);
+
+        const profilesMap = new Map(
+          profilesData?.map(p => [p.id, p]) || []
+        );
+
+        const messagesWithProfiles = data.map(msg => ({
           ...msg,
-          profile: msg.profiles
+          profile: profilesMap.get(msg.created_by)
         }));
         setMessages(messagesWithProfiles);
+      } else {
+        setMessages([]);
       }
     } catch (error) {
       console.error("Error in fetchMessages:", error);

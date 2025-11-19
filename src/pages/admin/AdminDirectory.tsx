@@ -29,15 +29,10 @@ export default function AdminDirectory() {
     setLoading(true);
     
     try {
-      // Get all users with admin role and their profiles in one query
+      // Get all users with admin role
       const { data: adminRoles, error: rolesError } = await supabase
         .from("user_roles")
-        .select(`
-          user_id,
-          role,
-          created_at,
-          profiles!user_roles_user_id_fkey(display_name)
-        `)
+        .select("user_id, role, created_at")
         .eq("role", "admin");
 
       if (rolesError) {
@@ -53,17 +48,28 @@ export default function AdminDirectory() {
         return;
       }
 
+      // Fetch profiles for all admins
+      const userIds = adminRoles.map(r => r.user_id);
+      const { data: profilesData } = await supabase
+        .from("profiles")
+        .select("id, display_name")
+        .in("id", userIds);
+
+      const profilesMap = new Map(
+        profilesData?.map(p => [p.id, p]) || []
+      );
+
       // Check master admin status for current user
       const { data: isMaster } = await supabase.rpc("is_master_admin", {
         _user_id: user?.id || "",
       });
 
       // Transform the data
-      const adminsData = adminRoles.map((adminRole: any) => ({
+      const adminsData = adminRoles.map((adminRole) => ({
         id: adminRole.user_id,
         email: adminRole.user_id === user?.id ? user?.email || "Admin User" : "hidden@privacy.com",
         created_at: adminRole.created_at || new Date().toISOString(),
-        display_name: adminRole.profiles?.display_name || "Admin User",
+        display_name: profilesMap.get(adminRole.user_id)?.display_name || "Admin User",
         role: adminRole.role,
         is_master: adminRole.user_id === user?.id && (isMaster || false),
       }));
@@ -71,6 +77,7 @@ export default function AdminDirectory() {
       setAdmins(adminsData);
     } catch (error) {
       console.error("Error in fetchAdmins:", error);
+      toast.error("Failed to load admins");
     } finally {
       setLoading(false);
     }

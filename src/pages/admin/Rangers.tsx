@@ -32,19 +32,38 @@ export default function Rangers() {
     try {
       const { data: rangersData, error } = await supabase
         .from("rangers")
-        .select(`
-          *,
-          profile:profiles!rangers_user_id_fkey(display_name)
-        `)
+        .select("*")
         .order("created_at", { ascending: false });
 
       if (error) {
         console.error("Error fetching rangers:", error);
-      } else if (rangersData) {
-        setRangers(rangersData as any);
+        setRangers([]);
+        return;
+      }
+
+      // Manually fetch profiles for all rangers
+      if (rangersData && rangersData.length > 0) {
+        const userIds = rangersData.map(r => r.user_id);
+        const { data: profilesData } = await supabase
+          .from("profiles")
+          .select("id, display_name")
+          .in("id", userIds);
+
+        const profilesMap = new Map(
+          profilesData?.map(p => [p.id, p]) || []
+        );
+
+        const rangersWithProfiles = rangersData.map(ranger => ({
+          ...ranger,
+          profile: profilesMap.get(ranger.user_id)
+        }));
+        setRangers(rangersWithProfiles);
+      } else {
+        setRangers([]);
       }
     } catch (error) {
       console.error("Error in fetchRangers:", error);
+      setRangers([]);
     } finally {
       setLoading(false);
     }
