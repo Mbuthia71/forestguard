@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { Shield, Lock, Mail, Fingerprint } from 'lucide-react';
 import { z } from 'zod';
+import { supabase } from '@/integrations/supabase/client';
 
 const authSchema = z.object({
   email: z.string().email('Invalid email address').max(255),
@@ -21,6 +22,10 @@ export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [employeeId, setEmployeeId] = useState('');
+  const [department, setDepartment] = useState('');
+  const [position, setPosition] = useState('Forest Ranger');
   const [loading, setLoading] = useState(false);
   const [useBiometric, setUseBiometric] = useState(false);
   const { signIn, signUp, user, userRole, isRanger, isAdmin } = useAuth();
@@ -70,9 +75,26 @@ export default function Auth() {
         if (isLogin) {
           ({ error } = await signIn(email, password));
         } else {
-          // Pass display_name as metadata during signup
-          const { error: signUpError } = await signUp(email, password, { display_name: displayName });
+          // Pass display_name and phone as metadata during signup
+          const { error: signUpError } = await signUp(email, password, { 
+            display_name: displayName,
+            phone: phone || null
+          });
           error = signUpError;
+          
+          // Update ranger employment details after successful signup
+          if (!error) {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+              await supabase.from('rangers').update({
+                phone: phone || null,
+                employee_id: employeeId || null,
+                department: department || null,
+                position: position || 'Forest Ranger',
+                place_of_employment: 'Kenya Forest Service'
+              }).eq('user_id', user.id);
+            }
+          }
         }
 
         if (error) {
@@ -158,19 +180,73 @@ export default function Auth() {
             </div>
 
             {!isLogin && (
-              <div className="space-y-2">
-                <Label htmlFor="displayName">Display Name</Label>
-                <Input
-                  id="displayName"
-                  type="text"
-                  placeholder="Your Name"
-                  value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
-                  required
-                  maxLength={100}
-                  className="bg-background/50"
-                />
-              </div>
+              <>
+                <div className="space-y-2">
+                  <Label htmlFor="displayName">Full Name *</Label>
+                  <Input
+                    id="displayName"
+                    type="text"
+                    placeholder="John Kamau"
+                    value={displayName}
+                    onChange={(e) => setDisplayName(e.target.value)}
+                    required
+                    maxLength={100}
+                    className="bg-background/50"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Phone Number</Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    placeholder="+254 712 345 678"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    maxLength={20}
+                    className="bg-background/50"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="employeeId">Employee ID</Label>
+                  <Input
+                    id="employeeId"
+                    type="text"
+                    placeholder="KFS-2024-001"
+                    value={employeeId}
+                    onChange={(e) => setEmployeeId(e.target.value)}
+                    maxLength={50}
+                    className="bg-background/50"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="department">Department</Label>
+                  <Input
+                    id="department"
+                    type="text"
+                    placeholder="Nairobi Division"
+                    value={department}
+                    onChange={(e) => setDepartment(e.target.value)}
+                    maxLength={100}
+                    className="bg-background/50"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="position">Position</Label>
+                  <Input
+                    id="position"
+                    type="text"
+                    placeholder="Forest Ranger"
+                    value={position}
+                    onChange={(e) => setPosition(e.target.value)}
+                    maxLength={100}
+                    className="bg-background/50"
+                  />
+                </div>
+              </>
             )}
 
             <div className="space-y-2">

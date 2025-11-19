@@ -522,8 +522,12 @@ export type Database = {
         Row: {
           assigned_zones: string[] | null
           created_at: string | null
+          department: string | null
+          employee_id: string | null
           id: string
           phone: string | null
+          place_of_employment: string | null
+          position: string | null
           status: string | null
           updated_at: string | null
           user_id: string
@@ -531,8 +535,12 @@ export type Database = {
         Insert: {
           assigned_zones?: string[] | null
           created_at?: string | null
+          department?: string | null
+          employee_id?: string | null
           id?: string
           phone?: string | null
+          place_of_employment?: string | null
+          position?: string | null
           status?: string | null
           updated_at?: string | null
           user_id: string
@@ -540,8 +548,12 @@ export type Database = {
         Update: {
           assigned_zones?: string[] | null
           created_at?: string | null
+          department?: string | null
+          employee_id?: string | null
           id?: string
           phone?: string | null
+          place_of_employment?: string | null
+          position?: string | null
           status?: string | null
           updated_at?: string | null
           user_id?: string
