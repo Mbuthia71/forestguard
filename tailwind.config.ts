@@ -62,10 +62,10 @@ export default {
           mid: "hsl(var(--forest-mid))",
           light: "hsl(var(--forest-light))",
         },
-        lime: {
-          neon: "hsl(var(--lime-neon))",
-          bright: "hsl(var(--lime-bright))",
-          glow: "hsl(var(--lime-glow))",
+        kenya: {
+          cream: "hsl(var(--kenya-cream))",
+          red: "hsl(var(--kenya-red))",
+          green: "hsl(var(--kenya-green))",
         },
       },
       borderRadius: {
@@ -91,8 +91,8 @@ export default {
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
         "glow-pulse": {
-          "0%, 100%": { filter: "drop-shadow(0 0 10px hsl(84 100% 70% / 0.5))" },
-          "50%": { filter: "drop-shadow(0 0 20px hsl(84 100% 70% / 0.8))" },
+          "0%, 100%": { filter: "drop-shadow(0 0 10px hsl(150 45% 40% / 0.3))" },
+          "50%": { filter: "drop-shadow(0 0 20px hsl(150 45% 40% / 0.5))" },
         },
         "float": {
           "0%, 100%": { transform: "translateY(0px)" },
