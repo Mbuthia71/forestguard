@@ -68,6 +68,11 @@ const Navigation = () => {
                 {link.label}
               </a>
             ))}
+            <Link to="/auth">
+              <Button variant="outline" className="border-primary text-primary">
+                Ranger Login
+              </Button>
+            </Link>
             <Link to={isAdmin ? "/admin" : "/admin-auth"}>
               <Button variant="outline" className="border-primary text-primary">
                 <ShieldCheck className="mr-2 h-4 w-4" /> {isAdmin ? 'Admin' : 'Admin Login'}
@@ -103,6 +108,11 @@ const Navigation = () => {
                   {link.label}
                 </a>
               ))}
+              <Link to="/auth" onClick={() => setIsMobileMenuOpen(false)}>
+                <Button variant="outline" className="border-primary text-primary w-full">
+                  Ranger Login
+                </Button>
+              </Link>
               <Link to={isAdmin ? "/admin" : "/admin-auth"} onClick={() => setIsMobileMenuOpen(false)}>
                 <Button variant="outline" className="border-primary text-primary w-full">
                   <ShieldCheck className="mr-2 h-4 w-4" /> {isAdmin ? 'Admin' : 'Admin Login'}

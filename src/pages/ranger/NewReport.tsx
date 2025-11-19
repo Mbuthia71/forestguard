@@ -10,6 +10,7 @@ import { Camera, MapPin, ArrowLeft, X, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import RangerNavigation from "@/components/RangerNavigation";
 
 export default function NewReport() {
   const navigate = useNavigate();
@@ -172,7 +173,8 @@ export default function NewReport() {
   };
 
   return (
-    <div className="p-4 max-w-2xl mx-auto space-y-4">
+    <div className="pb-20 lg:pt-20">
+      <div className="p-4 max-w-2xl mx-auto space-y-4">
       <Button variant="ghost" onClick={() => navigate("/ranger")}>
         <ArrowLeft className="w-4 h-4 mr-2" />
         Back to Dashboard
@@ -319,6 +321,8 @@ export default function NewReport() {
           </Button>
         </CardContent>
       </Card>
+      </div>
+      <RangerNavigation />
     </div>
   );
 }
