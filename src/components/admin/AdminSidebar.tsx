@@ -43,8 +43,16 @@ const navigation = [
 
 export default function AdminSidebar() {
   const location = useLocation();
-  const { signOut } = useAuth();
+  const { signOut, isMasterAdmin } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
+  
+  // Filter navigation based on master admin status
+  const filteredNavigation = navigation.filter(item => {
+    if (item.href === '/admin/approvals') {
+      return isMasterAdmin;
+    }
+    return true;
+  });
 
   return (
     <>
@@ -79,7 +87,7 @@ export default function AdminSidebar() {
 
         {/* Navigation */}
         <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-          {navigation.map((item) => {
+          {filteredNavigation.map((item) => {
             const isActive = location.pathname === item.href;
             return (
               <Link
