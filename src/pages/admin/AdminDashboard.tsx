@@ -185,32 +185,6 @@ export default function AdminDashboard() {
           );
         })}
       </div>
-
-      {/* Quick Actions */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
-          <CardDescription>Common administrative tasks</CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-wrap gap-3">
-          <Button onClick={() => navigate('/admin/rangers/create')}>
-            <Users className="mr-2 h-4 w-4" />
-            Create Ranger Account
-          </Button>
-          <Button variant="outline" onClick={() => navigate('/admin/tasks/create')}>
-            <Activity className="mr-2 h-4 w-4" />
-            Assign New Task
-          </Button>
-          <Button variant="outline" onClick={() => navigate('/admin/reports/generate')}>
-            <FileText className="mr-2 h-4 w-4" />
-            Generate Report
-          </Button>
-          <Button variant="outline" onClick={() => navigate('/admin/map')}>
-            <MapPin className="mr-2 h-4 w-4" />
-            View Full Map
-          </Button>
-        </CardContent>
-      </Card>
     </div>
   );
 }
