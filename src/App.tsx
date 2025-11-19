@@ -23,6 +23,9 @@ import LiveSensorMap from "./pages/admin/LiveSensorMap";
 import SatelliteMonitoring from "./pages/admin/SatelliteMonitoring";
 import AdminForum from "./pages/admin/Forum";
 import AdminApprovals from "./pages/admin/AdminApprovals";
+import NewReport from "./pages/ranger/NewReport";
+import Tasks from "./pages/ranger/Tasks";
+import RangerMap from "./pages/ranger/RangerMap";
 
 const queryClient = new QueryClient();
 
@@ -54,6 +57,9 @@ const App = () => (
 
             {/* Ranger Routes */}
             <Route path="/ranger" element={<RangerDashboard />} />
+            <Route path="/ranger/report/new" element={<NewReport />} />
+            <Route path="/ranger/tasks" element={<Tasks />} />
+            <Route path="/ranger/map" element={<RangerMap />} />
 
             {/* Stakeholder Routes */}
             <Route path="/stakeholder" element={<StakeholderDashboard />} />
