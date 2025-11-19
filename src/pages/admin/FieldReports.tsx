@@ -7,6 +7,7 @@ import { FileText, MapPin, Calendar, User, Download } from "lucide-react";
 import { format } from "date-fns";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { toast } from "sonner";
 
 interface FieldReport {
   id: string;
@@ -42,11 +43,11 @@ export default function FieldReports() {
         .from("field_reports")
         .select(`
           *,
-          ranger:rangers(
+          rangers!field_reports_ranger_id_fkey(
             id,
             user_id,
             employee_id,
-            profile:profiles(display_name)
+            profiles!rangers_user_id_fkey(display_name)
           )
         `)
         .order("created_at", { ascending: false });
@@ -59,8 +60,17 @@ export default function FieldReports() {
 
       if (error) {
         console.error("Error fetching reports:", error);
+        toast.error("Failed to load reports");
       } else if (data) {
-        setReports(data as any);
+        // Transform to match expected structure
+        const transformedData = data.map((report: any) => ({
+          ...report,
+          ranger: {
+            ...report.rangers,
+            profile: report.rangers?.profiles
+          }
+        }));
+        setReports(transformedData);
       }
     } catch (error) {
       console.error("Error in fetchReports:", error);

@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Shield, Mail, Clock, Crown } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { formatDistanceToNow } from "date-fns";
+import { toast } from "sonner";
 
 interface Admin {
   id: string;
@@ -28,14 +29,20 @@ export default function AdminDirectory() {
     setLoading(true);
     
     try {
-      // Get all users with admin role
+      // Get all users with admin role and their profiles in one query
       const { data: adminRoles, error: rolesError } = await supabase
         .from("user_roles")
-        .select("user_id, role, created_at")
+        .select(`
+          user_id,
+          role,
+          created_at,
+          profiles!user_roles_user_id_fkey(display_name)
+        `)
         .eq("role", "admin");
 
       if (rolesError) {
         console.error("Error fetching admin roles:", rolesError);
+        toast.error("Failed to load admins");
         setLoading(false);
         return;
       }
@@ -46,36 +53,22 @@ export default function AdminDirectory() {
         return;
       }
 
-      // Get user details for each admin
-      const adminPromises = adminRoles.map(async (adminRole) => {
-        try {
-          const { data: profile } = await supabase
-            .from("profiles")
-            .select("display_name")
-            .eq("id", adminRole.user_id)
-            .maybeSingle();
-
-          // Check if they're master admin
-          const { data: isMaster } = await supabase.rpc("is_master_admin", {
-            _user_id: adminRole.user_id,
-          });
-
-          return {
-            id: adminRole.user_id,
-            email: "Admin User",
-            created_at: adminRole.created_at || new Date().toISOString(),
-            display_name: profile?.display_name || "Admin User",
-            role: adminRole.role,
-            is_master: isMaster || false,
-          };
-        } catch (error) {
-          console.error("Error processing admin:", error);
-          return null;
-        }
+      // Check master admin status for current user
+      const { data: isMaster } = await supabase.rpc("is_master_admin", {
+        _user_id: user?.id || "",
       });
 
-      const adminsData = await Promise.all(adminPromises);
-      setAdmins(adminsData.filter((a) => a !== null) as Admin[]);
+      // Transform the data
+      const adminsData = adminRoles.map((adminRole: any) => ({
+        id: adminRole.user_id,
+        email: adminRole.user_id === user?.id ? user?.email || "Admin User" : "hidden@privacy.com",
+        created_at: adminRole.created_at || new Date().toISOString(),
+        display_name: adminRole.profiles?.display_name || "Admin User",
+        role: adminRole.role,
+        is_master: adminRole.user_id === user?.id && (isMaster || false),
+      }));
+
+      setAdmins(adminsData);
     } catch (error) {
       console.error("Error in fetchAdmins:", error);
     } finally {
