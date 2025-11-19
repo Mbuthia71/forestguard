@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Play } from "lucide-react";
 import forestGuardLogo from "@/assets/forestguard-logo.png";
-import forestRiver from "@/assets/forest-river.jpg";
-import forestStream from "@/assets/forest-stream.jpg";
-import forestCenote from "@/assets/forest-cenote.jpg";
+import kenyaLandscape from "@/assets/kenya-landscape.jpg";
+import forestWaterfall from "@/assets/forest-waterfall.jpg";
+import forestPath from "@/assets/forest-path.jpeg";
 import { motion } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
@@ -11,13 +11,13 @@ import { useNavigate } from "react-router-dom";
 const Hero = () => {
   const { user, isAdmin } = useAuth();
   const navigate = useNavigate();
-  const images = [forestRiver, forestStream, forestCenote];
+  const images = [kenyaLandscape, forestWaterfall, forestPath];
   const randomImage = images[Math.floor(Math.random() * images.length)];
 
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-forest-deep/80 via-forest-deep/60 to-background z-0"></div>
-      <img src={randomImage} alt="Forest" className="absolute inset-0 w-full h-full object-cover opacity-20" />
+      <div className="absolute inset-0 bg-gradient-to-b from-forest-deep/70 via-background/80 to-background z-0"></div>
+      <img src={randomImage} alt="Kenyan Forest" className="absolute inset-0 w-full h-full object-cover opacity-40" />
 
       <div className="relative z-10 container mx-auto px-4 text-center">
         <motion.div

@@ -1,5 +1,8 @@
 import { motion } from 'framer-motion';
 import { TreePine, Droplets, MapPin, AlertTriangle } from 'lucide-react';
+import forestWaterfall from '@/assets/forest-waterfall.jpg';
+import forestPath from '@/assets/forest-path.jpeg';
+import kenyaLandscape from '@/assets/kenya-landscape.jpg';
 
 const KenyaForestImpact = () => {
   const impacts = [
@@ -34,7 +37,7 @@ const KenyaForestImpact = () => {
   ];
 
   return (
-    <section id="kenya-impact" className="py-20 px-4 bg-gradient-to-b from-background to-background/50">
+    <section id="kenya-impact" className="py-20 px-4 bg-gradient-to-b from-kenya-cream via-background to-kenya-cream">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -45,12 +48,51 @@ const KenyaForestImpact = () => {
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
             Kenya Forest <span className="text-primary">Impact</span>
           </h2>
-          <p className="text-xl text-foreground/70 max-w-3xl mx-auto">
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Protecting Kenya's vital forest ecosystems with cutting-edge technology
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Beautiful Image Gallery */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-16 rounded-2xl overflow-hidden"
+        >
+          <div className="relative h-64 md:h-80 overflow-hidden group">
+            <img 
+              src={kenyaLandscape} 
+              alt="Great Rift Valley Kenya" 
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-forest-deep/80 to-transparent flex items-end p-4">
+              <p className="text-white font-semibold">Great Rift Valley Forests</p>
+            </div>
+          </div>
+          <div className="relative h-64 md:h-80 overflow-hidden group">
+            <img 
+              src={forestWaterfall} 
+              alt="Kakamega Forest Waterfall" 
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-forest-deep/80 to-transparent flex items-end p-4">
+              <p className="text-white font-semibold">Kakamega Rainforest</p>
+            </div>
+          </div>
+          <div className="relative h-64 md:h-80 overflow-hidden group">
+            <img 
+              src={forestPath} 
+              alt="Forest Conservation Path" 
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-forest-deep/80 to-transparent flex items-end p-4">
+              <p className="text-white font-semibold">Protected Forest Trails</p>
+            </div>
+          </div>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {impacts.map((impact, index) => (
             <motion.div
               key={index}
@@ -87,7 +129,7 @@ const KenyaForestImpact = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mt-12 p-8 bg-primary/10 border border-primary/20 rounded-2xl"
+          className="mt-12 p-8 bg-card/50 border border-primary/20 rounded-2xl backdrop-blur-sm"
         >
           <h3 className="text-2xl font-bold text-foreground mb-4">Key Kenyan Forests</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-foreground/80">
