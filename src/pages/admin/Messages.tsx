@@ -53,18 +53,17 @@ export default function Messages() {
     try {
       const { data, error } = await supabase
         .from("admin_messages")
-        .select("*, profiles:created_by(display_name)")
+        .select(`
+          *,
+          profile:profiles!admin_messages_created_by_fkey(display_name)
+        `)
         .eq("channel", "general")
         .order("created_at", { ascending: true });
 
       if (error) {
         console.error("Error fetching messages:", error);
       } else if (data) {
-        const mapped = data.map((m: any) => ({
-          ...m,
-          profile: m.profiles,
-        }));
-        setMessages(mapped);
+        setMessages(data as any);
       }
     } catch (error) {
       console.error("Error in fetchMessages:", error);

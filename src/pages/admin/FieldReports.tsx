@@ -3,8 +3,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { FileText, MapPin, Calendar, User } from "lucide-react";
+import { FileText, MapPin, Calendar, User, Download } from "lucide-react";
 import { format } from "date-fns";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 interface FieldReport {
   id: string;
@@ -35,26 +37,36 @@ export default function FieldReports() {
 
   const fetchReports = async () => {
     setLoading(true);
-    let query = supabase
-      .from("field_reports")
-      .select(`
-        *,
-        ranger:rangers!inner(
-          profile:profiles!inner(display_name)
-        )
-      `)
-      .order("created_at", { ascending: false});
+    try {
+      let query = supabase
+        .from("field_reports")
+        .select(`
+          *,
+          ranger:rangers(
+            id,
+            user_id,
+            employee_id,
+            profile:profiles(display_name)
+          )
+        `)
+        .order("created_at", { ascending: false });
 
-    if (filter !== "all") {
-      query = query.eq("status", filter);
+      if (filter !== "all") {
+        query = query.eq("status", filter);
+      }
+
+      const { data, error } = await query;
+
+      if (error) {
+        console.error("Error fetching reports:", error);
+      } else if (data) {
+        setReports(data as any);
+      }
+    } catch (error) {
+      console.error("Error in fetchReports:", error);
+    } finally {
+      setLoading(false);
     }
-
-    const { data, error } = await query;
-
-    if (!error && data) {
-      setReports(data as any);
-    }
-    setLoading(false);
   };
 
   const getSeverityColor = (severity: string) => {
@@ -66,6 +78,37 @@ export default function FieldReports() {
       default:
         return "secondary";
     }
+  };
+
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    
+    doc.setFontSize(18);
+    doc.text("Field Reports", 14, 22);
+    
+    doc.setFontSize(11);
+    doc.text(`Generated: ${format(new Date(), "MMM d, yyyy HH:mm")}`, 14, 30);
+    doc.text(`Filter: ${filter}`, 14, 36);
+    
+    const tableData = reports.map(report => [
+      report.title,
+      report.ranger?.profile?.display_name || "Unknown",
+      report.report_type,
+      report.severity,
+      report.status,
+      `${report.latitude.toFixed(4)}, ${report.longitude.toFixed(4)}`,
+      format(new Date(report.created_at), "MMM d, yyyy")
+    ]);
+    
+    autoTable(doc, {
+      startY: 42,
+      head: [["Title", "Ranger", "Type", "Severity", "Status", "Location", "Date"]],
+      body: tableData,
+      styles: { fontSize: 8 },
+      headStyles: { fillColor: [34, 197, 94] }
+    });
+    
+    doc.save(`field-reports-${format(new Date(), "yyyy-MM-dd")}.pdf`);
   };
 
   return (
@@ -87,6 +130,15 @@ export default function FieldReports() {
               {status}
             </Button>
           ))}
+          <Button
+            variant="outline"
+            onClick={exportToPDF}
+            size="sm"
+            disabled={reports.length === 0}
+          >
+            <Download className="w-4 h-4 mr-2" />
+            Export PDF
+          </Button>
         </div>
       </div>
 
