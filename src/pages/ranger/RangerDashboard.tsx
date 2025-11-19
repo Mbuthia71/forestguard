@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Camera, MapPin, CheckCircle, AlertTriangle, List } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import RangerNavigation from "@/components/RangerNavigation";
 
 export default function RangerDashboard() {
   const navigate = useNavigate();
@@ -88,12 +90,18 @@ export default function RangerDashboard() {
   ];
 
   return (
-    <div className="p-4 space-y-6 max-w-2xl mx-auto">
-      {/* Header */}
-      <div className="text-center">
-        <h1 className="text-3xl font-bold mb-2">Ranger Field Mode</h1>
-        <p className="text-muted-foreground">Welcome back, {ranger?.user_id || 'Ranger'}</p>
-      </div>
+    <div className="pb-20 lg:pt-20">
+      <div className="p-4 space-y-6 max-w-2xl mx-auto">
+        {/* Header */}
+        <div className="text-center space-y-2">
+          <h1 className="text-3xl font-bold">🌲 Ranger Field Mode</h1>
+          <p className="text-muted-foreground">Welcome back, {ranger?.user_id || 'Ranger'}</p>
+          {!navigator.onLine && (
+            <Badge variant="secondary" className="mt-2">
+              📡 Offline Mode - Data will sync when online
+            </Badge>
+          )}
+        </div>
 
       {/* Status Cards */}
       <div className="grid grid-cols-3 gap-3">
@@ -171,6 +179,8 @@ export default function RangerDashboard() {
           <span className="text-orange-600 dark:text-orange-400">● Offline - Data will sync when connected</span>
         )}
       </div>
+      </div>
+      <RangerNavigation />
     </div>
   );
 }

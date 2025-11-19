@@ -41,6 +41,7 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/auth" element={<Auth />} />
             <Route path="/admin-auth" element={<AdminAuth />} />
             
             {/* Admin Routes */}
@@ -62,13 +63,13 @@ const App = () => (
             </Route>
 
             {/* Ranger Routes */}
-            <Route path="/ranger" element={<RangerDashboard />} />
-            <Route path="/ranger/report/new" element={<NewReport />} />
-            <Route path="/ranger/tasks" element={<Tasks />} />
-            <Route path="/ranger/map" element={<RangerMap />} />
+            <Route path="/ranger" element={<ProtectedRoute><RangerDashboard /></ProtectedRoute>} />
+            <Route path="/ranger/report/new" element={<ProtectedRoute><NewReport /></ProtectedRoute>} />
+            <Route path="/ranger/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
+            <Route path="/ranger/map" element={<ProtectedRoute><RangerMap /></ProtectedRoute>} />
 
             {/* Stakeholder Routes */}
-            <Route path="/stakeholder" element={<StakeholderDashboard />} />
+            <Route path="/stakeholder" element={<ProtectedRoute><StakeholderDashboard /></ProtectedRoute>} />
             
             <Route path="*" element={<NotFound />} />
           </Routes>

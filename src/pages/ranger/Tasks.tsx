@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import RangerNavigation from "@/components/RangerNavigation";
 
 interface Task {
   id: string;
@@ -88,7 +89,8 @@ export default function Tasks() {
   };
 
   return (
-    <div className="p-4 max-w-2xl mx-auto space-y-4">
+    <div className="pb-20 lg:pt-20">
+      <div className="p-4 max-w-2xl mx-auto space-y-4">
       <Button variant="ghost" onClick={() => navigate("/ranger")}>
         <ArrowLeft className="w-4 h-4 mr-2" />
         Back to Dashboard
@@ -148,6 +150,8 @@ export default function Tasks() {
           )}
         </CardContent>
       </Card>
+      </div>
+      <RangerNavigation />
     </div>
   );
 }
