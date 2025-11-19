@@ -13,7 +13,7 @@ interface AuthContextType {
   isMasterAdmin: boolean;
   userRole: 'admin' | 'ranger' | 'stakeholder' | null;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
-  signUp: (email: string, password: string, metadata?: { display_name?: string }) => Promise<{ error: Error | null }>;
+  signUp: (email: string, password: string, metadata?: { display_name?: string; phone?: string }) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
   refreshRole: () => Promise<void>;
 }
@@ -132,7 +132,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const signUp = async (email: string, password: string, metadata?: { display_name?: string }) => {
+  const signUp = async (email: string, password: string, metadata?: { display_name?: string; phone?: string }) => {
     try {
       const redirectUrl = `${window.location.origin}/`;
       const { error } = await supabase.auth.signUp({
