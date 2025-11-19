@@ -59,32 +59,73 @@ export default function Tasks() {
   const fetchData = async () => {
     setLoading(true);
 
-    const [tasksRes, rangersRes] = await Promise.all([
-      supabase
+    try {
+      // Fetch tasks with ranger info
+      const { data: tasksData, error: tasksError } = await supabase
         .from("ranger_tasks")
-        .select(`
-          *,
-          ranger:rangers!ranger_tasks_assigned_to_fkey(
-            profile:profiles!inner(display_name)
-          )
-        `)
-        .order("created_at", { ascending: false }),
-      supabase
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      console.log("Tasks data:", tasksData, "Error:", tasksError);
+
+      if (tasksData) {
+        // Fetch ranger profiles separately
+        const rangerIds = [...new Set(tasksData.map(t => t.assigned_to).filter(Boolean))];
+        if (rangerIds.length > 0) {
+          const { data: rangersData } = await supabase
+            .from("rangers")
+            .select("id, user_id")
+            .in("id", rangerIds);
+
+          if (rangersData) {
+            const userIds = rangersData.map(r => r.user_id);
+            const { data: profilesData } = await supabase
+              .from("profiles")
+              .select("id, display_name")
+              .in("id", userIds);
+
+            const profilesMap = new Map(profilesData?.map(p => [p.id, p]) || []);
+            const rangersMap = new Map(
+              rangersData.map(r => [r.id, { ...r, profile: profilesMap.get(r.user_id) }])
+            );
+
+            const tasksWithRangers = tasksData.map(task => ({
+              ...task,
+              ranger: task.assigned_to ? rangersMap.get(task.assigned_to) : null
+            }));
+            setTasks(tasksWithRangers as any);
+          }
+        } else {
+          setTasks(tasksData as any);
+        }
+      }
+
+      // Fetch active rangers
+      const { data: activeRangers, error: rangersError } = await supabase
         .from("rangers")
-        .select("id, profiles:user_id(display_name)")
-        .eq("status", "active"),
-    ]);
+        .select("id, user_id")
+        .eq("status", "active");
 
-    if (!tasksRes.error && tasksRes.data) {
-      setTasks(tasksRes.data as any);
-    }
+      console.log("Rangers data:", activeRangers, "Error:", rangersError);
 
-    if (!rangersRes.error && rangersRes.data) {
-      const mapped = rangersRes.data.map((r: any) => ({
-        id: r.id,
-        profile: r.profiles,
-      }));
-      setRangers(mapped);
+      if (activeRangers) {
+        const userIds = activeRangers.map(r => r.user_id);
+        const { data: profilesData } = await supabase
+          .from("profiles")
+          .select("id, display_name")
+          .in("id", userIds);
+
+        const profilesMap = new Map(profilesData?.map(p => [p.id, p]) || []);
+        const rangersWithProfiles = activeRangers.map(ranger => ({
+          id: ranger.id,
+          profile: profilesMap.get(ranger.user_id)
+        }));
+
+        console.log("Rangers with profiles:", rangersWithProfiles);
+        setRangers(rangersWithProfiles);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
 
     setLoading(false);
