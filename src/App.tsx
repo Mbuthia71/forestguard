@@ -32,8 +32,8 @@ const SatelliteMonitoring = lazy(() => import("./pages/admin/SatelliteMonitoring
 const SatelliteIntelligence = lazy(() => import("./pages/admin/SatelliteIntelligence"));
 const IncidentExplorer = lazy(() => import("./pages/admin/IncidentExplorer"));
 const BlockchainLookup = lazy(() => import("./pages/admin/BlockchainLookup"));
-const AdminForum = lazy(() => import("./pages/admin/Forum"));
 const AdminApprovals = lazy(() => import("./pages/admin/AdminApprovals"));
+const AdminDirectory = lazy(() => import("./pages/admin/AdminDirectory"));
 const AdminRangers = lazy(() => import("./pages/admin/Rangers"));
 const AdminFieldReports = lazy(() => import("./pages/admin/FieldReports"));
 const AdminTasks = lazy(() => import("./pages/admin/Tasks"));
@@ -85,7 +85,7 @@ const App = () => (
                 <Route path="reports" element={<AdminReports />} />
                 <Route path="blockchain-tracking" element={<BlockchainTracking />} />
                 <Route path="messages" element={<AdminMessages />} />
-                <Route path="forum" element={<AdminForum />} />
+                <Route path="directory" element={<AdminDirectory />} />
               </Route>
 
               {/* Ranger Routes */}

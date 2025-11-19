@@ -24,6 +24,7 @@ import { useState } from 'react';
 const navigation = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
   { name: 'Admin Approvals', href: '/admin/approvals', icon: Shield },
+  { name: 'Admin Directory', href: '/admin/directory', icon: Shield },
   { name: 'Rangers', href: '/admin/rangers', icon: Users },
   { name: 'Field Reports', href: '/admin/field-reports', icon: FileText },
   { name: 'Tasks', href: '/admin/tasks', icon: Activity },
@@ -37,7 +38,6 @@ const navigation = [
   { name: 'Blockchain Tracking', href: '/admin/blockchain-tracking', icon: Shield },
   { name: 'Blockchain Lookup', href: '/admin/blockchain-lookup', icon: LinkIcon },
   { name: 'Messages', href: '/admin/messages', icon: MessageSquare },
-  { name: 'Forum', href: '/admin/forum', icon: MessageSquare },
 ];
 
 export default function AdminSidebar() {
