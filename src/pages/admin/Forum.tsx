@@ -60,8 +60,13 @@ export default function AdminForum() {
       return;
     }
 
+    if (!data || data.length === 0) {
+      setThreads([]);
+      return;
+    }
+
     // Fetch profiles and roles for all creators
-    const creatorIds = [...new Set(data?.map(t => t.created_by) || [])];
+    const creatorIds = [...new Set(data.map(t => t.created_by))];
     
     const { data: profiles } = await supabase
       .from("profiles")
@@ -76,9 +81,9 @@ export default function AdminForum() {
     const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
     const adminMap = new Map(roles?.filter(r => r.role === 'admin').map(r => [r.user_id, true]) || []);
     
-    const mapped = (data || []).map((t: any) => ({
+    const mapped = data.map((t: any) => ({
       ...t,
-      profile: profileMap.get(t.created_by),
+      profile: profileMap.get(t.created_by) || { display_name: 'Unknown Admin' },
       is_admin: adminMap.get(t.created_by) || false,
     }));
     setThreads(mapped);
@@ -96,8 +101,13 @@ export default function AdminForum() {
       return;
     }
 
+    if (!data || data.length === 0) {
+      setComments((prev) => ({ ...prev, [threadId]: [] }));
+      return;
+    }
+
     // Fetch profiles and roles for all commenters
-    const creatorIds = [...new Set(data?.map(c => c.created_by) || [])];
+    const creatorIds = [...new Set(data.map(c => c.created_by))];
     
     const { data: profiles } = await supabase
       .from("profiles")
@@ -112,9 +122,9 @@ export default function AdminForum() {
     const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
     const adminMap = new Map(roles?.filter(r => r.role === 'admin').map(r => [r.user_id, true]) || []);
     
-    const mapped = (data || []).map((c: any) => ({
+    const mapped = data.map((c: any) => ({
       ...c,
-      profile: profileMap.get(c.created_by),
+      profile: profileMap.get(c.created_by) || { display_name: 'Unknown Admin' },
       is_admin: adminMap.get(c.created_by) || false,
     }));
     setComments((prev) => ({ ...prev, [threadId]: mapped }));

@@ -61,21 +61,47 @@ export default function AdminAuth() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("User not created");
 
-      const { error: approvalError } = await supabase
-        .from("pending_admin_approvals")
-        .insert({ 
+      // Check if this is the first admin (no user_roles exist)
+      const { count } = await supabase
+        .from("user_roles")
+        .select("*", { count: "exact", head: true });
+
+      const isFirstAdmin = count === 0;
+
+      if (isFirstAdmin) {
+        // First admin - auto-approve and create admin role
+        await supabase.from("user_roles").insert({ 
           user_id: user.id, 
-          display_name: displayName.trim(),
-          status: 'pending'
+          role: 'admin' 
         });
 
-      if (approvalError) throw approvalError;
+        playTone("success");
+        toast({ 
+          title: "Master Admin Created", 
+          description: "You are now the master admin. Logging in..." 
+        });
+        
+        await refreshRole();
+        setTimeout(() => navigate("/admin"), 500);
+      } else {
+        // Not first admin - request approval
+        const { error: approvalError } = await supabase
+          .from("pending_admin_approvals")
+          .insert({ 
+            user_id: user.id, 
+            display_name: displayName.trim(),
+            status: 'pending'
+          });
 
-      playTone("success");
-      toast({ 
-        title: "Registration submitted", 
-        description: "Your admin request is pending approval." 
-      });
+        if (approvalError) throw approvalError;
+
+        playTone("success");
+        toast({ 
+          title: "Registration submitted", 
+          description: "Your admin request is pending approval." 
+        });
+      }
+      
       setIsSignupMode(false);
       setDisplayName("");
       setEmail("");
