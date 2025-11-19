@@ -37,5 +37,12 @@ export function ProtectedRoute({ children, requireAdmin = false }: ProtectedRout
     return <Navigate to="/" replace />;
   }
 
+  // Ranger routes - allow if user is a ranger OR admin
+  // Admins can access ranger views for testing/oversight
+  const path = window.location.pathname;
+  if (path.startsWith('/ranger') && !isRanger && !isAdmin) {
+    return <Navigate to="/" replace />;
+  }
+
   return <>{children}</>;
 }

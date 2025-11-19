@@ -7,6 +7,8 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import ScrollToTop from "@/components/ScrollToTop";
 import Index from "./pages/Index";
+import HowItWorksPage from "./pages/HowItWorks";
+import TechnologyPage from "./pages/Technology";
 import Auth from "./pages/Auth";
 import AdminAuth from "./pages/AdminAuth";
 import NotFound from "./pages/NotFound";
@@ -46,6 +48,8 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/how-it-works" element={<HowItWorksPage />} />
+            <Route path="/technology" element={<TechnologyPage />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/admin-auth" element={<AdminAuth />} />
             
