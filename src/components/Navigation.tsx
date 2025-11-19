@@ -27,11 +27,11 @@ const Navigation = () => {
   }, []);
 
   const navLinks = [
-    { href: "#home", label: "Home" },
-    { href: "#how-it-works", label: "How It Works" },
-    { href: "#technology", label: "Technology" },
-    { href: "#about", label: "About" },
-    { href: "#contact", label: "Contact" },
+    { href: "/", label: "Home", isRoute: true },
+    { href: "/how-it-works", label: "How It Works", isRoute: true },
+    { href: "/technology", label: "Technology", isRoute: true },
+    { href: "#about", label: "About", isRoute: false },
+    { href: "#contact", label: "Contact", isRoute: false },
   ];
 
   const handleInstall = async () => {
@@ -53,20 +53,30 @@ const Navigation = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo/Brand */}
-          <a href="#home" className="text-xl font-bold text-primary hover:text-lime-neon transition-colors">
+          <Link to="/" className="text-xl font-bold text-primary hover:text-lime-neon transition-colors">
             ForestGuard
-          </a>
+          </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-4">
             {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="text-foreground/80 hover:text-primary transition-colors font-medium"
-              >
-                {link.label}
-              </a>
+              link.isRoute ? (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  className="text-foreground/80 hover:text-primary transition-colors font-medium"
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="text-foreground/80 hover:text-primary transition-colors font-medium"
+                >
+                  {link.label}
+                </a>
+              )
             ))}
             <Link to="/auth">
               <Button variant="outline" className="border-primary text-primary">
@@ -99,14 +109,25 @@ const Navigation = () => {
           <div className="md:hidden py-4 animate-fade-in">
             <div className="flex flex-col space-y-4">
               {navLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  className="text-foreground/80 hover:text-primary transition-colors font-medium"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {link.label}
-                </a>
+                link.isRoute ? (
+                  <Link
+                    key={link.href}
+                    to={link.href}
+                    className="text-foreground/80 hover:text-primary transition-colors font-medium"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                ) : (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    className="text-foreground/80 hover:text-primary transition-colors font-medium"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {link.label}
+                  </a>
+                )
               ))}
               <Link to="/auth" onClick={() => setIsMobileMenuOpen(false)}>
                 <Button variant="outline" className="border-primary text-primary w-full">
