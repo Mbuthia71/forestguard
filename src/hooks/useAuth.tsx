@@ -44,7 +44,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .from('rangers')
         .select('id')
         .eq('user_id', userId)
-        .single();
+        .maybeSingle();
 
       // Set admin status
       const hasAdminRole = roleData?.role === 'admin';

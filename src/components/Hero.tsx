@@ -76,10 +76,10 @@ const Hero = () => {
               size="lg"
               variant="outline"
               className="border-primary text-primary hover:bg-primary/10 group"
-              onClick={() => document.getElementById('dashboard')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => navigate('/auth')}
             >
               <Play className="mr-2 group-hover:scale-110 transition-transform" />
-              View Dashboard
+              Ranger Login
             </Button>
           </motion.div>
         </motion.div>
