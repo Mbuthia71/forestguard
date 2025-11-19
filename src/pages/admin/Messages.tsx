@@ -1,32 +1,46 @@
-import { useEffect, useState } from 'react';
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { supabase } from '@/integrations/supabase/client';
-import { Mail, MailOpen, Clock } from 'lucide-react';
-import { toast } from 'sonner';
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import { MessageCircle, Send, Trash2 } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { formatDistanceToNow } from "date-fns";
+import { toast } from "sonner";
 
 interface Message {
   id: string;
-  name: string;
-  email: string;
-  message: string;
-  status: string;
   created_at: string;
-  blockchain_tx_hash?: string | null;
-  ipfs_hash?: string | null;
+  created_by: string;
+  message_text: string;
+  channel: string;
+  profile?: {
+    display_name: string | null;
+  };
 }
 
-export default function AdminMessages() {
+export default function Messages() {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [filter, setFilter] = useState<'all' | 'unread' | 'read'>('all');
+  const [newMessage, setNewMessage] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [sending, setSending] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
     fetchMessages();
-
+    
     const channel = supabase
-      .channel('messages-changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'contact_messages' }, fetchMessages)
+      .channel('admin_messages')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'admin_messages'
+        },
+        () => fetchMessages()
+      )
       .subscribe();
 
     return () => {
@@ -35,142 +49,183 @@ export default function AdminMessages() {
   }, []);
 
   const fetchMessages = async () => {
-    const { data, error } = await supabase
-      .from('contact_messages')
-      .select('*')
-      .order('created_at', { ascending: false });
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from("admin_messages")
+        .select("*, profiles:created_by(display_name)")
+        .eq("channel", "general")
+        .order("created_at", { ascending: true });
 
-    if (!error && data) {
-      setMessages(data);
+      if (error) {
+        console.error("Error fetching messages:", error);
+      } else if (data) {
+        const mapped = data.map((m: any) => ({
+          ...m,
+          profile: m.profiles,
+        }));
+        setMessages(mapped);
+      }
+    } catch (error) {
+      console.error("Error in fetchMessages:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const markAsRead = async (id: string) => {
-    const { error } = await supabase
-      .from('contact_messages')
-      .update({ status: 'read' })
-      .eq('id', id);
+  const handleSend = async () => {
+    if (!newMessage.trim() || !user) return;
+    
+    setSending(true);
+    try {
+      const { error } = await supabase
+        .from("admin_messages")
+        .insert({
+          created_by: user.id,
+          message_text: newMessage.trim(),
+          channel: "general"
+        });
 
-    if (!error) {
-      toast.success('Message marked as read');
-      fetchMessages();
+      if (error) {
+        console.error("Error sending message:", error);
+        toast.error("Failed to send message");
+      } else {
+        setNewMessage("");
+        toast.success("Message sent");
+      }
+    } catch (error) {
+      console.error("Error in handleSend:", error);
+      toast.error("Failed to send message");
+    } finally {
+      setSending(false);
     }
   };
 
-  const filteredMessages = messages.filter((msg) => {
-    if (filter === 'all') return true;
-    return msg.status === filter;
-  });
+  const handleDelete = async (messageId: string) => {
+    try {
+      const { error } = await supabase
+        .from("admin_messages")
+        .delete()
+        .eq("id", messageId);
 
-  const unreadCount = messages.filter((m) => m.status === 'unread').length;
+      if (error) {
+        console.error("Error deleting message:", error);
+        toast.error("Failed to delete message");
+      } else {
+        toast.success("Message deleted");
+      }
+    } catch (error) {
+      console.error("Error in handleDelete:", error);
+      toast.error("Failed to delete message");
+    }
+  };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-4xl font-bold text-foreground mb-2">
-            Contact <span className="text-primary">Messages</span>
-          </h1>
-          <p className="text-foreground/70">
-            Manage community messages and inquiries
-          </p>
-        </div>
-        {unreadCount > 0 && (
-          <Badge variant="destructive" className="text-lg px-4 py-2">
-            {unreadCount} Unread
+    <div className="space-y-6 max-w-4xl mx-auto">
+      <div>
+        <h1 className="text-3xl font-bold flex items-center gap-2">
+          <MessageCircle className="w-8 h-8 text-primary" />
+          Admin Messages
+        </h1>
+        <p className="text-muted-foreground mt-2">
+          Communicate with other administrators
+        </p>
+      </div>
+
+      <Card className="p-6 space-y-4">
+        <div className="flex items-center justify-between">
+          <Badge variant="secondary" className="text-sm">
+            #general
           </Badge>
-        )}
-      </div>
+          <span className="text-sm text-muted-foreground">
+            {messages.length} messages
+          </span>
+        </div>
 
-      {/* Filters */}
-      <div className="flex gap-3">
-        <Button
-          variant={filter === 'all' ? 'default' : 'outline'}
-          onClick={() => setFilter('all')}
-        >
-          All
-        </Button>
-        <Button
-          variant={filter === 'unread' ? 'default' : 'outline'}
-          onClick={() => setFilter('unread')}
-        >
-          Unread
-        </Button>
-        <Button
-          variant={filter === 'read' ? 'default' : 'outline'}
-          onClick={() => setFilter('read')}
-        >
-          Read
-        </Button>
-      </div>
-
-      {/* Messages List */}
-      <div className="space-y-4">
-        {filteredMessages.map((msg) => (
-          <Card
-            key={msg.id}
-            className="p-6 bg-card/50 backdrop-blur-sm border-border hover-glow"
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex-1 space-y-3">
-                <div className="flex items-center gap-3">
-                  {msg.status === 'unread' ? (
-                    <Mail className="w-5 h-5 text-primary" />
-                  ) : (
-                    <MailOpen className="w-5 h-5 text-foreground/50" />
-                  )}
-                  <div>
-                    <h3 className="font-semibold text-foreground">{msg.name}</h3>
-                    <p className="text-sm text-foreground/60">{msg.email}</p>
-                  </div>
-                  <Badge variant={msg.status === 'unread' ? 'default' : 'secondary'}>
-                    {msg.status}
-                  </Badge>
-                </div>
-
-                <p className="text-foreground/80 pl-8">{msg.message}</p>
-
-                <div className="flex items-center gap-2 text-sm text-foreground/60 pl-8">
-                  <Clock className="w-4 h-4" />
-                  {new Date(msg.created_at).toLocaleString()}
-                </div>
-
-                {(msg.blockchain_tx_hash || msg.ipfs_hash) && (
-                  <div className="pl-8 mt-2 space-y-1">
-                    {msg.blockchain_tx_hash && (
-                      <div className="text-xs text-foreground/70 font-mono">
-                        TX: {msg.blockchain_tx_hash.slice(0, 18)}...
-                      </div>
-                    )}
-                    {msg.ipfs_hash && (
-                      <div className="text-xs text-foreground/70 font-mono">
-                        IPFS: {msg.ipfs_hash.slice(0, 18)}...
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {msg.status === 'unread' && (
-                <Button
-                  onClick={() => markAsRead(msg.id)}
-                  variant="outline"
-                  size="sm"
-                >
-                  Mark as Read
-                </Button>
-              )}
+        <div className="space-y-4 max-h-[500px] overflow-y-auto">
+          {loading ? (
+            <div className="text-center py-12 text-muted-foreground">
+              Loading messages...
             </div>
-          </Card>
-        ))}
+          ) : messages.length === 0 ? (
+            <div className="text-center py-12">
+              <MessageCircle className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+              <p className="text-muted-foreground">No messages yet. Start the conversation!</p>
+            </div>
+          ) : (
+            messages.map((message) => (
+              <div
+                key={message.id}
+                className={`flex gap-3 ${
+                  message.created_by === user?.id ? "flex-row-reverse" : ""
+                }`}
+              >
+                <div
+                  className={`flex-1 space-y-1 ${
+                    message.created_by === user?.id ? "text-right" : ""
+                  }`}
+                >
+                  <div className="flex items-center gap-2 text-sm">
+                    <span className="font-medium">
+                      {message.profile?.display_name || "Admin User"}
+                    </span>
+                    {message.created_by === user?.id && (
+                      <Badge variant="outline" className="text-xs">You</Badge>
+                    )}
+                    <span className="text-muted-foreground text-xs">
+                      {formatDistanceToNow(new Date(message.created_at), {
+                        addSuffix: true,
+                      })}
+                    </span>
+                  </div>
+                  <div
+                    className={`inline-block px-4 py-2 rounded-lg ${
+                      message.created_by === user?.id
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted"
+                    }`}
+                  >
+                    <p className="text-sm whitespace-pre-wrap">
+                      {message.message_text}
+                    </p>
+                  </div>
+                  {message.created_by === user?.id && (
+                    <button
+                      onClick={() => handleDelete(message.id)}
+                      className="text-xs text-muted-foreground hover:text-destructive transition-colors"
+                    >
+                      <Trash2 className="w-3 h-3 inline mr-1" />
+                      Delete
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
 
-        {filteredMessages.length === 0 && (
-          <Card className="p-12 text-center bg-card/50 backdrop-blur-sm border-border">
-            <Mail className="w-16 h-16 text-foreground/30 mx-auto mb-4" />
-            <p className="text-foreground/60">No messages found</p>
-          </Card>
-        )}
-      </div>
+        <div className="flex gap-2 pt-4 border-t">
+          <Textarea
+            placeholder="Type your message..."
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSend();
+              }
+            }}
+            className="min-h-[80px]"
+          />
+          <Button
+            onClick={handleSend}
+            disabled={!newMessage.trim() || sending}
+            className="self-end"
+          >
+            <Send className="w-4 h-4" />
+          </Button>
+        </div>
+      </Card>
     </div>
   );
 }

@@ -73,6 +73,30 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_messages: {
+        Row: {
+          channel: string
+          created_at: string | null
+          created_by: string
+          id: string
+          message_text: string
+        }
+        Insert: {
+          channel?: string
+          created_at?: string | null
+          created_by: string
+          id?: string
+          message_text: string
+        }
+        Update: {
+          channel?: string
+          created_at?: string | null
+          created_by?: string
+          id?: string
+          message_text?: string
+        }
+        Relationships: []
+      }
       alerts: {
         Row: {
           action_notes: string | null

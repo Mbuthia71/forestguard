@@ -25,7 +25,7 @@ const AdminMap = lazy(() => import("./pages/admin/Map"));
 const AdminAlerts = lazy(() => import("./pages/admin/Alerts"));
 const AdminReports = lazy(() => import("./pages/admin/Reports"));
 const BlockchainTracking = lazy(() => import("./pages/admin/BlockchainTracking"));
-const AdminMessages = lazy(() => import("./pages/admin/Messages"));
+const Messages = lazy(() => import("./pages/admin/Messages"));
 const KenyaDashboard = lazy(() => import("./pages/admin/KenyaDashboard"));
 const LiveSensorMap = lazy(() => import("./pages/admin/LiveSensorMap"));
 const SatelliteMonitoring = lazy(() => import("./pages/admin/SatelliteMonitoring"));
@@ -84,7 +84,7 @@ const App = () => (
                 <Route path="alerts" element={<AdminAlerts />} />
                 <Route path="reports" element={<AdminReports />} />
                 <Route path="blockchain-tracking" element={<BlockchainTracking />} />
-                <Route path="messages" element={<AdminMessages />} />
+                <Route path="messages" element={<Messages />} />
                 <Route path="directory" element={<AdminDirectory />} />
               </Route>
 
