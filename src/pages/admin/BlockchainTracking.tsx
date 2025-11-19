@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { Shield, AlertTriangle, MessageSquare, Radio, ExternalLink } from "lucide-react";
 import { format } from "date-fns";
 import { useAuth } from "@/hooks/useAuth";
+import { BlockchainTimeline } from "@/components/BlockchainTimeline";
 
 interface BlockchainTransaction {
   id: string;
@@ -302,42 +303,55 @@ export default function BlockchainTracking() {
       {selectedTx && (
         <Card className="border-primary">
           <CardHeader>
-            <CardTitle>Update Transaction Status</CardTitle>
+            <CardTitle>Transaction Details & Timeline</CardTitle>
             <CardDescription>
               Transaction: {selectedTx.blockchain_tx_hash}
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <label className="text-sm font-medium">New Status</label>
-              <Select value={newStatus} onValueChange={setNewStatus}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="received">Received</SelectItem>
-                  <SelectItem value="under_review">Under Review</SelectItem>
-                  <SelectItem value="in_progress">In Progress</SelectItem>
-                  <SelectItem value="resolved">Resolved</SelectItem>
-                  <SelectItem value="ignored">Ignored</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <label className="text-sm font-medium">Action Notes</label>
-              <Textarea
-                value={actionNotes}
-                onChange={(e) => setActionNotes(e.target.value)}
-                placeholder="What action was taken?"
-              />
-            </div>
-            <div className="flex gap-2">
-              <Button onClick={updateTransactionStatus} disabled={isUpdating}>
-                Update Status
-              </Button>
-              <Button variant="outline" onClick={() => setSelectedTx(null)}>
-                Cancel
-              </Button>
+          <CardContent className="space-y-6">
+            {/* Timeline Visualization */}
+            <BlockchainTimeline
+              createdAt={selectedTx.created_at}
+              actionStatus={selectedTx.action_status}
+              actionTimestamp={selectedTx.action_timestamp}
+              actionNotes={selectedTx.action_notes}
+              actionTakenBy={selectedTx.action_taken_by}
+            />
+
+            {/* Update Form */}
+            <div className="border-t pt-6 space-y-4">
+              <h3 className="font-medium">Update Status</h3>
+              <div>
+                <label className="text-sm font-medium">New Status</label>
+                <Select value={newStatus} onValueChange={setNewStatus}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="received">Received</SelectItem>
+                    <SelectItem value="under_review">Under Review</SelectItem>
+                    <SelectItem value="in_progress">In Progress</SelectItem>
+                    <SelectItem value="resolved">Resolved</SelectItem>
+                    <SelectItem value="ignored">Ignored</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="text-sm font-medium">Action Notes</label>
+                <Textarea
+                  value={actionNotes}
+                  onChange={(e) => setActionNotes(e.target.value)}
+                  placeholder="What action was taken?"
+                />
+              </div>
+              <div className="flex gap-2">
+                <Button onClick={updateTransactionStatus} disabled={isUpdating}>
+                  Update Status
+                </Button>
+                <Button variant="outline" onClick={() => setSelectedTx(null)}>
+                  Cancel
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>

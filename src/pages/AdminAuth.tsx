@@ -1,23 +1,26 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Fingerprint, ShieldCheck } from "lucide-react";
+import { Fingerprint, ShieldCheck, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
 import { useWebAuthn } from "@/hooks/useWebAuthn";
+import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
 
 export default function AdminAuth() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { isSupported, registerBiometric, loginWithBiometric } = useWebAuthn();
-  const { refreshRole } = useAuth();
-  const [loading, setLoading] = useState<"idle" | "signup" | "login">("idle");
-  const [displayName, setDisplayName] = useState("");
+  const { signIn, signUp, refreshRole } = useAuth();
+  const [loading, setLoading] = useState(false);
   const [isSignupMode, setIsSignupMode] = useState(false);
+  const [displayName, setDisplayName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  // Futuristic sound cues using WebAudio
   const playTone = (type: "success" | "error") => {
     try {
       const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
@@ -41,34 +44,23 @@ export default function AdminAuth() {
   };
 
   useEffect(() => {
-    document.title = "Admin Fingerprint Login • ForestGuard";
+    document.title = "Admin Login • ForestGuard";
   }, []);
 
-  const ADMIN_EMAIL = "admin@fg.local"; // pseudonymous identifier (no real email)
-
-  const handleSignup = async () => {
-    if (!displayName.trim()) {
-      toast({ title: "Name required", description: "Please enter your display name.", variant: "destructive" });
+  const handleEmailSignup = async () => {
+    if (!displayName.trim() || !email || !password) {
+      toast({ title: "All fields required", description: "Please fill in all fields.", variant: "destructive" });
       return;
     }
-    
-    setLoading("signup");
+
+    setLoading(true);
     try {
-      // First register biometric - this creates the auth user
-      await registerBiometric(ADMIN_EMAIL);
-      
-      // Get current user
+      const { error: signUpError } = await signUp(email, password, { display_name: displayName.trim() });
+      if (signUpError) throw signUpError;
+
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("User not created");
-      
-      // Create profile with display name
-      const { error: profileError } = await supabase
-        .from("profiles")
-        .insert({ id: user.id, display_name: displayName.trim() });
-      
-      if (profileError) throw profileError;
-      
-      // Create admin approval request
+
       const { error: approvalError } = await supabase
         .from("pending_admin_approvals")
         .insert({ 
@@ -76,133 +68,211 @@ export default function AdminAuth() {
           display_name: displayName.trim(),
           status: 'pending'
         });
-      
+
       if (approvalError) throw approvalError;
-      
+
       playTone("success");
       toast({ 
         title: "Registration submitted", 
-        description: "Your admin request is pending approval. You'll be able to login once approved." 
+        description: "Your admin request is pending approval." 
       });
       setIsSignupMode(false);
       setDisplayName("");
+      setEmail("");
+      setPassword("");
     } catch (e: any) {
       playTone("error");
-      toast({ title: "Registration failed", description: e.message || "Could not register.", variant: "destructive" });
+      toast({ title: "Registration failed", description: e.message, variant: "destructive" });
     } finally {
-      setLoading("idle");
+      setLoading(false);
     }
   };
 
-  const handleLogin = async () => {
-    setLoading("login");
+  const handleEmailLogin = async () => {
+    if (!email || !password) {
+      toast({ title: "Fields required", description: "Enter email and password.", variant: "destructive" });
+      return;
+    }
+
+    setLoading(true);
     try {
-      await loginWithBiometric(ADMIN_EMAIL);
-      // Bootstrap admin role if none exists, then confirm role
+      const { error } = await signIn(email, password);
+      if (error) throw error;
+
       await supabase.functions.invoke('bootstrap-admin');
-      // Refresh role in auth context so ProtectedRoute passes
       await refreshRole();
 
       playTone("success");
-      toast({ title: "Admin access granted", description: "Redirecting to admin..." });
-      navigate("/admin", { replace: true });
+      toast({ title: "Admin access granted", description: "Redirecting..." });
+      setTimeout(() => navigate("/admin"), 500);
     } catch (e: any) {
       playTone("error");
-      toast({ title: "Authentication failed", description: e.message || "Could not verify fingerprint.", variant: "destructive" });
+      toast({ title: "Login failed", description: e.message, variant: "destructive" });
     } finally {
-      setLoading("idle");
+      setLoading(false);
+    }
+  };
+
+  const handleBiometricLogin = async () => {
+    setLoading(true);
+    try {
+      await loginWithBiometric("admin@fg.local");
+      await supabase.functions.invoke('bootstrap-admin');
+      await refreshRole();
+
+      playTone("success");
+      toast({ title: "Admin access granted" });
+      setTimeout(() => navigate("/admin"), 500);
+    } catch (e: any) {
+      playTone("error");
+      toast({ title: "Biometric login failed", description: e.message, variant: "destructive" });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <main className="min-h-screen bg-background flex items-center justify-center p-6">
-      <motion.article
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 flex items-center justify-center p-4">
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md rounded-xl border border-border/60 bg-card/70 backdrop-blur-md shadow-xl p-8 text-center"
+        className="w-full max-w-md"
       >
-        <div className="flex items-center justify-center mb-6">
-          <ShieldCheck className="h-6 w-6 text-primary mr-2" />
-          <h1 className="text-xl font-semibold text-foreground">Login / Signup with Fingerprint</h1>
+        <div className="text-center mb-8">
+          <motion.div
+            animate={{ rotate: [0, 5, -5, 0] }}
+            transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+            className="inline-block mb-4"
+          >
+            <ShieldCheck className="w-16 h-16 text-primary" />
+          </motion.div>
+          <h1 className="text-3xl font-bold mb-2">Admin Access</h1>
+          <p className="text-muted-foreground">Secure login for ForestGuard administrators</p>
         </div>
 
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.4 }}
-          className="relative mb-8"
-        >
-          <div className="w-32 h-32 mx-auto rounded-full border-4 border-primary/30 flex items-center justify-center bg-primary/5 shadow-md">
-            <Fingerprint className="h-16 w-16 text-primary animate-pulse" />
-          </div>
-        </motion.div>
+        <div className="bg-card border rounded-xl shadow-lg p-8 space-y-6">
+          {isSignupMode ? (
+            <>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="displayName">Display Name</Label>
+                  <Input
+                    id="displayName"
+                    value={displayName}
+                    onChange={(e) => setDisplayName(e.target.value)}
+                    placeholder="Enter your name"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="admin@example.com"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="password">Password</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                  />
+                </div>
+              </div>
 
-        <p className="text-sm text-muted-foreground mb-6">
-          {isSupported ? "Touch your fingerprint sensor to authenticate" : "WebAuthn not supported on this device"}
-        </p>
+              <Button
+                className="w-full"
+                size="lg"
+                onClick={handleEmailSignup}
+                disabled={loading}
+              >
+                <Mail className="w-4 h-4 mr-2" />
+                {loading ? "Submitting..." : "Request Admin Access"}
+              </Button>
 
-        {isSignupMode ? (
-          <div className="space-y-4">
-            <div className="space-y-2 text-left">
-              <label htmlFor="displayName" className="text-sm font-medium text-foreground">
-                Display Name
-              </label>
-              <input
-                id="displayName"
-                type="text"
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
-                placeholder="Enter your name"
-                className="w-full px-3 py-2 rounded-md border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                disabled={loading === "signup"}
-              />
-            </div>
-            <Button
-              onClick={handleSignup}
-              disabled={!isSupported || loading === "signup"}
-              className="w-full"
-            >
-              {loading === "signup" ? "Registering..." : "Register & Enroll Fingerprint"}
-            </Button>
-            <Button
-              onClick={() => {
-                setIsSignupMode(false);
-                setDisplayName("");
-              }}
-              variant="ghost"
-              className="w-full"
-              disabled={loading === "signup"}
-            >
-              Back to Login
-            </Button>
-          </div>
-        ) : (
-          <div className="flex flex-col gap-3">
-            <Button
-              onClick={handleLogin}
-              disabled={!isSupported || loading === "login"}
-              className="w-full"
-              size="lg"
-            >
-              {loading === "login" ? "Verifying..." : "Login with Fingerprint"}
-            </Button>
-            <Button
-              onClick={() => setIsSignupMode(true)}
-              variant="outline"
-              className="w-full"
-              size="lg"
-            >
-              New Admin? Register
-            </Button>
-          </div>
-        )}
+              <Button
+                variant="ghost"
+                className="w-full"
+                onClick={() => setIsSignupMode(false)}
+              >
+                Already approved? Sign in
+              </Button>
+            </>
+          ) : (
+            <>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="loginEmail">Email</Label>
+                  <Input
+                    id="loginEmail"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="admin@example.com"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="loginPassword">Password</Label>
+                  <Input
+                    id="loginPassword"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                  />
+                </div>
+              </div>
 
-        <div className="mt-6 pt-6 border-t border-border">
-          <p className="text-xs text-muted-foreground text-center">
-            Your biometric data is stored securely on this device and never sent to servers.
-          </p>
+              <Button
+                className="w-full"
+                size="lg"
+                onClick={handleEmailLogin}
+                disabled={loading}
+              >
+                <Mail className="w-4 h-4 mr-2" />
+                {loading ? "Signing in..." : "Sign In with Email"}
+              </Button>
+
+              {isSupported && (
+                <>
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                      <span className="w-full border-t" />
+                    </div>
+                    <div className="relative flex justify-center text-xs uppercase">
+                      <span className="bg-card px-2 text-muted-foreground">Or</span>
+                    </div>
+                  </div>
+
+                  <Button
+                    variant="outline"
+                    className="w-full border-primary/20"
+                    size="lg"
+                    onClick={handleBiometricLogin}
+                    disabled={loading}
+                  >
+                    <Fingerprint className="w-5 h-5 mr-2" />
+                    Login with Fingerprint
+                  </Button>
+                </>
+              )}
+
+              <Button
+                variant="ghost"
+                className="w-full"
+                onClick={() => setIsSignupMode(true)}
+              >
+                Need admin access? Request approval
+              </Button>
+            </>
+          )}
         </div>
-      </motion.article>
-    </main>
+      </motion.div>
+    </div>
   );
 }
