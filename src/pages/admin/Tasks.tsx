@@ -224,13 +224,24 @@ export default function Tasks() {
                     <SelectValue placeholder="Select ranger" />
                   </SelectTrigger>
                   <SelectContent>
-                    {rangers.map((ranger) => (
-                      <SelectItem key={ranger.id} value={ranger.id}>
-                        {ranger.profile?.display_name || "Unknown Ranger"}
-                      </SelectItem>
-                    ))}
+                    {rangers.length === 0 ? (
+                      <div className="px-2 py-3 text-sm text-muted-foreground text-center">
+                        No active rangers available
+                      </div>
+                    ) : (
+                      rangers.map((ranger) => (
+                        <SelectItem key={ranger.id} value={ranger.id}>
+                          {ranger.profile?.display_name || "Unknown Ranger"}
+                        </SelectItem>
+                      ))
+                    )}
                   </SelectContent>
                 </Select>
+                {rangers.length === 0 && (
+                  <p className="text-xs text-muted-foreground mt-1">
+                    No active rangers found. Rangers must sign up at /auth first.
+                  </p>
+                )}
               </div>
 
               <div>
