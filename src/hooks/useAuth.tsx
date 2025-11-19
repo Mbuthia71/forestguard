@@ -8,6 +8,9 @@ interface AuthContextType {
   session: Session | null;
   loading: boolean;
   isAdmin: boolean;
+  isRanger: boolean;
+  isStakeholder: boolean;
+  userRole: 'admin' | 'ranger' | 'stakeholder' | null;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signUp: (email: string, password: string, metadata?: { display_name?: string }) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
@@ -21,20 +24,54 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isRanger, setIsRanger] = useState(false);
+  const [isStakeholder, setIsStakeholder] = useState(false);
+  const [userRole, setUserRole] = useState<'admin' | 'ranger' | 'stakeholder' | null>(null);
   const navigate = useNavigate();
 
-  const checkAdminRole = async (userId: string) => {
+  const checkUserRole = async (userId: string) => {
     try {
-      const { data, error } = await supabase
+      // Check user_roles table for role
+      const { data: roleData } = await supabase
         .from('user_roles')
         .select('role')
         .eq('user_id', userId)
-        .eq('role', 'admin')
         .single();
-      
-      setIsAdmin(!!data && !error);
+
+      if (roleData) {
+        const role = roleData.role;
+        setIsAdmin(role === 'admin');
+        setUserRole(role === 'admin' ? 'admin' : null);
+        setIsRanger(false);
+        setIsStakeholder(false);
+        return;
+      }
+
+      // Check rangers table
+      const { data: rangerData } = await supabase
+        .from('rangers')
+        .select('id')
+        .eq('user_id', userId)
+        .single();
+
+      if (rangerData) {
+        setIsRanger(true);
+        setUserRole('ranger');
+        setIsAdmin(false);
+        setIsStakeholder(false);
+        return;
+      }
+
+      // Default to no role
+      setIsAdmin(false);
+      setIsRanger(false);
+      setIsStakeholder(false);
+      setUserRole(null);
     } catch {
       setIsAdmin(false);
+      setIsRanger(false);
+      setIsStakeholder(false);
+      setUserRole(null);
     }
   };
 
@@ -44,9 +81,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(session?.user ?? null);
 
       if (session?.user) {
-        await checkAdminRole(session.user.id);
+        await checkUserRole(session.user.id);
       } else {
         setIsAdmin(false);
+        setIsRanger(false);
+        setIsStakeholder(false);
+        setUserRole(null);
       }
 
       setLoading(false);
@@ -99,16 +139,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signOut = async () => {
     await supabase.auth.signOut();
     setIsAdmin(false);
+    setIsRanger(false);
+    setIsStakeholder(false);
+    setUserRole(null);
     navigate('/');
   };
 
   const refreshRole = async () => {
     const uid = supabase.auth.getUser ? (await supabase.auth.getUser()).data.user?.id : user?.id;
-    if (uid) await checkAdminRole(uid);
+    if (uid) await checkUserRole(uid);
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, isAdmin, signIn, signUp, signOut, refreshRole }}>
+    <AuthContext.Provider value={{ user, session, loading, isAdmin, isRanger, isStakeholder, userRole, signIn, signUp, signOut, refreshRole }}>
       {children}
     </AuthContext.Provider>
   );

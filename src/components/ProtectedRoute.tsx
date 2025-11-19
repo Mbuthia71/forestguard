@@ -7,7 +7,7 @@ interface ProtectedRouteProps {
 }
 
 export function ProtectedRoute({ children, requireAdmin = false }: ProtectedRouteProps) {
-  const { user, isAdmin, loading } = useAuth();
+  const { user, isAdmin, isRanger, userRole, loading } = useAuth();
 
   if (loading) {
     return (
@@ -20,10 +20,20 @@ export function ProtectedRoute({ children, requireAdmin = false }: ProtectedRout
   }
 
   if (!user) {
+    // Redirect to appropriate auth page based on path
+    const path = window.location.pathname;
+    if (path.startsWith('/ranger')) {
+      return <Navigate to="/auth" replace />;
+    }
     return <Navigate to="/admin-auth" replace />;
   }
 
+  // Admin routes require admin role
   if (requireAdmin && !isAdmin) {
+    // Redirect based on actual role
+    if (isRanger) {
+      return <Navigate to="/ranger" replace />;
+    }
     return <Navigate to="/" replace />;
   }
 
