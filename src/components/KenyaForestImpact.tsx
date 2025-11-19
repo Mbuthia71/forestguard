@@ -3,7 +3,6 @@ import { TreePine, Droplets, MapPin, AlertTriangle } from 'lucide-react';
 import forestWaterfall from '@/assets/forest-waterfall.jpg';
 import forestPath from '@/assets/forest-path.jpeg';
 import kenyaLandscape from '@/assets/kenya-landscape.jpg';
-import { OptimizedImage } from './OptimizedImage';
 
 const KenyaForestImpact = () => {
   const impacts = [
@@ -62,30 +61,33 @@ const KenyaForestImpact = () => {
           className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-16 rounded-2xl overflow-hidden"
         >
           <div className="relative h-64 md:h-80 overflow-hidden group">
-            <OptimizedImage 
+            <img 
               src={kenyaLandscape} 
               alt="Great Rift Valley Kenya" 
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+              loading="lazy"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-forest-deep/80 to-transparent flex items-end p-4">
               <p className="text-white font-semibold">Great Rift Valley Forests</p>
             </div>
           </div>
           <div className="relative h-64 md:h-80 overflow-hidden group">
-            <OptimizedImage 
+            <img 
               src={forestWaterfall} 
               alt="Kakamega Forest Waterfall" 
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+              loading="lazy"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-forest-deep/80 to-transparent flex items-end p-4">
               <p className="text-white font-semibold">Kakamega Rainforest</p>
             </div>
           </div>
           <div className="relative h-64 md:h-80 overflow-hidden group">
-            <OptimizedImage 
+            <img 
               src={forestPath} 
               alt="Forest Conservation Path" 
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+              loading="lazy"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-forest-deep/80 to-transparent flex items-end p-4">
               <p className="text-white font-semibold">Protected Forest Trails</p>
