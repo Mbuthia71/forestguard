@@ -3,7 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, ExternalLink, Clock, User, DollarSign, Zap } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Search, ExternalLink, Clock, User, DollarSign, Zap, Info } from "lucide-react";
 import { toast } from "sonner";
 
 interface BlockchainTransaction {
@@ -70,6 +71,14 @@ export default function BlockchainLookup() {
           Verify environmental reports on Polygon blockchain
         </p>
       </div>
+
+      <Alert>
+        <Info className="h-4 w-4" />
+        <AlertTitle>Demo Mode</AlertTitle>
+        <AlertDescription>
+          This demonstration uses real example transactions from the Polygon blockchain. In production, ForestGuard would generate unique transaction hashes for each environmental report. All blockchain data shown is publicly accessible and used for verification demonstration purposes.
+        </AlertDescription>
+      </Alert>
 
       <Card>
         <CardHeader>
