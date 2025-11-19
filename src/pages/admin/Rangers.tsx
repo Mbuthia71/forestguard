@@ -29,19 +29,26 @@ export default function Rangers() {
 
   const fetchRangers = async () => {
     setLoading(true);
-    const { data: rangersData, error } = await supabase
-      .from("rangers")
-      .select("*, profiles:user_id(display_name)")
-      .order("created_at", { ascending: false });
+    try {
+      const { data: rangersData, error } = await supabase
+        .from("rangers")
+        .select("*, profiles:user_id(display_name)")
+        .order("created_at", { ascending: false });
 
-    if (!error && rangersData) {
-      const mapped = rangersData.map((r: any) => ({
-        ...r,
-        profile: r.profiles,
-      }));
-      setRangers(mapped);
+      if (error) {
+        console.error("Error fetching rangers:", error);
+      } else if (rangersData) {
+        const mapped = rangersData.map((r: any) => ({
+          ...r,
+          profile: r.profiles,
+        }));
+        setRangers(mapped);
+      }
+    } catch (error) {
+      console.error("Error in fetchRangers:", error);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (

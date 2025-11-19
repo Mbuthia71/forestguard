@@ -27,43 +27,60 @@ export default function AdminDirectory() {
   const fetchAdmins = async () => {
     setLoading(true);
     
-    // Get all users with admin role
-    const { data: adminRoles, error: rolesError } = await supabase
-      .from("user_roles")
-      .select("user_id, role, created_at")
-      .eq("role", "admin");
+    try {
+      // Get all users with admin role
+      const { data: adminRoles, error: rolesError } = await supabase
+        .from("user_roles")
+        .select("user_id, role, created_at")
+        .eq("role", "admin");
 
-    if (rolesError || !adminRoles) {
-      setLoading(false);
-      return;
-    }
+      if (rolesError) {
+        console.error("Error fetching admin roles:", rolesError);
+        setLoading(false);
+        return;
+      }
 
-    // Get user details for each admin
-    const adminPromises = adminRoles.map(async (adminRole) => {
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("display_name")
-        .eq("id", adminRole.user_id)
-        .maybeSingle();
+      if (!adminRoles || adminRoles.length === 0) {
+        setAdmins([]);
+        setLoading(false);
+        return;
+      }
 
-      // Check if they're master admin
-      const { data: isMaster } = await supabase.rpc("is_master_admin", {
-        _user_id: adminRole.user_id,
+      // Get user details for each admin
+      const adminPromises = adminRoles.map(async (adminRole) => {
+        try {
+          const { data: profile } = await supabase
+            .from("profiles")
+            .select("display_name")
+            .eq("id", adminRole.user_id)
+            .maybeSingle();
+
+          // Check if they're master admin
+          const { data: isMaster } = await supabase.rpc("is_master_admin", {
+            _user_id: adminRole.user_id,
+          });
+
+          return {
+            id: adminRole.user_id,
+            email: "Admin User",
+            created_at: adminRole.created_at || new Date().toISOString(),
+            display_name: profile?.display_name || "Admin User",
+            role: adminRole.role,
+            is_master: isMaster || false,
+          };
+        } catch (error) {
+          console.error("Error processing admin:", error);
+          return null;
+        }
       });
 
-      return {
-        id: adminRole.user_id,
-        email: "Admin User", // Email not exposed for privacy
-        created_at: adminRole.created_at || new Date().toISOString(),
-        display_name: profile?.display_name || null,
-        role: adminRole.role,
-        is_master: isMaster || false,
-      };
-    });
-
-    const adminsData = await Promise.all(adminPromises);
-    setAdmins(adminsData.filter((a) => a !== null) as Admin[]);
-    setLoading(false);
+      const adminsData = await Promise.all(adminPromises);
+      setAdmins(adminsData.filter((a) => a !== null) as Admin[]);
+    } catch (error) {
+      console.error("Error in fetchAdmins:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
