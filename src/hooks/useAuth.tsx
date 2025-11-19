@@ -10,6 +10,7 @@ interface AuthContextType {
   isAdmin: boolean;
   isRanger: boolean;
   isStakeholder: boolean;
+  isMasterAdmin: boolean;
   userRole: 'admin' | 'ranger' | 'stakeholder' | null;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signUp: (email: string, password: string, metadata?: { display_name?: string }) => Promise<{ error: Error | null }>;
@@ -26,6 +27,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isRanger, setIsRanger] = useState(false);
   const [isStakeholder, setIsStakeholder] = useState(false);
+  const [isMasterAdmin, setIsMasterAdmin] = useState(false);
   const [userRole, setUserRole] = useState<'admin' | 'ranger' | 'stakeholder' | null>(null);
   const navigate = useNavigate();
 
@@ -44,6 +46,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUserRole(role === 'admin' ? 'admin' : null);
         setIsRanger(false);
         setIsStakeholder(false);
+        
+        // Check if master admin by calling the database function
+        if (role === 'admin') {
+          const { data: isMaster } = await supabase.rpc('is_master_admin', { _user_id: userId });
+          setIsMasterAdmin(isMaster || false);
+        } else {
+          setIsMasterAdmin(false);
+        }
         return;
       }
 
@@ -66,11 +76,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsAdmin(false);
       setIsRanger(false);
       setIsStakeholder(false);
+      setIsMasterAdmin(false);
       setUserRole(null);
     } catch {
       setIsAdmin(false);
       setIsRanger(false);
       setIsStakeholder(false);
+      setIsMasterAdmin(false);
       setUserRole(null);
     }
   };
@@ -86,6 +98,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setIsAdmin(false);
         setIsRanger(false);
         setIsStakeholder(false);
+        setIsMasterAdmin(false);
         setUserRole(null);
       }
 
@@ -141,6 +154,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsAdmin(false);
     setIsRanger(false);
     setIsStakeholder(false);
+    setIsMasterAdmin(false);
     setUserRole(null);
     navigate('/');
   };
@@ -151,7 +165,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, isAdmin, isRanger, isStakeholder, userRole, signIn, signUp, signOut, refreshRole }}>
+    <AuthContext.Provider value={{ user, session, loading, isAdmin, isRanger, isStakeholder, isMasterAdmin, userRole, signIn, signUp, signOut, refreshRole }}>
       {children}
     </AuthContext.Provider>
   );
