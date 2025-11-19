@@ -5,7 +5,6 @@ import heroForestPath from "@/assets/hero-forest-path.jpg";
 import { motion } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import { OptimizedImage } from "./OptimizedImage";
 
 const Hero = () => {
   const { user, isAdmin } = useAuth();
@@ -14,7 +13,7 @@ const Hero = () => {
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-forest-deep/70 via-background/80 to-background z-0"></div>
-      <OptimizedImage 
+      <img 
         src={heroForestPath} 
         alt="Kenyan Forest" 
         className="absolute inset-0 w-full h-full object-cover opacity-40"
@@ -34,7 +33,7 @@ const Hero = () => {
             transition={{ duration: 1, delay: 0.2 }}
             className="flex justify-center mb-8"
           >
-            <OptimizedImage
+            <img
               src={forestGuardLogo}
               alt="ForestGuard"
               className="w-full max-w-3xl h-auto"

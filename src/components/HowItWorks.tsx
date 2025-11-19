@@ -2,7 +2,6 @@ import { Satellite, Radio, Shield, Bell } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import forestRangers from "@/assets/forest-rangers.jpeg";
-import { OptimizedImage } from "./OptimizedImage";
 
 const HowItWorks = () => {
   const steps = [
@@ -50,10 +49,11 @@ const HowItWorks = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12 max-w-7xl mx-auto items-center">
           <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-            <OptimizedImage 
+            <img 
               src={forestRangers} 
               alt="Forest Rangers in Action" 
               className="w-full h-[500px] object-cover"
+              loading="lazy"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-forest-deep/80 to-transparent flex items-end p-8">
               <div>
