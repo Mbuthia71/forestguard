@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import { MessageCircle, Send, Trash2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { Send, Trash2, Users, MessageSquare } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { format } from "date-fns";
 
 interface Message {
   id: string;
@@ -49,6 +50,7 @@ export default function Messages() {
   }, []);
 
   const fetchMessages = async () => {
+    console.log('Fetching messages...');
     setLoading(true);
     try {
       const { data, error } = await supabase
@@ -56,6 +58,8 @@ export default function Messages() {
         .select("*")
         .eq("channel", "general")
         .order("created_at", { ascending: true });
+
+      console.log('Messages response:', { data, error });
 
       if (error) {
         console.error("Error fetching messages:", error);
@@ -79,6 +83,8 @@ export default function Messages() {
           ...msg,
           profile: profilesMap.get(msg.created_by)
         }));
+        
+        console.log('Messages with profiles:', messagesWithProfiles);
         setMessages(messagesWithProfiles);
       } else {
         setMessages([]);
@@ -138,110 +144,153 @@ export default function Messages() {
     }
   };
 
+  const getInitials = (name: string | null | undefined) => {
+    if (!name) return "AD";
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
-      <div>
-        <h1 className="text-3xl font-bold flex items-center gap-2">
-          <MessageCircle className="w-8 h-8 text-primary" />
-          Admin Messages
-        </h1>
-        <p className="text-muted-foreground mt-2">
-          Communicate with other administrators
-        </p>
-      </div>
-
-      <Card className="p-6 space-y-4">
+    <div className="h-[calc(100vh-8rem)] flex flex-col space-y-4">
+      {/* Header */}
+      <Card className="p-6 bg-gradient-to-r from-primary/10 to-primary/5 border-primary/20">
         <div className="flex items-center justify-between">
-          <Badge variant="secondary" className="text-sm">
-            #general
-          </Badge>
-          <span className="text-sm text-muted-foreground">
-            {messages.length} messages
-          </span>
+          <div className="space-y-1">
+            <div className="flex items-center gap-3">
+              <MessageSquare className="w-8 h-8 text-primary" />
+              <h1 className="text-3xl font-bold text-foreground">
+                Admin Messages
+              </h1>
+            </div>
+            <p className="text-muted-foreground ml-11">
+              Team communication center
+            </p>
+          </div>
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <Users className="w-5 h-5" />
+            <span className="text-sm">{messages.length} messages</span>
+          </div>
         </div>
+      </Card>
 
-        <div className="space-y-4 max-h-[500px] overflow-y-auto">
+      {/* Messages Area */}
+      <Card className="flex-1 flex flex-col overflow-hidden bg-card/50 backdrop-blur-sm">
+        <ScrollArea className="flex-1 p-6">
           {loading ? (
-            <div className="text-center py-12 text-muted-foreground">
-              Loading messages...
+            <div className="flex items-center justify-center h-full">
+              <div className="text-center space-y-3">
+                <MessageSquare className="w-12 h-12 text-muted-foreground/50 mx-auto animate-pulse" />
+                <p className="text-muted-foreground">Loading messages...</p>
+              </div>
             </div>
           ) : messages.length === 0 ? (
-            <div className="text-center py-12">
-              <MessageCircle className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-              <p className="text-muted-foreground">No messages yet. Start the conversation!</p>
-            </div>
-          ) : (
-            messages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex gap-3 ${
-                  message.created_by === user?.id ? "flex-row-reverse" : ""
-                }`}
-              >
-                <div
-                  className={`flex-1 space-y-1 ${
-                    message.created_by === user?.id ? "text-right" : ""
-                  }`}
-                >
-                  <div className="flex items-center gap-2 text-sm">
-                    <span className="font-medium">
-                      {message.profile?.display_name || "Admin User"}
-                    </span>
-                    {message.created_by === user?.id && (
-                      <Badge variant="outline" className="text-xs">You</Badge>
-                    )}
-                    <span className="text-muted-foreground text-xs">
-                      {formatDistanceToNow(new Date(message.created_at), {
-                        addSuffix: true,
-                      })}
-                    </span>
-                  </div>
-                  <div
-                    className={`inline-block px-4 py-2 rounded-lg ${
-                      message.created_by === user?.id
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted"
-                    }`}
-                  >
-                    <p className="text-sm whitespace-pre-wrap">
-                      {message.message_text}
-                    </p>
-                  </div>
-                  {message.created_by === user?.id && (
-                    <button
-                      onClick={() => handleDelete(message.id)}
-                      className="text-xs text-muted-foreground hover:text-destructive transition-colors"
-                    >
-                      <Trash2 className="w-3 h-3 inline mr-1" />
-                      Delete
-                    </button>
-                  )}
+            <div className="flex items-center justify-center h-full">
+              <div className="text-center space-y-3">
+                <MessageSquare className="w-16 h-16 text-muted-foreground/30 mx-auto" />
+                <div>
+                  <p className="text-lg font-medium text-foreground">No messages yet</p>
+                  <p className="text-sm text-muted-foreground">
+                    Start the conversation below
+                  </p>
                 </div>
               </div>
-            ))
-          )}
-        </div>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {messages.map((message) => {
+                const isOwnMessage = message.created_by === user?.id;
+                const displayName =
+                  message.profile?.display_name || "Admin User";
 
-        <div className="flex gap-2 pt-4 border-t">
-          <Textarea
-            placeholder="Type your message..."
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                handleSend();
-              }
-            }}
-            className="min-h-[80px]"
-          />
-          <Button
-            onClick={handleSend}
-            disabled={!newMessage.trim() || sending}
-            className="self-end"
-          >
-            <Send className="w-4 h-4" />
-          </Button>
+                return (
+                  <div
+                    key={message.id}
+                    className={`flex gap-3 ${
+                      isOwnMessage ? "flex-row-reverse" : "flex-row"
+                    }`}
+                  >
+                    <Avatar className="w-10 h-10 border-2 border-primary/20">
+                      <AvatarFallback className="bg-primary/10 text-primary font-semibold">
+                        {getInitials(displayName)}
+                      </AvatarFallback>
+                    </Avatar>
+
+                    <div
+                      className={`flex-1 max-w-[70%] ${
+                        isOwnMessage ? "items-end" : "items-start"
+                      } flex flex-col gap-1`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium text-foreground">
+                          {displayName}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          {format(new Date(message.created_at), "HH:mm")}
+                        </span>
+                      </div>
+
+                      <div
+                        className={`group relative p-4 rounded-2xl ${
+                          isOwnMessage
+                            ? "bg-primary text-primary-foreground rounded-tr-sm"
+                            : "bg-muted text-foreground rounded-tl-sm"
+                        }`}
+                      >
+                        <p className="text-sm whitespace-pre-wrap break-words">
+                          {message.message_text}
+                        </p>
+
+                        {isOwnMessage && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="absolute -right-10 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8 hover:bg-destructive/10 hover:text-destructive"
+                            onClick={() => handleDelete(message.id)}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </ScrollArea>
+
+        {/* Input Area */}
+        <div className="p-4 border-t border-border bg-background/50 backdrop-blur-sm">
+          <div className="flex gap-3">
+            <Textarea
+              placeholder="Type your message..."
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSend();
+                }
+              }}
+              className="min-h-[60px] max-h-[120px] resize-none"
+              disabled={sending}
+            />
+            <Button
+              onClick={handleSend}
+              disabled={!newMessage.trim() || sending}
+              size="icon"
+              className="h-[60px] w-[60px] shrink-0"
+            >
+              <Send className="w-5 h-5" />
+            </Button>
+          </div>
+          <p className="text-xs text-muted-foreground mt-2">
+            Press Enter to send • Shift + Enter for new line
+          </p>
         </div>
       </Card>
     </div>

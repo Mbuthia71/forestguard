@@ -38,42 +38,59 @@ export default function FieldReports() {
 
   const fetchReports = async () => {
     setLoading(true);
+    console.log('Fetching field reports with filter:', filter);
+    
     try {
       let query = supabase
         .from("field_reports")
-        .select(`
-          *,
-          rangers!field_reports_ranger_id_fkey(
-            id,
-            user_id,
-            employee_id,
-            profiles!rangers_user_id_fkey(display_name)
-          )
-        `)
+        .select("*")
         .order("created_at", { ascending: false });
 
       if (filter !== "all") {
         query = query.eq("status", filter);
       }
 
-      const { data, error } = await query;
+      const { data: reportsData, error } = await query;
+      console.log('Field reports response:', { reportsData, error });
 
       if (error) {
         console.error("Error fetching reports:", error);
         toast.error("Failed to load reports");
-      } else if (data) {
-        // Transform to match expected structure
-        const transformedData = data.map((report: any) => ({
+        return;
+      }
+
+      // Fetch rangers and profiles separately
+      if (reportsData && reportsData.length > 0) {
+        const rangerIds = [...new Set(reportsData.map(r => r.ranger_id))];
+        
+        const { data: rangersData } = await supabase
+          .from("rangers")
+          .select("id, user_id")
+          .in("id", rangerIds);
+
+        const rangerUserIds = rangersData?.map(r => r.user_id) || [];
+        
+        const { data: profilesData } = await supabase
+          .from("profiles")
+          .select("id, display_name")
+          .in("id", rangerUserIds);
+
+        const profilesMap = new Map(profilesData?.map(p => [p.id, p]) || []);
+        const rangersMap = new Map(rangersData?.map(r => [r.id, { ...r, profile: profilesMap.get(r.user_id) }]) || []);
+
+        const transformedData = reportsData.map((report: any) => ({
           ...report,
-          ranger: {
-            ...report.rangers,
-            profile: report.rangers?.profiles
-          }
+          ranger: rangersMap.get(report.ranger_id)
         }));
+        
+        console.log('Transformed reports:', transformedData);
         setReports(transformedData);
+      } else {
+        setReports([]);
       }
     } catch (error) {
       console.error("Error in fetchReports:", error);
+      toast.error("Error loading reports");
     } finally {
       setLoading(false);
     }
