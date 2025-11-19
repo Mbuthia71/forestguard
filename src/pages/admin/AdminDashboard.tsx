@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { MapPin, Users, AlertTriangle, FileText, TrendingUp, Activity } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
+import { useForestSelector } from "@/hooks/useForestSelector";
+import { KENYAN_FORESTS } from "@/data/forests";
+import { Badge } from "@/components/ui/badge";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
+  const { selectedForest, setSelectedForest } = useForestSelector();
   const [stats, setStats] = useState({
     totalRangers: 0,
     activeRangers: 0,
@@ -92,9 +97,68 @@ export default function AdminDashboard() {
 
   return (
     <div className="p-6 space-y-8">
-      <div>
-        <h1 className="text-4xl font-bold mb-2">ForestGuard Admin</h1>
-        <p className="text-muted-foreground">Monitor forests, manage rangers, and respond to alerts</p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-4xl font-bold mb-2">ForestGuard Admin</h1>
+          <p className="text-muted-foreground">Monitor forests, manage rangers, and respond to alerts</p>
+        </div>
+        
+        <Card className="w-80">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium">Select Forest</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <Select 
+              value={selectedForest.id} 
+              onValueChange={(id) => {
+                const forest = KENYAN_FORESTS.find(f => f.id === id);
+                if (forest) setSelectedForest(forest);
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {KENYAN_FORESTS.map((forest) => (
+                  <SelectItem key={forest.id} value={forest.id}>
+                    {forest.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            
+            <div className="grid grid-cols-3 gap-2 text-xs">
+              <div className="space-y-1">
+                <p className="text-muted-foreground">Fire Risk</p>
+                <Badge variant={selectedForest.riskScore.fire > 15 ? "destructive" : "secondary"}>
+                  {selectedForest.riskScore.fire}
+                </Badge>
+              </div>
+              <div className="space-y-1">
+                <p className="text-muted-foreground">Logging</p>
+                <Badge variant={selectedForest.riskScore.logging > 20 ? "destructive" : "secondary"}>
+                  {selectedForest.riskScore.logging}
+                </Badge>
+              </div>
+              <div className="space-y-1">
+                <p className="text-muted-foreground">Encroachment</p>
+                <Badge variant={selectedForest.riskScore.encroachment > 20 ? "destructive" : "secondary"}>
+                  {selectedForest.riskScore.encroachment}
+                </Badge>
+              </div>
+            </div>
+            
+            <div className="pt-2 border-t">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Health Index</span>
+                <span className="font-bold text-lg text-primary">{selectedForest.healthIndex}/100</span>
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                Last updated: {selectedForest.lastUpdate}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Quick Stats Grid */}

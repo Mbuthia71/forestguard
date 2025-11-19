@@ -21,6 +21,9 @@ import AdminMessages from "./pages/admin/Messages";
 import KenyaDashboard from "./pages/admin/KenyaDashboard";
 import LiveSensorMap from "./pages/admin/LiveSensorMap";
 import SatelliteMonitoring from "./pages/admin/SatelliteMonitoring";
+import SatelliteIntelligence from "./pages/admin/SatelliteIntelligence";
+import IncidentExplorer from "./pages/admin/IncidentExplorer";
+import BlockchainLookup from "./pages/admin/BlockchainLookup";
 import AdminForum from "./pages/admin/Forum";
 import AdminApprovals from "./pages/admin/AdminApprovals";
 import NewReport from "./pages/ranger/NewReport";
@@ -48,6 +51,9 @@ const App = () => (
               <Route path="map" element={<AdminMap />} />
               <Route path="live-sensors" element={<LiveSensorMap />} />
               <Route path="satellite-monitoring" element={<SatelliteMonitoring />} />
+              <Route path="satellite-intelligence" element={<SatelliteIntelligence />} />
+              <Route path="incident-explorer" element={<IncidentExplorer />} />
+              <Route path="blockchain-lookup" element={<BlockchainLookup />} />
               <Route path="alerts" element={<AdminAlerts />} />
               <Route path="reports" element={<AdminReports />} />
               <Route path="blockchain-tracking" element={<BlockchainTracking />} />

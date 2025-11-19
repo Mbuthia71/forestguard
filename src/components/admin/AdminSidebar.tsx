@@ -14,7 +14,9 @@ import {
   Satellite,
   Users,
   Activity,
-  Shield
+  Shield,
+  Search,
+  Link as LinkIcon
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
@@ -29,9 +31,12 @@ const navigation = [
   { name: 'Map & Zones', href: '/admin/map', icon: Map },
   { name: 'Live Sensors', href: '/admin/live-sensors', icon: Radio },
   { name: 'Satellite', href: '/admin/satellite-monitoring', icon: Satellite },
+  { name: 'SAR & Optical', href: '/admin/satellite-intelligence', icon: Satellite },
+  { name: 'Incident Explorer', href: '/admin/incident-explorer', icon: Search },
   { name: 'Alerts', href: '/admin/alerts', icon: AlertCircle },
   { name: 'Reports', href: '/admin/reports', icon: FileText },
   { name: 'Blockchain Tracking', href: '/admin/blockchain-tracking', icon: Shield },
+  { name: 'Blockchain Lookup', href: '/admin/blockchain-lookup', icon: LinkIcon },
   { name: 'Messages', href: '/admin/messages', icon: MessageSquare },
   { name: 'Forum', href: '/admin/forum', icon: MessageSquare },
 ];
