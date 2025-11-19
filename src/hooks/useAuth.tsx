@@ -33,51 +33,46 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const checkUserRole = async (userId: string) => {
     try {
-      // Check user_roles table for role
+      // Check both admin and ranger roles independently - users can have both
       const { data: roleData } = await supabase
         .from('user_roles')
         .select('role')
         .eq('user_id', userId)
         .single();
 
-      if (roleData) {
-        const role = roleData.role;
-        setIsAdmin(role === 'admin');
-        setUserRole(role === 'admin' ? 'admin' : null);
-        setIsRanger(false);
-        setIsStakeholder(false);
-        
-        // Check if master admin by calling the database function
-        if (role === 'admin') {
-          const { data: isMaster } = await supabase.rpc('is_master_admin', { _user_id: userId });
-          setIsMasterAdmin(isMaster || false);
-        } else {
-          setIsMasterAdmin(false);
-        }
-        return;
-      }
-
-      // Check rangers table
       const { data: rangerData } = await supabase
         .from('rangers')
         .select('id')
         .eq('user_id', userId)
         .single();
 
-      if (rangerData) {
-        setIsRanger(true);
-        setUserRole('ranger');
-        setIsAdmin(false);
-        setIsStakeholder(false);
-        return;
+      // Set admin status
+      const hasAdminRole = roleData?.role === 'admin';
+      setIsAdmin(hasAdminRole);
+      
+      // Check if master admin
+      if (hasAdminRole) {
+        const { data: isMaster } = await supabase.rpc('is_master_admin', { _user_id: userId });
+        setIsMasterAdmin(isMaster || false);
+      } else {
+        setIsMasterAdmin(false);
       }
 
-      // Default to no role
-      setIsAdmin(false);
-      setIsRanger(false);
+      // Set ranger status
+      const hasRangerRole = !!rangerData;
+      setIsRanger(hasRangerRole);
+      
+      // Set stakeholder status (not implemented yet)
       setIsStakeholder(false);
-      setIsMasterAdmin(false);
-      setUserRole(null);
+
+      // Set primary user role - prioritize admin if they have both
+      if (hasAdminRole) {
+        setUserRole('admin');
+      } else if (hasRangerRole) {
+        setUserRole('ranger');
+      } else {
+        setUserRole(null);
+      }
     } catch {
       setIsAdmin(false);
       setIsRanger(false);
