@@ -17,6 +17,7 @@ import NotFound from "./pages/NotFound";
 // Lazy load admin pages for better performance
 const HowItWorksPage = lazy(() => import("./pages/HowItWorks"));
 const TechnologyPage = lazy(() => import("./pages/Technology"));
+const AboutPage = lazy(() => import("./pages/About"));
 const AdminLayout = lazy(() => import("./components/admin/AdminLayout"));
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
 const RangerDashboard = lazy(() => import("./pages/ranger/RangerDashboard"));
@@ -66,6 +67,7 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/how-it-works" element={<HowItWorksPage />} />
               <Route path="/technology" element={<TechnologyPage />} />
+              <Route path="/about" element={<AboutPage />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/admin-auth" element={<AdminAuth />} />
               
