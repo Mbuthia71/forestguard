@@ -1,11 +1,12 @@
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { Home, Camera, List, MapPin, LogOut } from 'lucide-react';
+import { Home, Camera, List, MapPin, LogOut, User } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 
 const navigation = [
-  { name: 'Dashboard', href: '/ranger', icon: Home },
+  { name: 'Profile', href: '/ranger', icon: User },
+  { name: 'Dashboard', href: '/rangers', icon: Home },
   { name: 'New Report', href: '/ranger/report/new', icon: Camera },
   { name: 'Tasks', href: '/ranger/tasks', icon: List },
   { name: 'Map', href: '/ranger/map', icon: MapPin },

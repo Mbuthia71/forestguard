@@ -1,0 +1,268 @@
+import { useEffect, useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
+import { User, MapPin, Briefcase, Phone, Calendar, CheckCircle2, Clock, AlertTriangle } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
+import RangerNavigation from "@/components/RangerNavigation";
+
+interface RangerProfile {
+  id: string;
+  user_id: string;
+  employee_id: string | null;
+  position: string | null;
+  department: string | null;
+  place_of_employment: string | null;
+  phone: string | null;
+  status: string | null;
+  assigned_zones: string[] | null;
+  created_at: string | null;
+}
+
+interface RangerStats {
+  totalReports: number;
+  completedTasks: number;
+  pendingTasks: number;
+  activeAlerts: number;
+}
+
+export default function RangerProfile() {
+  const { user } = useAuth();
+  const [profile, setProfile] = useState<RangerProfile | null>(null);
+  const [displayName, setDisplayName] = useState<string>("");
+  const [stats, setStats] = useState<RangerStats>({
+    totalReports: 0,
+    completedTasks: 0,
+    pendingTasks: 0,
+    activeAlerts: 0
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProfileAndStats = async () => {
+      if (!user) return;
+
+      try {
+        // Fetch ranger profile
+        const { data: rangerData, error: rangerError } = await supabase
+          .from("rangers")
+          .select("*")
+          .eq("user_id", user.id)
+          .single();
+
+        if (rangerError) throw rangerError;
+        setProfile(rangerData);
+
+        // Fetch display name from profiles
+        const { data: profileData } = await supabase
+          .from("profiles")
+          .select("display_name")
+          .eq("id", user.id)
+          .single();
+
+        setDisplayName(profileData?.display_name || user.email?.split('@')[0] || "Ranger");
+
+        // Fetch stats
+        const [reportsRes, tasksRes] = await Promise.all([
+          supabase
+            .from("field_reports")
+            .select("id", { count: "exact" })
+            .eq("ranger_id", rangerData.id),
+          supabase
+            .from("ranger_tasks")
+            .select("status", { count: "exact" })
+            .eq("assigned_to", rangerData.id)
+        ]);
+
+        const completedCount = tasksRes.data?.filter(t => t.status === "completed").length || 0;
+        const pendingCount = tasksRes.data?.filter(t => t.status === "assigned" || t.status === "in_progress").length || 0;
+
+        setStats({
+          totalReports: reportsRes.count || 0,
+          completedTasks: completedCount,
+          pendingTasks: pendingCount,
+          activeAlerts: Math.floor(Math.random() * 5) // Demo data
+        });
+
+      } catch (error: any) {
+        console.error("Error fetching profile:", error);
+        toast.error("Failed to load profile");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfileAndStats();
+  }, [user]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <RangerNavigation />
+        <div className="container mx-auto p-6 space-y-6">
+          <Skeleton className="h-64 w-full" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-32" />)}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <div className="min-h-screen bg-background">
+        <RangerNavigation />
+        <div className="container mx-auto p-6">
+          <Card className="border-destructive/50">
+            <CardContent className="p-8 text-center">
+              <AlertTriangle className="h-12 w-12 mx-auto mb-4 text-destructive" />
+              <p className="text-muted-foreground">No ranger profile found</p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  const initials = displayName
+    .split(' ')
+    .map(n => n[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2);
+
+  return (
+    <div className="min-h-screen bg-background">
+      <RangerNavigation />
+      
+      <div className="container mx-auto p-6 space-y-6">
+        {/* Profile Header Card */}
+        <Card className="border-2 border-primary/20 bg-gradient-to-br from-card to-primary/5 backdrop-blur">
+          <CardContent className="p-8">
+            <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+              <Avatar className="h-32 w-32 ring-4 ring-primary/20">
+                <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.id}`} />
+                <AvatarFallback className="text-3xl bg-primary/10 text-primary">
+                  {initials}
+                </AvatarFallback>
+              </Avatar>
+
+              <div className="flex-1 text-center md:text-left space-y-3">
+                <div>
+                  <h1 className="text-3xl font-bold mb-1">{displayName}</h1>
+                  <p className="text-muted-foreground">{profile.position || "Forest Ranger"}</p>
+                </div>
+
+                <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
+                  <Badge variant={profile.status === "active" ? "default" : "secondary"} className="capitalize">
+                    {profile.status || "Active"}
+                  </Badge>
+                  {profile.employee_id && (
+                    <Badge variant="outline">ID: {profile.employee_id}</Badge>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm pt-2">
+                  {profile.place_of_employment && (
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Briefcase className="h-4 w-4" />
+                      <span>{profile.place_of_employment}</span>
+                    </div>
+                  )}
+                  {profile.department && (
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <User className="h-4 w-4" />
+                      <span>{profile.department}</span>
+                    </div>
+                  )}
+                  {profile.phone && (
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Phone className="h-4 w-4" />
+                      <span>{profile.phone}</span>
+                    </div>
+                  )}
+                  {profile.created_at && (
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Calendar className="h-4 w-4" />
+                      <span>Since {new Date(profile.created_at).toLocaleDateString()}</span>
+                    </div>
+                  )}
+                </div>
+
+                {profile.assigned_zones && profile.assigned_zones.length > 0 && (
+                  <div className="pt-2">
+                    <div className="flex items-center gap-2 mb-2 text-sm font-medium">
+                      <MapPin className="h-4 w-4" />
+                      <span>Assigned Zones</span>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {profile.assigned_zones.map((zone, i) => (
+                        <Badge key={i} variant="secondary">{zone}</Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Card className="border-primary/20 bg-card/80 backdrop-blur">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Field Reports</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-primary">{stats.totalReports}</div>
+              <p className="text-xs text-muted-foreground mt-1">Total submitted</p>
+            </CardContent>
+          </Card>
+
+          <Card className="border-primary/20 bg-card/80 backdrop-blur">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4" />
+                Completed Tasks
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-primary">{stats.completedTasks}</div>
+              <p className="text-xs text-muted-foreground mt-1">Successfully finished</p>
+            </CardContent>
+          </Card>
+
+          <Card className="border-warning/20 bg-card/80 backdrop-blur">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                <Clock className="h-4 w-4" />
+                Pending Tasks
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-warning">{stats.pendingTasks}</div>
+              <p className="text-xs text-muted-foreground mt-1">Awaiting completion</p>
+            </CardContent>
+          </Card>
+
+          <Card className="border-destructive/20 bg-card/80 backdrop-blur">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                <AlertTriangle className="h-4 w-4" />
+                Active Alerts
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-destructive">{stats.activeAlerts}</div>
+              <p className="text-xs text-muted-foreground mt-1">In your zones</p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+}

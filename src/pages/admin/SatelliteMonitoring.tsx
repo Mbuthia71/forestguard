@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Satellite, Clock, Flame, CloudRain, AlertTriangle, TrendingUp } from "lucide-react";
+import { Satellite, Clock, Flame, CloudRain, AlertTriangle, TrendingUp, Activity } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
 
 interface NASAEvent {
   id: string;
@@ -46,6 +47,7 @@ export default function SatelliteMonitoring() {
   const [alertsByForest, setAlertsByForest] = useState<Record<string, { last7: number; prev7: number }>>({});
   const [nasaEvents, setNasaEvents] = useState<NASAEvent[]>([]);
   const [loadingEvents, setLoadingEvents] = useState(true);
+  const [heatmapData, setHeatmapData] = useState<Array<{ forest: string; alerts: number }>>([]);
 
   useEffect(() => {
     const fetchAlerts = async () => {
@@ -77,6 +79,13 @@ export default function SatelliteMonitoring() {
       });
 
       setAlertsByForest(map);
+      
+      // Generate heatmap data
+      const heatmap = Object.keys(forests).map((name) => ({
+        forest: name.replace(' Forest', ''),
+        alerts: map[name].last7
+      })).sort((a, b) => b.alerts - a.alerts);
+      setHeatmapData(heatmap);
     };
 
     const fetchNASAEvents = async () => {
@@ -210,6 +219,74 @@ export default function SatelliteMonitoring() {
               })}
             </div>
           )}
+        </CardContent>
+      </Card>
+
+      {/* Alert Heatmap Visualization */}
+      <Card className="border-2 border-destructive/20 bg-card/50 backdrop-blur">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Activity className="h-5 w-5 text-destructive" />
+            Alert Intensity Heatmap (Last 7 Days)
+          </CardTitle>
+          <CardDescription>
+            Visual representation of alert frequency across all Kenyan forest zones
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {!heatmapData.length ? (
+            <Skeleton className="h-80 w-full" />
+          ) : (
+            <ResponsiveContainer width="100%" height={320}>
+              <BarChart data={heatmapData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                <XAxis 
+                  dataKey="forest" 
+                  angle={-45} 
+                  textAnchor="end" 
+                  height={100}
+                  stroke="hsl(var(--foreground))"
+                  tick={{ fill: 'hsl(var(--foreground))' }}
+                />
+                <YAxis 
+                  stroke="hsl(var(--foreground))"
+                  tick={{ fill: 'hsl(var(--foreground))' }}
+                />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: 'hsl(var(--card))', 
+                    border: '1px solid hsl(var(--border))',
+                    borderRadius: '8px'
+                  }}
+                  labelStyle={{ color: 'hsl(var(--foreground))' }}
+                />
+                <Bar dataKey="alerts" radius={[8, 8, 0, 0]}>
+                  {heatmapData.map((entry, index) => {
+                    const color = entry.alerts >= 8 
+                      ? 'hsl(var(--destructive))' 
+                      : entry.alerts >= 3 
+                      ? 'hsl(var(--warning))' 
+                      : 'hsl(var(--primary))';
+                    return <Cell key={`cell-${index}`} fill={color} />;
+                  })}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          )}
+          <div className="flex items-center justify-center gap-6 mt-4 text-sm">
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 rounded bg-primary" />
+              <span className="text-muted-foreground">Stable (0-2)</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 rounded bg-warning" />
+              <span className="text-muted-foreground">Warning (3-7)</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 rounded bg-destructive" />
+              <span className="text-muted-foreground">Critical (8+)</span>
+            </div>
+          </div>
         </CardContent>
       </Card>
 
