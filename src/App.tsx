@@ -7,7 +7,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import ScrollToTop from "@/components/ScrollToTop";
 import LoadingScreen from "@/components/LoadingScreen";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 
 // Eager load critical pages
 import Index from "./pages/Index";
@@ -47,6 +47,24 @@ const RangerProfile = lazy(() => import("./pages/ranger/RangerProfile"));
 
 const queryClient = new QueryClient();
 
+const MinimumLoadingTime = ({ children }: { children: React.ReactNode }) => {
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsReady(true);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!isReady) {
+    return <LoadingScreen />;
+  }
+
+  return <>{children}</>;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -55,7 +73,8 @@ const App = () => (
       <BrowserRouter>
         <ScrollToTop />
         <AuthProvider>
-          <Suspense fallback={<LoadingScreen />}>
+          <MinimumLoadingTime>
+            <Suspense fallback={<LoadingScreen />}>
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/how-it-works" element={<HowItWorksPage />} />
@@ -99,6 +118,7 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
+          </MinimumLoadingTime>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
