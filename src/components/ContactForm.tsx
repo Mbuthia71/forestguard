@@ -9,6 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Mail, User, MessageSquare } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { z } from 'zod';
+import forestFoliage from "@/assets/forest-foliage.png";
 
 const contactSchema = z.object({
   name: z.string().trim().min(1, 'Name is required').max(100, 'Name must be less than 100 characters'),
@@ -73,8 +74,12 @@ export default function ContactForm() {
   };
 
   return (
-    <section id="contact" className="py-24 bg-gradient-to-b from-forest-deep/30 to-background">
-      <div className="container mx-auto px-4">
+    <section id="contact" className="py-24 bg-gradient-to-b from-forest-deep/30 to-background relative overflow-hidden">
+      {/* Forest foliage decorative background */}
+      <div className="absolute bottom-0 left-0 w-1/4 h-1/3 opacity-15">
+        <img src={forestFoliage} alt="" className="w-full h-full object-cover" />
+      </div>
+      <div className="container mx-auto px-4 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

@@ -1,5 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Database, Waves, Link2, Cpu, Satellite, Radio } from "lucide-react";
+import abstractGreenWaves from "@/assets/abstract-green-waves.png";
+import illustratedForest from "@/assets/illustrated-forest-night.png";
 
 const TechnologyStack = () => {
   const technologies = [
@@ -48,8 +50,15 @@ const TechnologyStack = () => {
   ];
 
   return (
-    <section id="technology" className="py-24 bg-background">
-      <div className="container mx-auto px-4">
+    <section id="technology" className="py-24 bg-background relative overflow-hidden">
+      {/* Abstract background patterns */}
+      <div className="absolute top-0 left-0 w-1/2 h-full opacity-5">
+        <img src={abstractGreenWaves} alt="" className="w-full h-full object-cover" />
+      </div>
+      <div className="absolute bottom-0 right-0 w-1/3 h-1/2 opacity-10">
+        <img src={illustratedForest} alt="" className="w-full h-full object-cover" />
+      </div>
+      <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-16 animate-fade-in">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
             Technology <span className="text-primary">Stack</span>
