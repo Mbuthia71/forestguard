@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import { TreePine, AlertTriangle, Shield, Users } from 'lucide-react';
+import handNature from "@/assets/hand-nature.png";
 
 export default function ImpactMetrics() {
   const metrics = [
@@ -35,8 +36,12 @@ export default function ImpactMetrics() {
   ];
 
   return (
-    <section className="py-16 bg-gradient-to-b from-forest-deep/20 to-background">
-      <div className="container mx-auto px-4">
+    <section className="py-16 bg-gradient-to-b from-forest-deep/20 to-background relative overflow-hidden">
+      {/* Hand with nature decorative element */}
+      <div className="absolute top-0 right-0 w-1/4 h-1/2 opacity-10">
+        <img src={handNature} alt="" className="w-full h-full object-cover" />
+      </div>
+      <div className="container mx-auto px-4 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
