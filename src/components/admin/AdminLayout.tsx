@@ -1,7 +1,10 @@
 import { Outlet } from 'react-router-dom';
 import AdminSidebar from './AdminSidebar';
+import { useRealtimeNotifications } from '@/hooks/useRealtimeNotifications';
 
 export default function AdminLayout() {
+  useRealtimeNotifications();
+  
   return (
     <div className="min-h-screen bg-background flex w-full">
       <AdminSidebar />
