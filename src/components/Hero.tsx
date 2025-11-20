@@ -11,11 +11,11 @@ const Hero = () => {
   const navigate = useNavigate();
 
   return (
-    <section id="home" className="relative min-h-screen bg-background overflow-hidden">
+    <section id="home" className="relative min-h-screen bg-background overflow-hidden pt-24">
       {/* Subtle background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-primary/10"></div>
       
-      <div className="relative z-10 container mx-auto px-8 h-screen flex items-center">
+      <div className="relative z-10 container mx-auto px-8 min-h-[calc(100vh-6rem)] flex items-center">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full items-center">
           
           {/* Left side - Vertical text like bonsai design */}
