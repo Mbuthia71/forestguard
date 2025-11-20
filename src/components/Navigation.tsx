@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Menu, X, ShieldCheck, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
+import forestGuardLogo from "@/assets/forestguard-logo-new.png";
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -53,8 +54,9 @@ const Navigation = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo/Brand */}
-          <Link to="/" className="text-xl font-bold text-primary hover:text-lime-neon transition-colors">
-            ForestGuard
+          <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <img src={forestGuardLogo} alt="ForestGuard" className="h-10 w-auto" />
+            <span className="text-xl font-bold text-primary">ForestGuard</span>
           </Link>
 
           {/* Desktop Navigation */}
