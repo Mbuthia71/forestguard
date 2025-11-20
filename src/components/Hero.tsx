@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Play } from "lucide-react";
-import forestGuardLogo from "@/assets/forestguard-logo.png";
+import forestGuardLogo from "@/assets/forestguard-logo-new.png";
 import heroForestPath from "@/assets/hero-forest-path.jpg";
 import { motion } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
@@ -31,14 +31,20 @@ const Hero = () => {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 1, delay: 0.2 }}
-            className="flex justify-center mb-8"
+            className="flex flex-col items-center mb-8 space-y-4"
           >
             <img
               src={forestGuardLogo}
-              alt="ForestGuard"
-              className="w-full max-w-3xl h-auto"
+              alt="ForestGuard Logo"
+              className="w-32 h-auto"
               loading="eager"
             />
+            <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-primary via-lime-neon to-forest-deep bg-clip-text text-transparent">
+              ForestGuard
+            </h1>
+            <p className="text-xl md:text-2xl text-muted-foreground font-light tracking-wide">
+              Protecting Kenya's Forests with Technology
+            </p>
           </motion.div>
 
           <motion.p
