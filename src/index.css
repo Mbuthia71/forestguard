@@ -208,4 +208,10 @@ All colors MUST be HSL.
     width: 100%;
     max-width: 100%;
   }
+  
+  /* Vertical writing mode for bonsai-inspired design */
+  .writing-mode-vertical {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
 }

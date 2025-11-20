@@ -11,90 +11,181 @@ const Hero = () => {
   const navigate = useNavigate();
 
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-forest-deep/70 via-background/80 to-background z-0"></div>
-      <img 
-        src={heroForestPath} 
-        alt="Kenyan Forest" 
-        className="absolute inset-0 w-full h-full object-cover opacity-40"
-        loading="eager"
-      />
+    <section id="home" className="relative min-h-screen bg-background overflow-hidden">
+      {/* Subtle background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-primary/10"></div>
+      
+      <div className="relative z-10 container mx-auto px-8 h-screen flex items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full items-center">
+          
+          {/* Left side - Vertical text like bonsai design */}
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 0.3 }}
+            className="hidden lg:flex lg:col-span-2 items-center"
+          >
+            <div className="flex flex-col items-start gap-4">
+              <div className="writing-mode-vertical text-7xl font-light tracking-widest text-muted-foreground/40 rotate-180">
+                forestguard
+              </div>
+              <div className="w-px h-32 bg-border"></div>
+            </div>
+          </motion.div>
 
-      <div className="relative z-10 container mx-auto px-4 text-center">
+          {/* Center content */}
+          <div className="lg:col-span-8 space-y-12 text-center lg:text-left">
+            
+            {/* Main heading */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="space-y-6"
+            >
+              <div className="flex items-center justify-center lg:justify-start gap-4 mb-8">
+                <motion.img
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ duration: 1, delay: 0.5, type: "spring" }}
+                  src={forestGuardLogo}
+                  alt="ForestGuard Logo"
+                  className="w-20 h-20"
+                />
+                <div className="h-16 w-px bg-border"></div>
+                <h1 className="text-5xl md:text-7xl font-light tracking-tight">
+                  THE FUTURE
+                  <span className="block text-6xl md:text-8xl font-bold bg-gradient-to-r from-primary via-lime-neon to-forest-deep bg-clip-text text-transparent mt-2">
+                    OF FOREST
+                  </span>
+                  <span className="block text-4xl md:text-6xl font-light tracking-wide mt-2">
+                    MONITORING
+                  </span>
+                </h1>
+              </div>
+
+              <div className="h-px w-32 bg-border"></div>
+
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.8, duration: 0.8 }}
+                className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed"
+              >
+                Real-time forest monitoring powered by <span className="text-primary font-semibold">satellite data</span>, 
+                <span className="text-primary font-semibold"> IoT sensors</span>, and 
+                <span className="text-primary font-semibold"> blockchain technology</span>.
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1, duration: 0.8 }}
+                className="flex flex-wrap gap-6 text-sm text-muted-foreground justify-center lg:justify-start"
+              >
+                <span>🛰️ Sentinel-2 Imagery</span>
+                <span>📡 LoRaWAN Sensors</span>
+                <span>🔗 Polygon Blockchain</span>
+                <span>🤖 AI-Powered Alerts</span>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.2, duration: 0.6 }}
+                className="pt-4"
+              >
+                <p className="text-primary font-bold text-2xl mb-8">
+                  Protecting 2,847 hectares of forest. Every second counts.
+                </p>
+              </motion.div>
+            </motion.div>
+
+            {/* CTA Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.4, duration: 0.6 }}
+              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+            >
+              <Button
+                size="lg"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 group min-w-[200px]"
+                onClick={() => (isAdmin ? navigate('/admin') : navigate('/admin-auth'))}
+              >
+                {isAdmin ? 'Go to Admin' : 'Admin Login'}
+                <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-2 border-primary text-primary hover:bg-primary/10 group min-w-[200px]"
+                onClick={() => navigate('/auth')}
+              >
+                <Play className="mr-2 group-hover:scale-110 transition-transform" />
+                Ranger Login
+              </Button>
+            </motion.div>
+
+            {/* Geometric element */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 1.6, duration: 0.8 }}
+              className="hidden lg:flex items-center gap-4 pt-8"
+            >
+              <div className="w-24 h-24 border-2 border-primary/20 relative">
+                <div className="absolute inset-2 bg-primary/5"></div>
+              </div>
+              <div className="w-16 h-16 border-2 border-primary/30"></div>
+            </motion.div>
+          </div>
+
+          {/* Right side - Large hero tree image */}
+          <motion.div
+            initial={{ opacity: 0, x: 50, scale: 0.9 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            transition={{ duration: 1.2, delay: 0.6 }}
+            className="hidden lg:flex lg:col-span-2 items-center justify-center relative"
+          >
+            <div className="relative">
+              {/* Circular platform like bonsai design */}
+              <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-48 h-2 border-2 border-primary/30 rounded-full"></div>
+              <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-32 h-1 bg-primary/20 rounded-full"></div>
+              
+              {/* Large number like the reference */}
+              <div className="text-[200px] font-bold text-primary/5 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 leading-none">
+                01
+              </div>
+
+              {/* Tree icon as centerpiece */}
+              <motion.img
+                animate={{ 
+                  y: [0, -10, 0],
+                }}
+                transition={{ 
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                src={forestGuardLogo}
+                alt="Forest Icon"
+                className="w-40 h-40 relative z-10 drop-shadow-2xl"
+              />
+            </div>
+          </motion.div>
+
+        </div>
+      </div>
+
+      {/* Bottom decorative line */}
+      <div className="absolute bottom-8 left-0 right-0 flex justify-center">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="max-w-5xl mx-auto space-y-8"
-        >
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="flex flex-col items-center mb-8 space-y-4"
-          >
-            <img
-              src={forestGuardLogo}
-              alt="ForestGuard Logo"
-              className="w-32 h-auto"
-              loading="eager"
-            />
-            <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-primary via-lime-neon to-forest-deep bg-clip-text text-transparent">
-              ForestGuard
-            </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground font-light tracking-wide">
-              Protecting Kenya's Forests with Technology
-            </p>
-          </motion.div>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5, duration: 0.8 }}
-            className="text-lg md:text-xl text-foreground/90 max-w-3xl mx-auto leading-relaxed space-y-4"
-          >
-            <span className="block">
-              Real-time forest monitoring powered by <span className="text-primary font-semibold">satellite data</span>, 
-              <span className="text-primary font-semibold"> IoT sensors</span>, and 
-              <span className="text-primary font-semibold"> blockchain technology</span>.
-            </span>
-            <span className="block text-base md:text-lg">
-              🛰️ <span className="font-semibold">Sentinel-2 Imagery</span> • 
-              📡 <span className="font-semibold">LoRaWAN Sensors</span> • 
-              🔗 <span className="font-semibold">Polygon Blockchain</span> • 
-              🤖 <span className="font-semibold">AI-Powered Alerts</span>
-            </span>
-            <span className="block text-primary font-bold text-xl mt-4">
-              Protecting 2,847 hectares of forest. Every second counts.
-            </span>
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7, duration: 0.6 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4"
-          >
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-primary text-primary hover:bg-primary/10 group"
-              onClick={() => (isAdmin ? navigate('/admin') : navigate('/admin-auth'))}
-            >
-              {isAdmin ? 'Go to Admin' : 'Admin Login'}
-              <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-primary text-primary hover:bg-primary/10 group"
-              onClick={() => navigate('/auth')}
-            >
-              <Play className="mr-2 group-hover:scale-110 transition-transform" />
-              Ranger Login
-            </Button>
-          </motion.div>
-        </motion.div>
+          initial={{ width: 0 }}
+          animate={{ width: "200px" }}
+          transition={{ duration: 1.5, delay: 1.8 }}
+          className="h-px bg-gradient-to-r from-transparent via-primary to-transparent"
+        ></motion.div>
       </div>
     </section>
   );
