@@ -550,6 +550,7 @@ export type Database = {
           employee_id: string | null
           id: string
           phone: string | null
+          photo_url: string | null
           place_of_employment: string | null
           position: string | null
           status: string | null
@@ -563,6 +564,7 @@ export type Database = {
           employee_id?: string | null
           id?: string
           phone?: string | null
+          photo_url?: string | null
           place_of_employment?: string | null
           position?: string | null
           status?: string | null
@@ -576,6 +578,7 @@ export type Database = {
           employee_id?: string | null
           id?: string
           phone?: string | null
+          photo_url?: string | null
           place_of_employment?: string | null
           position?: string | null
           status?: string | null
