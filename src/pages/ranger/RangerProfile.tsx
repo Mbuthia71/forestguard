@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { User, MapPin, Briefcase, Phone, Calendar, CheckCircle2, Clock, AlertTriangle } from "lucide-react";
+import { User, MapPin, Briefcase, Phone, Calendar, CheckCircle2, Clock, AlertTriangle, Camera, Upload } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import RangerNavigation from "@/components/RangerNavigation";
@@ -20,6 +21,7 @@ interface RangerProfile {
   status: string | null;
   assigned_zones: string[] | null;
   created_at: string | null;
+  photo_url: string | null;
 }
 
 interface RangerStats {
@@ -40,6 +42,8 @@ export default function RangerProfile() {
     activeAlerts: 0
   });
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const fetchProfileAndStats = async () => {
@@ -98,6 +102,59 @@ export default function RangerProfile() {
     fetchProfileAndStats();
   }, [user]);
 
+  const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !profile) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please upload an image file');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image size must be less than 5MB');
+      return;
+    }
+
+    setUploading(true);
+    try {
+      // Create storage bucket if it doesn't exist (handled by RLS)
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${profile.id}-${Date.now()}.${fileExt}`;
+      const filePath = `ranger-photos/${fileName}`;
+
+      // Upload to storage
+      const { error: uploadError } = await supabase.storage
+        .from('ranger-photos')
+        .upload(filePath, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('ranger-photos')
+        .getPublicUrl(filePath);
+
+      // Update profile with photo URL
+      const { error: updateError } = await supabase
+        .from('rangers')
+        .update({ photo_url: publicUrl })
+        .eq('id', profile.id);
+
+      if (updateError) throw updateError;
+
+      setProfile({ ...profile, photo_url: publicUrl });
+      toast.success('Profile photo updated successfully');
+    } catch (error: any) {
+      console.error('Error uploading photo:', error);
+      toast.error('Failed to upload photo');
+    } finally {
+      setUploading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
@@ -144,12 +201,34 @@ export default function RangerProfile() {
         <Card className="border-2 border-primary/20 bg-gradient-to-br from-card to-primary/5 backdrop-blur">
           <CardContent className="p-8">
             <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-              <Avatar className="h-32 w-32 ring-4 ring-primary/20">
-                <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.id}`} />
-                <AvatarFallback className="text-3xl bg-primary/10 text-primary">
-                  {initials}
-                </AvatarFallback>
-              </Avatar>
+              <div className="relative group">
+                <Avatar className="h-32 w-32 ring-4 ring-primary/20">
+                  <AvatarImage src={profile.photo_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.id}`} />
+                  <AvatarFallback className="text-3xl bg-primary/10 text-primary">
+                    {initials}
+                  </AvatarFallback>
+                </Avatar>
+                <Button
+                  size="icon"
+                  variant="secondary"
+                  className="absolute bottom-0 right-0 h-10 w-10 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading}
+                >
+                  {uploading ? (
+                    <Upload className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Camera className="h-4 w-4" />
+                  )}
+                </Button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handlePhotoUpload}
+                />
+              </div>
 
               <div className="flex-1 text-center md:text-left space-y-3">
                 <div>
