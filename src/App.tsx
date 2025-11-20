@@ -37,6 +37,7 @@ const AdminDirectory = lazy(() => import("./pages/admin/AdminDirectory"));
 const AdminRangers = lazy(() => import("./pages/admin/Rangers"));
 const AdminFieldReports = lazy(() => import("./pages/admin/FieldReports"));
 const AdminTasks = lazy(() => import("./pages/admin/Tasks"));
+const AdminSettings = lazy(() => import("./pages/admin/Settings"));
 const NewReport = lazy(() => import("./pages/ranger/NewReport"));
 const Tasks = lazy(() => import("./pages/ranger/Tasks"));
 const RangerMap = lazy(() => import("./pages/ranger/RangerMap"));
@@ -75,6 +76,7 @@ const App = () => (
                 <Route path="rangers" element={<AdminRangers />} />
                 <Route path="field-reports" element={<AdminFieldReports />} />
                 <Route path="tasks" element={<AdminTasks />} />
+                <Route path="settings" element={<AdminSettings />} />
                 <Route path="kenya-dashboard" element={<KenyaDashboard />} />
                 <Route path="map" element={<AdminMap />} />
                 <Route path="live-sensors" element={<LiveSensorMap />} />

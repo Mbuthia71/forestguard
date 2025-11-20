@@ -422,6 +422,36 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_preferences: {
+        Row: {
+          alerts_enabled: boolean
+          created_at: string | null
+          field_reports_enabled: boolean
+          id: string
+          task_assignments_enabled: boolean
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          alerts_enabled?: boolean
+          created_at?: string | null
+          field_reports_enabled?: boolean
+          id?: string
+          task_assignments_enabled?: boolean
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          alerts_enabled?: boolean
+          created_at?: string | null
+          field_reports_enabled?: boolean
+          id?: string
+          task_assignments_enabled?: boolean
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       pending_admin_approvals: {
         Row: {
           approved_at: string | null
