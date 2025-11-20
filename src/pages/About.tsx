@@ -4,11 +4,13 @@ import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import founderImage from "@/assets/founder.jpeg";
 import { motion } from "framer-motion";
+import PageTransition from "@/components/PageTransition";
 
 const About = () => {
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
+    <PageTransition>
+      <div className="min-h-screen bg-background">
+        <Navigation />
       
       {/* Hero Section */}
       <motion.section 
@@ -388,6 +390,7 @@ const About = () => {
 
       <Footer />
     </div>
+    </PageTransition>
   );
 };
 

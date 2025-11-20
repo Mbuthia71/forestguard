@@ -5,18 +5,21 @@ import RealTimeDashboard from "@/components/RealTimeDashboard";
 import IoTSimulator from "@/components/IoTSimulator";
 import BlockchainReporting from "@/components/BlockchainReporting";
 import Footer from "@/components/Footer";
+import PageTransition from "@/components/PageTransition";
 
 const TechnologyPage = () => {
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
-      <TechnologyStack />
-      <SatelliteAnalysis />
-      <RealTimeDashboard />
-      <IoTSimulator />
-      <BlockchainReporting />
-      <Footer />
-    </div>
+    <PageTransition>
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        <TechnologyStack />
+        <SatelliteAnalysis />
+        <RealTimeDashboard />
+        <IoTSimulator />
+        <BlockchainReporting />
+        <Footer />
+      </div>
+    </PageTransition>
   );
 };
 
