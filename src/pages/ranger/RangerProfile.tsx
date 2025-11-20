@@ -170,7 +170,7 @@ export default function RangerProfile() {
     try {
       const fileExt = file.name.split('.').pop();
       const fileName = `${profile.id}-${Date.now()}.${fileExt}`;
-      const filePath = `${fileName}`;
+      const filePath = `${user?.id}/${fileName}`;
 
       // Upload to storage
       const { error: uploadError } = await supabase.storage

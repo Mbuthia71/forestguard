@@ -1,11 +1,45 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
 import { FileText, ClipboardList, AlertTriangle } from 'lucide-react';
 
+interface NotificationPreferences {
+  field_reports_enabled: boolean;
+  task_assignments_enabled: boolean;
+  alerts_enabled: boolean;
+}
+
 export function useRealtimeNotifications() {
-  const { isAdmin } = useAuth();
+  const { isAdmin, user } = useAuth();
+  const [preferences, setPreferences] = useState<NotificationPreferences>({
+    field_reports_enabled: true,
+    task_assignments_enabled: true,
+    alerts_enabled: true,
+  });
+
+  // Fetch preferences
+  useEffect(() => {
+    if (!user || !isAdmin) return;
+
+    const fetchPreferences = async () => {
+      const { data } = await supabase
+        .from("notification_preferences")
+        .select("*")
+        .eq("user_id", user.id)
+        .single();
+
+      if (data) {
+        setPreferences({
+          field_reports_enabled: data.field_reports_enabled,
+          task_assignments_enabled: data.task_assignments_enabled,
+          alerts_enabled: data.alerts_enabled,
+        });
+      }
+    };
+
+    fetchPreferences();
+  }, [user, isAdmin]);
 
   useEffect(() => {
     if (!isAdmin) return;
@@ -20,6 +54,8 @@ export function useRealtimeNotifications() {
           table: 'field_reports'
         },
         async (payload) => {
+          if (!preferences.field_reports_enabled) return;
+
           // Fetch ranger name for the notification
           const report = payload.new as any;
           const { data: ranger } = await supabase
@@ -53,6 +89,8 @@ export function useRealtimeNotifications() {
           table: 'ranger_tasks'
         },
         async (payload) => {
+          if (!preferences.task_assignments_enabled) return;
+
           const task = payload.new as any;
           
           // Only notify if task is assigned to someone
@@ -89,6 +127,8 @@ export function useRealtimeNotifications() {
           table: 'alerts'
         },
         (payload) => {
+          if (!preferences.alerts_enabled) return;
+
           const alert = payload.new as any;
           
           const severityColors = {
@@ -110,5 +150,5 @@ export function useRealtimeNotifications() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [isAdmin]);
+  }, [isAdmin, preferences]);
 }

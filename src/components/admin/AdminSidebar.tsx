@@ -15,7 +15,8 @@ import {
   Search,
   Link as LinkIcon,
   Users,
-  Activity
+  Activity,
+  Settings
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
@@ -38,6 +39,7 @@ const navigation = [
   { name: 'Blockchain Tracking', href: '/admin/blockchain-tracking', icon: Shield },
   { name: 'Blockchain Lookup', href: '/admin/blockchain-lookup', icon: LinkIcon },
   { name: 'Messages', href: '/admin/messages', icon: MessageSquare },
+  { name: 'Settings', href: '/admin/settings', icon: Settings },
 ];
 
 export default function AdminSidebar() {
