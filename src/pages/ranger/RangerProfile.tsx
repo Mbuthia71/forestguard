@@ -5,10 +5,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { User, MapPin, Briefcase, Phone, Calendar, CheckCircle2, Clock, AlertTriangle, Camera, Upload } from "lucide-react";
+import { User, MapPin, Briefcase, Phone, Calendar, CheckCircle2, Clock, AlertTriangle, Camera, Upload, FileText, Target, Route } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import RangerNavigation from "@/components/RangerNavigation";
+import { formatDistanceToNow } from "date-fns";
 
 interface RangerProfile {
   id: string;
@@ -31,6 +32,15 @@ interface RangerStats {
   activeAlerts: number;
 }
 
+interface ActivityItem {
+  id: string;
+  type: 'report' | 'task' | 'patrol';
+  title: string;
+  description: string;
+  timestamp: string;
+  location?: string;
+}
+
 export default function RangerProfile() {
   const { user } = useAuth();
   const [profile, setProfile] = useState<RangerProfile | null>(null);
@@ -41,6 +51,7 @@ export default function RangerProfile() {
     pendingTasks: 0,
     activeAlerts: 0
   });
+  const [activities, setActivities] = useState<ActivityItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -91,6 +102,43 @@ export default function RangerProfile() {
           activeAlerts: Math.floor(Math.random() * 5) // Demo data
         });
 
+        // Fetch recent activities
+        const activityItems: ActivityItem[] = [];
+
+        // Add field reports
+        if (reportsRes.data) {
+          reportsRes.data.slice(0, 5).forEach((report: any) => {
+            activityItems.push({
+              id: report.id,
+              type: 'report',
+              title: report.title || 'Field Report',
+              description: report.report_type,
+              timestamp: report.created_at,
+              location: `${report.latitude.toFixed(4)}, ${report.longitude.toFixed(4)}`
+            });
+          });
+        }
+
+        // Add completed tasks
+        if (tasksRes.data) {
+          tasksRes.data
+            .filter((t: any) => t.status === 'completed')
+            .slice(0, 5)
+            .forEach((task: any) => {
+              activityItems.push({
+                id: task.id,
+                type: 'task',
+                title: task.title,
+                description: 'Task completed',
+                timestamp: task.completed_at || task.updated_at
+              });
+            });
+        }
+
+        // Sort by timestamp
+        activityItems.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+        setActivities(activityItems.slice(0, 10));
+
       } catch (error: any) {
         console.error("Error fetching profile:", error);
         toast.error("Failed to load profile");
@@ -120,17 +168,19 @@ export default function RangerProfile() {
 
     setUploading(true);
     try {
-      // Create storage bucket if it doesn't exist (handled by RLS)
       const fileExt = file.name.split('.').pop();
       const fileName = `${profile.id}-${Date.now()}.${fileExt}`;
-      const filePath = `ranger-photos/${fileName}`;
+      const filePath = `${fileName}`;
 
       // Upload to storage
       const { error: uploadError } = await supabase.storage
         .from('ranger-photos')
         .upload(filePath, file, { upsert: true });
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        console.error('Upload error:', uploadError);
+        throw uploadError;
+      }
 
       // Get public URL
       const { data: { publicUrl } } = supabase.storage
@@ -341,6 +391,58 @@ export default function RangerProfile() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Activity Timeline */}
+        <Card className="border-primary/20 bg-card/80 backdrop-blur">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Clock className="h-5 w-5" />
+              Recent Activity
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {activities.length === 0 ? (
+              <p className="text-center text-muted-foreground py-8">No recent activity</p>
+            ) : (
+              <div className="space-y-4">
+                {activities.map((activity) => (
+                  <div key={activity.id} className="flex gap-4 pb-4 border-b last:border-0 border-border/50">
+                    <div className="flex-shrink-0 mt-1">
+                      {activity.type === 'report' && (
+                        <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                          <FileText className="h-5 w-5 text-primary" />
+                        </div>
+                      )}
+                      {activity.type === 'task' && (
+                        <div className="h-10 w-10 rounded-full bg-green-500/10 flex items-center justify-center">
+                          <CheckCircle2 className="h-5 w-5 text-green-500" />
+                        </div>
+                      )}
+                      {activity.type === 'patrol' && (
+                        <div className="h-10 w-10 rounded-full bg-blue-500/10 flex items-center justify-center">
+                          <Route className="h-5 w-5 text-blue-500" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-foreground">{activity.title}</p>
+                      <p className="text-sm text-muted-foreground">{activity.description}</p>
+                      {activity.location && (
+                        <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
+                          <MapPin className="h-3 w-3" />
+                          {activity.location}
+                        </p>
+                      )}
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {formatDistanceToNow(new Date(activity.timestamp), { addSuffix: true })}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
