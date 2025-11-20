@@ -2,12 +2,13 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import ScrollToTop from "@/components/ScrollToTop";
 import LoadingScreen from "@/components/LoadingScreen";
 import { lazy, Suspense, useEffect, useState } from "react";
+import { AnimatePresence } from "framer-motion";
 
 // Eager load critical pages
 import Index from "./pages/Index";
@@ -65,6 +66,57 @@ const MinimumLoadingTime = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
+const AnimatedRoutes = () => {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<Index />} />
+        <Route path="/how-it-works" element={<HowItWorksPage />} />
+        <Route path="/technology" element={<TechnologyPage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/admin-auth" element={<AdminAuth />} />
+        
+        {/* Admin Routes */}
+        <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="approvals" element={<AdminApprovals />} />
+          <Route path="rangers" element={<AdminRangers />} />
+          <Route path="field-reports" element={<AdminFieldReports />} />
+          <Route path="tasks" element={<AdminTasks />} />
+          <Route path="settings" element={<AdminSettings />} />
+          <Route path="kenya-dashboard" element={<KenyaDashboard />} />
+          <Route path="map" element={<AdminMap />} />
+          <Route path="live-sensors" element={<LiveSensorMap />} />
+          <Route path="satellite-monitoring" element={<SatelliteMonitoring />} />
+          <Route path="satellite-intelligence" element={<SatelliteIntelligence />} />
+          <Route path="incident-explorer" element={<IncidentExplorer />} />
+          <Route path="blockchain-lookup" element={<BlockchainLookup />} />
+          <Route path="blockchain-tracking" element={<BlockchainTracking />} />
+          <Route path="alerts" element={<AdminAlerts />} />
+          <Route path="reports" element={<AdminReports />} />
+          <Route path="messages" element={<Messages />} />
+          <Route path="directory" element={<AdminDirectory />} />
+        </Route>
+
+        {/* Ranger Routes */}
+        <Route path="/ranger" element={<ProtectedRoute><RangerProfile /></ProtectedRoute>} />
+        <Route path="/rangers" element={<ProtectedRoute><RangerDashboard /></ProtectedRoute>} />
+        <Route path="/ranger/report/new" element={<ProtectedRoute><NewReport /></ProtectedRoute>} />
+        <Route path="/ranger/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
+        <Route path="/ranger/map" element={<ProtectedRoute><RangerMap /></ProtectedRoute>} />
+
+        {/* Stakeholder Routes */}
+        <Route path="/stakeholder" element={<ProtectedRoute><StakeholderDashboard /></ProtectedRoute>} />
+
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </AnimatePresence>
+  );
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -75,49 +127,8 @@ const App = () => (
         <AuthProvider>
           <MinimumLoadingTime>
             <Suspense fallback={<LoadingScreen />}>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/how-it-works" element={<HowItWorksPage />} />
-              <Route path="/technology" element={<TechnologyPage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/admin-auth" element={<AdminAuth />} />
-              
-              {/* Admin Routes */}
-              <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
-                <Route index element={<AdminDashboard />} />
-                <Route path="approvals" element={<AdminApprovals />} />
-                <Route path="rangers" element={<AdminRangers />} />
-                <Route path="field-reports" element={<AdminFieldReports />} />
-                <Route path="tasks" element={<AdminTasks />} />
-                <Route path="settings" element={<AdminSettings />} />
-                <Route path="kenya-dashboard" element={<KenyaDashboard />} />
-                <Route path="map" element={<AdminMap />} />
-                <Route path="live-sensors" element={<LiveSensorMap />} />
-                <Route path="satellite-monitoring" element={<SatelliteMonitoring />} />
-                <Route path="satellite-intelligence" element={<SatelliteIntelligence />} />
-                <Route path="incident-explorer" element={<IncidentExplorer />} />
-                <Route path="blockchain-lookup" element={<BlockchainLookup />} />
-                <Route path="alerts" element={<AdminAlerts />} />
-                <Route path="reports" element={<AdminReports />} />
-                <Route path="blockchain-tracking" element={<BlockchainTracking />} />
-                <Route path="messages" element={<Messages />} />
-                <Route path="directory" element={<AdminDirectory />} />
-              </Route>
-
-              {/* Ranger Routes */}
-              <Route path="/ranger" element={<ProtectedRoute><RangerProfile /></ProtectedRoute>} />
-              <Route path="/rangers" element={<ProtectedRoute><RangerDashboard /></ProtectedRoute>} />
-              <Route path="/ranger/report/new" element={<ProtectedRoute><NewReport /></ProtectedRoute>} />
-              <Route path="/ranger/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
-              <Route path="/ranger/map" element={<ProtectedRoute><RangerMap /></ProtectedRoute>} />
-
-              {/* Stakeholder Routes */}
-              <Route path="/stakeholder" element={<ProtectedRoute><StakeholderDashboard /></ProtectedRoute>} />
-
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
+              <AnimatedRoutes />
+            </Suspense>
           </MinimumLoadingTime>
         </AuthProvider>
       </BrowserRouter>
