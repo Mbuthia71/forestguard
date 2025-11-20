@@ -40,6 +40,7 @@ const AdminTasks = lazy(() => import("./pages/admin/Tasks"));
 const NewReport = lazy(() => import("./pages/ranger/NewReport"));
 const Tasks = lazy(() => import("./pages/ranger/Tasks"));
 const RangerMap = lazy(() => import("./pages/ranger/RangerMap"));
+const RangerProfile = lazy(() => import("./pages/ranger/RangerProfile"));
 
 const queryClient = new QueryClient();
 
@@ -89,7 +90,8 @@ const App = () => (
               </Route>
 
               {/* Ranger Routes */}
-              <Route path="/ranger" element={<ProtectedRoute><RangerDashboard /></ProtectedRoute>} />
+              <Route path="/ranger" element={<ProtectedRoute><RangerProfile /></ProtectedRoute>} />
+              <Route path="/rangers" element={<ProtectedRoute><RangerDashboard /></ProtectedRoute>} />
               <Route path="/ranger/report/new" element={<ProtectedRoute><NewReport /></ProtectedRoute>} />
               <Route path="/ranger/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
               <Route path="/ranger/map" element={<ProtectedRoute><RangerMap /></ProtectedRoute>} />
