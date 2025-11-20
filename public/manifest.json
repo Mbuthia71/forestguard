@@ -1,23 +1,35 @@
 {
-  "name": "ForestGuard - Save What Still Breathes",
+  "name": "ForestGuard - Protecting Kenya's Forests",
   "short_name": "ForestGuard",
-  "description": "Real-time forest monitoring using satellite, IoT sensors, and blockchain",
+  "description": "Real-time forest monitoring using satellite data, IoT sensors, and blockchain technology",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a1f0f",
-  "theme_color": "#bef264",
+  "background_color": "#f8faf9",
+  "theme_color": "#2d6a4f",
   "icons": [
     {
-      "src": "/icons/forestguard-icon-512.png",
+      "src": "/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "/icons/forestguard-icon-512.png",
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
