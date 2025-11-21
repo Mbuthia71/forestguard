@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Heart, TreePine, Shield, Users, Target, CheckCircle2, Leaf } from "lucide-react";
 import { motion } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const Donate = () => {
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
@@ -54,7 +55,7 @@ const Donate = () => {
     { value: "89", label: "Reports Verified", icon: Users },
   ];
 
-  const handleDonate = () => {
+  const handleDonate = async () => {
     const amount = selectedAmount || parseFloat(customAmount);
     
     if (!amount || amount <= 0) {
@@ -66,13 +67,48 @@ const Donate = () => {
       return;
     }
 
-    toast({
-      title: "Redirecting to Payment",
-      description: `Processing donation of KES ${amount.toLocaleString()}...`,
-    });
+    try {
+      toast({
+        title: "Processing...",
+        description: "Redirecting to secure payment...",
+      });
 
-    // TODO: Integrate Paystack payment gateway
-    // This will redirect to Paystack checkout
+      // Call edge function to initialize Paystack transaction
+      const { data, error } = await supabase.functions.invoke('paystack-initialize', {
+        body: {
+          amount,
+          email: 'donor@forestguard.org', // You can collect this from a form
+          metadata: {
+            tier: donationTiers.find(t => t.amount === amount)?.title || 'Custom',
+            amount_kes: amount,
+          }
+        }
+      });
+
+      if (error) {
+        console.error('Payment initialization error:', error);
+        toast({
+          title: "Payment Error",
+          description: error.message || "Failed to initialize payment. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (data?.authorization_url) {
+        // Redirect to Paystack checkout
+        window.location.href = data.authorization_url;
+      } else {
+        throw new Error('No authorization URL received');
+      }
+    } catch (error) {
+      console.error('Donation error:', error);
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
