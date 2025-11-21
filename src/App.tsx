@@ -20,6 +20,7 @@ import NotFound from "./pages/NotFound";
 const HowItWorksPage = lazy(() => import("./pages/HowItWorks"));
 const TechnologyPage = lazy(() => import("./pages/Technology"));
 const AboutPage = lazy(() => import("./pages/About"));
+const DonatePage = lazy(() => import("./pages/Donate"));
 const AdminLayout = lazy(() => import("./components/admin/AdminLayout"));
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
 const RangerDashboard = lazy(() => import("./pages/ranger/RangerDashboard"));
@@ -76,6 +77,7 @@ const AnimatedRoutes = () => {
         <Route path="/how-it-works" element={<HowItWorksPage />} />
         <Route path="/technology" element={<TechnologyPage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/donate" element={<DonatePage />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/admin-auth" element={<AdminAuth />} />
         
