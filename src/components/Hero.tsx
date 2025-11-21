@@ -11,12 +11,12 @@ const Hero = () => {
   const navigate = useNavigate();
 
   return (
-    <section id="home" className="relative min-h-screen bg-background overflow-hidden pt-24">
+    <section id="home" className="relative min-h-screen bg-background overflow-hidden pt-20 md:pt-24">
       {/* Subtle background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-primary/10"></div>
       
-      <div className="relative z-10 container mx-auto px-8 min-h-[calc(100vh-6rem)] flex items-center">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full items-center">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 min-h-[calc(100vh-5rem)] md:min-h-[calc(100vh-6rem)] flex items-center py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 w-full items-center">
           
           {/* Left side - Vertical text like bonsai design */}
           <motion.div
@@ -34,43 +34,43 @@ const Hero = () => {
           </motion.div>
 
           {/* Center content */}
-          <div className="lg:col-span-8 space-y-12 text-center lg:text-left">
+          <div className="lg:col-span-8 space-y-6 sm:space-y-8 md:space-y-12 text-center lg:text-left">
             
             {/* Main heading */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="space-y-6"
+              className="space-y-4 md:space-y-6"
             >
-              <div className="flex items-center justify-center lg:justify-start gap-4 mb-8">
+              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4 mb-4 sm:mb-6 md:mb-8">
                 <motion.img
                   initial={{ scale: 0, rotate: -180 }}
                   animate={{ scale: 1, rotate: 0 }}
                   transition={{ duration: 1, delay: 0.5, type: "spring" }}
                   src={forestGuardLogo}
                   alt="ForestGuard Logo"
-                  className="w-20 h-20"
+                  className="w-16 h-16 sm:w-20 sm:h-20"
                 />
-                <div className="h-16 w-px bg-border"></div>
-                <h1 className="text-5xl md:text-7xl font-light tracking-tight">
+                <div className="hidden sm:block h-12 sm:h-16 w-px bg-border"></div>
+                <h1 className="responsive-text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-light tracking-tight">
                   THE FUTURE
-                  <span className="block text-6xl md:text-8xl font-bold bg-gradient-to-r from-primary via-lime-neon to-forest-deep bg-clip-text text-transparent mt-2">
+                  <span className="block responsive-text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold bg-gradient-to-r from-primary via-accent to-forest-deep bg-clip-text text-transparent mt-1 sm:mt-2">
                     OF FOREST
                   </span>
-                  <span className="block text-4xl md:text-6xl font-light tracking-wide mt-2">
+                  <span className="block responsive-text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-light tracking-wide mt-1 sm:mt-2">
                     MONITORING
                   </span>
                 </h1>
               </div>
 
-              <div className="h-px w-32 bg-border"></div>
+              <div className="h-px w-20 sm:w-32 bg-border mx-auto lg:mx-0"></div>
 
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.8, duration: 0.8 }}
-                className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed"
+                className="responsive-text-base md:text-lg lg:text-xl text-muted-foreground max-w-2xl leading-relaxed mx-auto lg:mx-0"
               >
                 Real-time forest monitoring powered by <span className="text-primary font-semibold">satellite data</span>, 
                 <span className="text-primary font-semibold"> IoT sensors</span>, and 
@@ -81,22 +81,22 @@ const Hero = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1, duration: 0.8 }}
-                className="flex flex-wrap gap-6 text-sm text-muted-foreground justify-center lg:justify-start"
+                className="flex flex-wrap gap-3 sm:gap-4 md:gap-6 text-xs sm:text-sm text-muted-foreground justify-center lg:justify-start"
               >
-                <span>🛰️ Sentinel-2 Imagery</span>
-                <span>📡 LoRaWAN Sensors</span>
-                <span>🔗 Polygon Blockchain</span>
-                <span>🤖 AI-Powered Alerts</span>
+                <span className="whitespace-nowrap">🛰️ Sentinel-2</span>
+                <span className="whitespace-nowrap">📡 LoRaWAN</span>
+                <span className="whitespace-nowrap">🔗 Blockchain</span>
+                <span className="whitespace-nowrap">🤖 AI Alerts</span>
               </motion.div>
 
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.2, duration: 0.6 }}
-                className="pt-4"
+                className="pt-2 sm:pt-4"
               >
-                <p className="text-primary font-bold text-2xl mb-8">
-                  Protecting 2,847 hectares of forest. Every second counts.
+                <p className="text-primary font-bold responsive-text-lg sm:text-xl md:text-2xl mb-4 sm:mb-6 md:mb-8">
+                  Protecting 2,847 hectares. Every second counts.
                 </p>
               </motion.div>
             </motion.div>
@@ -106,11 +106,11 @@ const Hero = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.4, duration: 0.6 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start"
             >
               <Button
                 size="lg"
-                className="bg-primary text-primary-foreground hover:bg-primary/90 group min-w-[200px]"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 group w-full sm:w-auto sm:min-w-[180px] touch-manipulation"
                 onClick={() => (isAdmin ? navigate('/admin') : navigate('/admin-auth'))}
               >
                 {isAdmin ? 'Go to Admin' : 'Admin Login'}
@@ -119,7 +119,7 @@ const Hero = () => {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-2 border-primary text-primary hover:bg-primary/10 group min-w-[200px]"
+                className="border-2 border-primary text-primary hover:bg-primary/10 group w-full sm:w-auto sm:min-w-[180px] touch-manipulation"
                 onClick={() => navigate('/auth')}
               >
                 <Play className="mr-2 group-hover:scale-110 transition-transform" />
