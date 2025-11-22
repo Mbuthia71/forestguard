@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Satellite, Radar, TrendingDown, Flame, TreeDeciduous } from "lucide-react";
 import { useForestSelector } from "@/hooks/useForestSelector";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { SatelliteAIVoiceover } from "@/components/SatelliteAIVoiceover";
 
 export default function SatelliteIntelligence() {
   const { selectedForest } = useForestSelector();
@@ -39,6 +40,11 @@ export default function SatelliteIntelligence() {
           </p>
         </div>
       </div>
+
+      <SatelliteAIVoiceover 
+        forestName={selectedForest.name}
+        satelliteData={forestHealth}
+      />
 
       <Tabs defaultValue="sar" className="space-y-6">
         <TabsList className="grid w-full grid-cols-3">
