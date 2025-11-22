@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Building2, TrendingUp, Shield, Users, CheckCircle2, Satellite, Network, Blocks, FileCheck, BarChart3, Globe, Leaf } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import ROICalculator from "@/components/ROICalculator";
 
 const ForOrganizations = () => {
   const partnershipTiers = [
@@ -39,31 +40,13 @@ const ForOrganizations = () => {
         "Real-time forest health metrics",
         "Monthly forest story reports (PDF)",
         "Incident explorer with verified threats",
-        "Carbon credit verification data",
         "Community impact statistics",
         "Downloadable data exports (CSV)",
         "Public API access for research",
+        "Educational resource library",
       ],
       cta: "Start NGO Subscription",
       color: "green",
-    },
-    {
-      tier: "Carbon Credit Verifiers",
-      icon: Leaf,
-      price: "5% verification fee",
-      description: "Satellite + ground truth verification for carbon offset projects",
-      features: [
-        "Sentinel-2 NDVI analysis (vegetation growth)",
-        "Before/after canopy density comparison",
-        "IoT sensor validation (on-ground verification)",
-        "Blockchain-timestamped evidence",
-        "Immutable audit trail",
-        "Automated verification reports",
-        "Integration with carbon registries",
-        "Fraud detection algorithms",
-      ],
-      cta: "Setup Carbon Verification",
-      color: "emerald",
     },
     {
       tier: "Research Institutions",
@@ -181,6 +164,11 @@ const ForOrganizations = () => {
             </div>
           </section>
 
+          {/* ROI Calculator */}
+          <section className="container mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+            <ROICalculator />
+          </section>
+
           {/* Partnership Tiers */}
           <section className="container mx-auto px-4 sm:px-6 lg:px-8 mb-16">
             <div className="text-center mb-12">
@@ -293,7 +281,7 @@ const ForOrganizations = () => {
                     <div className="text-center">
                       <div className="text-2xl font-bold text-primary mb-2">Year 3</div>
                       <div className="text-sm text-muted-foreground mb-1">$700K Revenue</div>
-                      <div className="text-xs text-muted-foreground">B2G + Carbon Credits + NGOs</div>
+                      <div className="text-xs text-muted-foreground">B2G + NGO Partnerships</div>
                     </div>
                     <div className="text-center">
                       <div className="text-2xl font-bold text-primary mb-2">Year 4</div>

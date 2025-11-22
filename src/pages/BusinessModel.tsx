@@ -158,15 +158,8 @@ const BusinessModel = () => {
                     </div>
                     <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
                       <div>
-                        <div className="font-semibold">Carbon Credit Verification</div>
-                        <div className="text-sm text-muted-foreground">5% fee on verified credits</div>
-                      </div>
-                      <div className="text-2xl font-bold text-primary">$100K</div>
-                    </div>
-                    <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                      <div>
-                        <div className="font-semibold">NGO Subscriptions</div>
-                        <div className="text-sm text-muted-foreground">20 NGOs × $5K/year</div>
+                        <div className="font-semibold">NGO Transparency Subscriptions</div>
+                        <div className="text-sm text-muted-foreground">20 organizations × $5K/year</div>
                       </div>
                       <div className="text-2xl font-bold text-primary">$100K</div>
                     </div>
