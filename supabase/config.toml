@@ -1,1 +1,31 @@
 project_id = "nsguyphwkmvtxczfabts"
+
+[functions.daily-forest-briefing]
+verify_jwt = false
+
+[functions.ai-satellite-summary]
+verify_jwt = false
+
+[functions.bootstrap-admin]
+verify_jwt = false
+
+[functions.get-mapbox-key]
+verify_jwt = false
+
+[functions.paystack-initialize]
+verify_jwt = false
+
+[functions.text-to-speech]
+verify_jwt = false
+
+[functions.webauthn-login-challenge]
+verify_jwt = false
+
+[functions.webauthn-login-verify]
+verify_jwt = false
+
+[functions.webauthn-register-challenge]
+verify_jwt = false
+
+[functions.webauthn-register-verify]
+verify_jwt = false
