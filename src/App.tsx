@@ -21,6 +21,7 @@ const HowItWorksPage = lazy(() => import("./pages/HowItWorks"));
 const TechnologyPage = lazy(() => import("./pages/Technology"));
 const AboutPage = lazy(() => import("./pages/About"));
 const DonatePage = lazy(() => import("./pages/Donate"));
+const BusinessModelPage = lazy(() => import("./pages/BusinessModel"));
 const AdminLayout = lazy(() => import("./components/admin/AdminLayout"));
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
 const RangerDashboard = lazy(() => import("./pages/ranger/RangerDashboard"));
@@ -78,6 +79,7 @@ const AnimatedRoutes = () => {
         <Route path="/technology" element={<TechnologyPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/donate" element={<DonatePage />} />
+        <Route path="/business-model" element={<BusinessModelPage />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/admin-auth" element={<AdminAuth />} />
         

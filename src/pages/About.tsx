@@ -97,9 +97,9 @@ const About = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              ForestGuard was born from a deep concern about Kenya's rapidly disappearing forest cover 
-              and the dangerous challenges faced by environmental activists reporting illegal logging, 
-              encroachment, and forest degradation.
+              Kenya loses 12,000 hectares of forest every year to illegal logging and land grabbing. 
+              Whistleblowers who report these crimes face threats, corruption, and retaliation. 
+              Traditional monitoring arrives too late—forests disappear while communities watch helplessly.
             </motion.p>
             <motion.p
               initial={{ opacity: 0 }}
@@ -107,10 +107,9 @@ const About = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.3 }}
             >
-              Traditional forest monitoring systems rely on infrequent manual patrols and paper-based 
-              reporting that can be easily tampered with or ignored. Whistleblowers who report illegal 
-              activities face intimidation, corruption, and retaliation from powerful interests profiting 
-              from deforestation.
+              ForestGuard changes this. We combine satellites that watch from space, sensors that listen 
+              on the ground, blockchain that protects whistleblowers, and AI that alerts rangers instantly. 
+              Threats are detected before they spread. Communities are protected from retaliation.
             </motion.p>
             <motion.p
               initial={{ opacity: 0 }}
@@ -118,26 +117,9 @@ const About = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
-              ForestGuard addresses these challenges by combining four revolutionary technologies: 
-              <span className="text-primary font-semibold"> satellite change detection</span> using 
-              Sentinel-2 and Google Earth Engine to monitor vegetation health from space, 
-              <span className="text-primary font-semibold"> IoT ground sensors</span> deployed across 
-              forest zones to detect fire, illegal logging, and wildlife activity in real-time, 
-              <span className="text-primary font-semibold"> blockchain-verified anonymous reporting</span> 
-              that protects whistleblower identities while creating immutable audit trails, and 
-              <span className="text-primary font-semibold"> AI-powered analytics</span> that transform 
-              complex environmental data into actionable insights for rangers and stakeholders.
-            </motion.p>
-            <motion.p
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-            >
-              By providing a transparent, tamper-proof system for forest monitoring and reporting, 
-              ForestGuard empowers Kenya's forest rangers, environmental organizations, and concerned 
-              citizens to protect our forests with the confidence that their reports will be verified, 
-              tracked, and acted upon—without fear of retaliation.
+              This isn't just about technology. It's about giving communities the power to protect their 
+              forests without fear. It's about making corruption visible. It's about using innovation to 
+              solve real problems in Kenya—every protected tree is a step toward the future Wangari Maathai envisioned.
             </motion.p>
           </div>
         </div>
