@@ -31,9 +31,9 @@ const Navigation = () => {
   const navLinks = [
     { href: "/", label: "Home", isRoute: true },
     { href: "/how-it-works", label: "How It Works", isRoute: true },
-    { href: "/technology", label: "Technology", isRoute: true },
+    { href: "/for-organizations", label: "For Organizations", isRoute: true },
     { href: "/about", label: "About", isRoute: true },
-    { href: "/donate", label: "Donate", isRoute: true },
+    { href: "/donate", label: "Invest", isRoute: true },
     { href: "#contact", label: "Contact", isRoute: false },
   ];
 

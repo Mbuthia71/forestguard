@@ -19,32 +19,32 @@ const Donate = () => {
   const donationTiers = [
     {
       amount: 500,
-      title: "Forest Friend",
+      title: "Forest Supporter",
       icon: Leaf,
-      impact: "Supports 1 IoT sensor for a month",
-      perks: ["Monthly impact report", "Digital certificate"],
+      impact: "Powers 1 IoT sensor for 30 days of continuous monitoring",
+      perks: ["Monthly impact dashboard access", "Digital impact certificate", "Forest health email updates"],
     },
     {
       amount: 2000,
-      title: "Tree Guardian",
+      title: "Conservation Partner",
       icon: TreePine,
-      impact: "Protects 10 hectares for a month",
-      perks: ["All Forest Friend perks", "Quarterly forest health updates", "Recognition on our website"],
+      impact: "Protects 10 hectares with full monitoring coverage",
+      perks: ["All Supporter perks", "Quarterly satellite imagery reports", "Website recognition", "Priority event invites"],
       popular: true,
     },
     {
       amount: 5000,
-      title: "Forest Defender",
+      title: "Forest Guardian",
       icon: Shield,
-      impact: "Funds ranger field equipment",
-      perks: ["All Tree Guardian perks", "Direct ranger updates", "Annual conservation tour invitation"],
+      impact: "Equips 1 ranger with field gear + GPS + mobile device",
+      perks: ["All Partner perks", "Direct ranger field reports", "Annual conservation site tour", "VIP stakeholder access"],
     },
     {
       amount: 10000,
-      title: "Conservation Champion",
+      title: "Impact Champion",
       icon: Users,
-      impact: "Sponsors satellite analysis for 50 hectares",
-      perks: ["All Forest Defender perks", "Personal project briefing", "VIP conservation events access"],
+      impact: "Sponsors 50 hectares of satellite analysis + AI threat detection",
+      perks: ["All Guardian perks", "Personal project briefing call", "Co-branded impact reports", "Advisory board invitation"],
     },
   ];
 
@@ -131,13 +131,14 @@ const Donate = () => {
               </div>
               
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">
-                Every Tree Counts.
-                <span className="block text-primary mt-2">Every Contribution Matters.</span>
+                Invest in Forest Protection.
+                <span className="block text-primary mt-2">Get Measurable Impact Returns.</span>
               </h1>
               
               <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                Your donation powers the technology protecting Kenya's forests. From satellite monitoring to ground sensors, 
-                from ranger equipment to blockchain verification—every shilling directly funds forest conservation.
+                Your investment powers real-time forest monitoring technology. Every contribution delivers quantifiable impact: 
+                hectares protected, threats prevented, and communities empowered. Track your conservation ROI with monthly 
+                impact reports showing exactly what your funding achieved.
               </p>
 
               <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
@@ -173,9 +174,14 @@ const Donate = () => {
             </div>
           </section>
 
-          {/* Donation Tiers */}
+          {/* Investment Tiers */}
           <section className="container mx-auto px-4 sm:px-6 lg:px-8 mb-16">
-            <h2 className="text-3xl font-bold text-center mb-12">Choose Your Impact</h2>
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold mb-4">Impact Investment Tiers</h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                Choose your investment level and receive tangible benefits while protecting Kenya's forests
+              </p>
+            </div>
             
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
               {donationTiers.map((tier, index) => (
@@ -225,12 +231,12 @@ const Donate = () => {
               ))}
             </div>
 
-            {/* Custom Amount */}
-            <Card className="max-w-2xl mx-auto">
+            {/* Custom Investment */}
+            <Card className="max-w-2xl mx-auto border-primary/20">
               <CardHeader>
-                <CardTitle>Or Choose Your Own Amount</CardTitle>
+                <CardTitle>Custom Impact Investment</CardTitle>
                 <CardDescription>
-                  Every contribution helps protect our forests, no matter the size
+                  Enter any amount and see your projected conservation impact instantly
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -254,22 +260,25 @@ const Donate = () => {
                     onClick={handleDonate}
                   >
                     <Heart className="mr-2 h-5 w-5" />
-                    Donate Now
+                    Invest Now
                   </Button>
                 </div>
                 
                 <p className="text-xs text-muted-foreground text-center">
-                  Secure payment powered by Paystack. Your donation is tax-deductible.
+                  Secure payment powered by Paystack. Tax-deductible. Impact reports delivered monthly.
                 </p>
               </CardContent>
             </Card>
           </section>
 
-          {/* Why Donate Section */}
+          {/* Investment Allocation */}
           <section className="bg-primary/5 py-16">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <div className="max-w-3xl mx-auto">
-                <h2 className="text-3xl font-bold text-center mb-8">Where Your Money Goes</h2>
+                <h2 className="text-3xl font-bold text-center mb-4">Your Impact Investment Allocation</h2>
+                <p className="text-center text-muted-foreground mb-8">
+                  100% transparent breakdown of how your investment directly funds forest protection technology
+                </p>
                 
                 <div className="space-y-6">
                   <Card>
