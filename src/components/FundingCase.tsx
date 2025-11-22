@@ -23,8 +23,8 @@ const FundingCase = () => {
     },
     {
       icon: TrendingUp,
-      title: 'Strengthens Carbon Markets',
-      description: 'Verified forest preservation data enables carbon credit generation',
+      title: 'Supports Eco-Tourism',
+      description: 'Protected forests attract visitors and generate sustainable community income',
       color: 'from-yellow-500 to-orange-600',
     },
     {

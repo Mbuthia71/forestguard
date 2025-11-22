@@ -34,9 +34,9 @@ const KenyaStakeholders = () => {
       color: 'from-orange-500 to-red-600',
     },
     {
-      name: 'Carbon Markets Initiative',
-      icon: DollarSign,
-      description: 'Verified forest preservation data for carbon credit generation and trading',
+      name: 'Community Engagement',
+      icon: Users,
+      description: 'Citizen reporting tools and educational resources for local communities',
       color: 'from-yellow-500 to-orange-600',
     },
   ];
