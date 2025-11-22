@@ -1,5 +1,5 @@
 import Navigation from "@/components/Navigation";
-import HowItWorks from "@/components/HowItWorks";
+import HowItWorksSimple from "@/components/HowItWorksSimple";
 import Footer from "@/components/Footer";
 import PageTransition from "@/components/PageTransition";
 
@@ -8,7 +8,7 @@ const HowItWorksPage = () => {
     <PageTransition>
       <div className="min-h-screen bg-background">
         <Navigation />
-        <HowItWorks />
+        <HowItWorksSimple />
         <Footer />
       </div>
     </PageTransition>
