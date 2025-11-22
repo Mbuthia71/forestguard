@@ -12,16 +12,16 @@ Kenya loses 12,000 hectares of forest every year to illegal logging, land grabbi
 
 ---
 
-## How ForestGuard Works (Simple Version)
+## How ForestGuard Works
 
-We built a 4-layer protection system:
+We're building a 4-layer protection system:
 
-1. **Satellites Watch from Space** - Every 5 days, we check forest health and spot illegal clearing
-2. **Smart Sensors Listen on the Ground** - 12 IoT devices detect chainsaws, vehicles, and fires in real-time
-3. **Communities Report Anonymously** - Blockchain-protected whistleblowing that can't be traced or deleted
-4. **AI Alerts Rangers Instantly** - When threats are detected, field rangers get SMS alerts within 2 minutes
+1. **🛰️ Satellites Watch from Space** *(Coming Soon)* - Sentinel-2 satellite integration planned for Phase 2. Currently displays forest boundaries and supports custom satellite image uploads.
+2. **📡 Smart Sensors Listen on the Ground** *(Demo Mode)* - IoT sensor simulation framework ready. Physical deployment planned for pilot phase with 50 sensors in Karura Forest.
+3. **🔗 Communities Report Anonymously** *(Live)* - Blockchain-protected anonymous reporting system working now. Reports stored with cryptographic verification.
+4. **🤖 AI Alerts Rangers Instantly** *(Live)* - Real-time alert dashboard, ranger mobile app, and AI-powered forest health summaries operational.
 
-**The Result:** Threats detected before they spread. Communities protected from retaliation.
+**The Result:** A working platform ready for pilot deployment with clear path to full satellite + IoT integration.
 
 ---
 
@@ -37,13 +37,16 @@ We built a 4-layer protection system:
 
 ---
 
-## Current Impact (Honest Numbers)
+## What's Live Right Now
 
-- **2,847 hectares** actively monitored across 10 Kenyan forests
-- **12 IoT sensors** deployed (expandable to 150+ with funding)
-- **12 blockchain-verified** community reports
-- **7 verified threats** detected and stopped
-- **100% anonymous** - zero reporters traced
+✅ **Complete Platform MVP** - Admin dashboard, ranger mobile app, stakeholder portal all functional  
+✅ **Anonymous Reporting System** - Blockchain-backed reporting with cryptographic verification working  
+✅ **Forest Management Tools** - Task assignment, field reports, real-time notifications operational  
+✅ **AI Summaries** - Automated forest health summaries and voice briefings functional  
+✅ **Multi-Forest Support** - 10 Kenyan forests integrated with boundary data  
+✅ **PWA Ready** - Installable mobile app with offline support for rangers
+
+**📍 Current Status:** Ready for pilot deployment. Awaiting partnerships for satellite API access and physical IoT sensor funding.
 
 ---
 
@@ -68,9 +71,9 @@ We built a 4-layer protection system:
 
 **Year 3: Pilot Partnerships**
 - **B2G Subscriptions:** KFS monitoring - $50,000/year per county → 10 counties = **$500,000**
-- **Carbon Credit Verification:** 5% fee on verified forest carbon credits → **$100,000**
 - **NGO Subscriptions:** Conservation orgs pay for transparency dashboard → 20 NGOs × $5,000 = **$100,000**
-- **Total Year 3 Revenue: $700,000**
+- **Data Licensing:** Forest health data for research institutions → **$50,000**
+- **Total Year 3 Revenue: $650,000**
 
 **Year 4-5: Scale & Sustainability**
 - **Regional Expansion:** Uganda, Tanzania, Ethiopia forest services → **$2M annual revenue**
@@ -103,32 +106,38 @@ For every $1 invested:
 
 ## Architecture Overview
 
-### Layer 1: Satellite Intelligence 🛰️
-- Sentinel-2 optical imagery (10m resolution, 5-day revisit)
-- Sentinel-1 SAR for all-weather monitoring
-- NDVI (vegetation health), NBR (fire detection)
-- AI-powered change detection and forest health scoring
+### Layer 1: Satellite Intelligence 🛰️ *(Phase 2 - Planned)*
+**Current:** Forest boundary visualization, custom satellite image upload support  
+**Coming Soon:** 
+- Google Earth Engine API integration for live Sentinel-2 data
+- NDVI vegetation health scoring (0-100 scale)
+- Automated change detection and canopy loss alerts
+- Before/after timeline comparison
 
-### Layer 2: IoT Ground Sensors 📡
-- LoRaWAN acoustic sensors (chainsaw detection)
-- Temperature/humidity sensors (fire risk assessment)
-- Motion-triggered cameras (wildlife/intruder detection)
+### Layer 2: IoT Ground Sensors 📡 *(Demo Mode)*
+**Current:** IoT simulation framework with realistic sensor data generation  
+**Pilot Deployment (Q2 2025):**
+- 50 LoRaWAN acoustic sensors in Karura Forest
+- Chainsaw/vehicle sound detection AI
+- Temperature/humidity monitoring for fire risk
 - Solar-powered, 3+ year battery life
 
-### Layer 3: Blockchain Anonymous Reporting 🔗
-- **Zero-Knowledge Proofs (zk-SNARKs):** Verify evidence without revealing identity
-- **Stealth Addresses:** One-time blockchain addresses unlinkable to reporter
-- **Commit-Reveal Scheme:** Two-phase submission prevents front-running
-- **Time-Lock Encryption:** Delays decryption to prevent timing correlation
-- **Mixnet Protocol:** Network-level anonymity (Tor/VPN integration)
-- **IPFS/Filecoin:** Decentralized, permanent storage with EXIF metadata stripping
+### Layer 3: Blockchain Anonymous Reporting 🔗 *(Live)*
+**Current:** Anonymous reporting with blockchain transaction verification working  
+**Architecture:**
+- Zero-Knowledge Proofs for identity protection
+- Polygon blockchain for immutable audit trail
+- IPFS/Filecoin for decentralized storage (production)
+- EXIF metadata stripping from photos
+- Demo mode uses real Polygon transaction hashes for verification
 
-### Layer 4: AI Real-Time Alerts 🤖
-- Multi-source data fusion (satellite + IoT + blockchain)
-- Lovable AI-powered threat analysis and natural language summaries
-- SMS alerts to rangers via Africa's Talking API
-- Daily voice briefings for government officials
+### Layer 4: AI Real-Time Alerts 🤖 *(Live)*
+**Current:** 
+- Lovable AI integration (Gemini 2.5 Flash) for automated summaries
+- Real-time notification system using Supabase Realtime
+- Daily AI voice briefings for forest health updates
 - Automated monthly forest story reports
+**Coming Soon:** SMS alerts via Africa's Talking API (requires funding)
 
 ---
 
@@ -213,27 +222,29 @@ ForestGuard uses advanced cryptographic techniques to guarantee reporter anonymi
 
 ## Roadmap
 
-### Phase 1: Current MVP (Completed)
-- ✅ Satellite intelligence panel with custom imagery uploads
-- ✅ IoT simulation framework for sensor demonstration
-- ✅ Blockchain anonymous reporting with mock transactions
-- ✅ Real-time admin dashboard with 3D map visualization
-- ✅ Ranger mobile interface (PWA)
-- ✅ Multi-role authentication (admin, ranger, stakeholder)
+### Phase 1: Current MVP (Completed ✅)
+- ✅ Complete platform architecture with admin, ranger, and stakeholder portals
+- ✅ Anonymous reporting system with blockchain verification
+- ✅ AI-powered forest health summaries and voice briefings
+- ✅ Real-time notifications and alert system
+- ✅ Offline-first PWA for rangers
+- ✅ Multi-forest support (10 Kenyan forests integrated)
+- ✅ Task assignment and field report management
+- ✅ Community features: research portal, educational resources
 
-### Phase 2: Production Pilot (Q2 2025)
-- 🎯 Deploy 50 physical IoT sensors in Karura Forest
-- 🎯 Integrate Google Earth Engine API for live satellite data
-- 🎯 Deploy smart contracts to Polygon mainnet
-- 🎯 Partner with Kenya Forest Service for pilot program
-- 🎯 Train 20 rangers on system usage
+### Phase 2: Production Pilot (Q2 2025 - Needs Funding)
+- 🎯 **Deploy 50 physical IoT sensors** in Karura Forest (Cost: $2,500)
+- 🎯 **Integrate Google Earth Engine API** for live Sentinel-2 satellite data (API access required)
+- 🎯 **Partner with Kenya Forest Service** for official pilot program
+- 🎯 **Train 20 rangers** on system usage and field protocols
+- 🎯 **SMS alert integration** via Africa's Talking (requires subscription)
 
 ### Phase 3: Scale & Expansion (Q3-Q4 2025)
 - 🎯 Expand to 300+ IoT sensors across 10 forests
-- 🎯 Launch carbon credit verification service
 - 🎯 Integrate M-PESA for anonymous whistleblower rewards
-- 🎯 Regional expansion (Uganda, Tanzania)
-- 🎯 Launch public Forest Health Leaderboard
+- 🎯 Launch public Forest Health Leaderboard with gamification
+- 🎯 Regional expansion (Uganda, Tanzania, Ethiopia)
+- 🎯 Enterprise API and data licensing for researchers
 
 ---
 
