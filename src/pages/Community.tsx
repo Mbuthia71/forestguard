@@ -16,18 +16,18 @@ import masaiMaraSunrise from "@/assets/masai-mara-sunrise.jpg";
 const Community = () => {
   const userCategories = [
     {
-      title: "Wanafunzi wa Mazingira (Environmental Students)",
+      title: "Students & Researchers",
       icon: GraduationCap,
-      description: "Zana za utafiti, data ya misitu, na rasilimali za kujifunza kwa wanafunzi wa sayansi ya mazingira, misitu, na uhifadhi.",
+      description: "Access research tools, forest data, and resources built for environmental science students and conservation researchers.",
       features: [
-        "Picha za satellite kwa ajili ya utafiti wako",
-        "Data ya historia ya ukataji misitu",
-        "Takwimu za sensors za IoT kwa masomo ya hali ya hewa",
-        "Ripoti za kila mwezi za afya ya misitu (PDF)",
-        "Jukwaa la wanafunzi wa utafiti",
-        "Uratibu wa ziara za shambani na walinzi wa misitu",
+        "Download forest health datasets for your research",
+        "Historical deforestation trend data",
+        "IoT sensor readings for climate studies",
+        "Monthly forest health reports (PDF exports)",
+        "Student research collaboration portal",
+        "Coordinate field visits with forest rangers",
       ],
-      cta: "Fungua Research Portal",
+      cta: "Open Research Portal",
       color: "blue",
       link: "#research-portal",
       bgImage: mtKenya,
@@ -35,50 +35,50 @@ const Community = () => {
     {
       title: "Wananchi Wajuzi (Citizen Scientists)",
       icon: Users,
-      description: "Jiunge na jamii ya ufuatiliaji misitu. Ripoti vitisho, fuatilia afya ya misitu, na changia juhudi za uhifadhi.",
+      description: "Join the forest monitoring community. Report threats, track forest health, na contribute to conservation efforts.",
       features: [
-        "Mfumo wa ripoti za siri kwa blockchain",
-        "Pakia picha zenye GPS coordinates",
-        "Leaderboard ya afya ya misitu kwa wakati halisi",
-        "Dashboard ya athari ya jamii",
-        "Utambuzi kwa ripoti zilizohakikiwa",
-        "Taarifa za uhifadhi kila mwezi",
+        "Anonymous blockchain-verified reporting",
+        "Upload photos with automatic GPS tagging",
+        "Real-time forest health leaderboard",
+        "Community impact dashboard",
+        "Recognition for verified reports",
+        "Monthly conservation updates",
       ],
-      cta: "Anza Kuripoti Sasa",
+      cta: "Start Reporting Now",
       color: "green",
       link: "/technology#blockchain",
       bgImage: gediForest,
     },
     {
-      title: "Wapenda Mazingira (Environmental Enthusiasts)",
+      title: "Environmental Enthusiasts",
       icon: BookOpen,
-      description: "Baki umejua kuhusu misitu ya Kenya. Jifunze kuhusu juhudi za uhifadhi, fuatilia maendeleo, na jiunge na jamii.",
+      description: "Stay updated on Kenya's forests. Learn about conservation efforts, track progress, na join the movement.",
       features: [
-        "Barua pepe za kila wiki za afya ya misitu",
-        "Ramani ya misitu ya kuingiliana",
-        "Hadithi za mafanikio ya uhifadhi",
-        "Maktaba ya rasilimali za elimu",
-        "Majukwaa ya majadiliano ya jamii",
-        "Arifa za fursa za kujitolea",
+        "Weekly forest health email updates",
+        "Interactive forest maps",
+        "Conservation success stories",
+        "Educational resource library",
+        "Community discussion forums",
+        "Volunteer opportunity alerts",
       ],
-      cta: "Jiunge na Jamii",
+      cta: "Join the Community",
       color: "purple",
       link: "#join-community",
       bgImage: savannaSunset,
     },
     {
-      title: "Wabunifu wa Maudhui (Content Creators)",
+      title: "Content Creators & Media",
       icon: Camera,
-      description: "Rekodi juhudi za uhifadhi, shiriki hadithi za misitu, na ongeza uelewa kupitia jukwaa lako.",
+      description: "Document conservation efforts, share forest stories, na amplify awareness through your platform.",
       features: [
-        "Fikia data za uhifadhi zilizohakikiwa",
-        "Picha za satellite za ubora wa juu",
-        "Hadithi za ripoti za walinzi shambani",
-        "Fursa za mahojiano na walinzi wa misitu",
-        "Ushirikiano wa maudhui yenye nembo",
-        "Utambuzi na kueneza pamoja",
+        "Access verified conservation data",
+        "High-resolution forest imagery",
+        "Exclusive ranger field report stories",
+        "Interview opportunities with forest rangers",
+        "Branded content collaborations",
+        "Recognition and co-promotion",
       ],
-      cta: "Ushirikiano wa Vyombo vya Habari",
+      cta: "Media Partnership",
       color: "orange",
       link: "#media-partnership",
       bgImage: masaiMaraSunrise,
@@ -87,37 +87,37 @@ const Community = () => {
 
   const communityFeatures = [
     {
-      title: "Ripoti Vitisho vya Mazingira",
+      title: "Report Environmental Threats",
       icon: AlertCircle,
-      description: "Unaona jambo geni? Ripoti kwa siri kupitia mfumo wetu wa blockchain. Utambulisho wako unalindwa.",
+      description: "Unaona something fishy? Report anonymously through our blockchain system. Your identity is protected kabisa.",
       link: "/technology#blockchain",
     },
     {
-      title: "Fuatilia Afya ya Misitu",
+      title: "Track Forest Health",
       icon: TrendingUp,
-      description: "Fuata alama za afya za misitu 10 za Kenya kwa wakati halisi. Tazama misitu inayoboresha na ile inayohitaji msaada.",
+      description: "Follow health scores for 10 Kenyan forests in real-time. See which forests are thriving na which ones need help.",
       link: "/#leaderboard",
     },
     {
-      title: "Jiunge na Majadiliano",
+      title: "Join the Conversation",
       icon: MessageSquare,
-      description: "Unganisha na wapenda mazingira wengine, wanafunzi, na wanataaluma wa uhifadhi kwenye majukwaa yetu.",
+      description: "Connect with fellow environmental enthusiasts, students, na conservation experts on our forums.",
       link: "#join-community",
     },
     {
-      title: "Pata Utambuzi",
+      title: "Get Recognition",
       icon: Award,
-      description: "Pata utambuzi kwa ripoti zilizohakikiwa na mchango wa uhifadhi. Tuzo za 'Shujaa wa Msitu' kila mwezi.",
+      description: "Earn recognition for verified reports and conservation contributions. Monthly 'Forest Hero' awards.",
       link: "#recognition",
     },
   ];
 
   const researchResources = [
     {
-      title: "Satellite Data Archive",
+      title: "Forest Health Datasets",
       icon: Download,
-      description: "Download Sentinel-2 imagery, NDVI datasets, and historical vegetation health data for your research projects.",
-      downloadLink: "#download-satellite",
+      description: "Download historical forest health data, deforestation patterns, and vegetation trends for your research projects.",
+      downloadLink: "#download-forest-data",
     },
     {
       title: "IoT Sensor Readings",
@@ -156,29 +156,29 @@ const Community = () => {
             >
               <div className="inline-flex items-center gap-2 bg-background/20 backdrop-blur-sm px-4 py-2 rounded-full mb-6 border border-white/20">
                 <Users className="h-5 w-5 text-white" />
-                <span className="text-sm font-semibold text-white">Jumuiya ya Walinzi wa Misitu</span>
+                <span className="text-sm font-semibold text-white">Forest Guardian Community</span>
               </div>
               
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 text-white">
-                Uhifadhi wa Misitu
-                <span className="block text-white/90 mt-2">Kwa Kila Mtu</span>
+                Forest Conservation
+                <span className="block text-white/90 mt-2">For Everyone</span>
               </h1>
               
               <p className="text-lg text-white/90 leading-relaxed mb-8">
-                Wewe ni mwanafunzi wa chuo kikuu unayefanya utafiti wa mabadiliko ya hali ya hewa, mwananchi mwenye wasiwasi 
-                anayeona ukataji haramu wa misitu, au mpenda mazingira anayefuatilia afya ya misitu—ForestGuard inatoa zana 
-                kwa Wakenya wa kawaida kushiriki katika uhifadhi wa misitu.
+                Whether you're a university student researching climate change, a concerned citizen spotting illegal logging, 
+                or an environmental enthusiast tracking forest health—ForestGuard provides tools for everyday Kenyans to participate 
+                in forest conservation. Tuko pamoja in protecting our forests.
               </p>
 
               <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
                 <Badge variant="outline" className="border-white/50 text-white text-base py-2 px-4 bg-background/10 backdrop-blur-sm">
-                  <Users className="mr-2 h-4 w-4" /> Bure Kabisa kwa Wananchi
+                  <Users className="mr-2 h-4 w-4" /> Free for All Citizens
                 </Badge>
                 <Badge variant="outline" className="border-white/50 text-white text-base py-2 px-4 bg-background/10 backdrop-blur-sm">
-                  <AlertCircle className="mr-2 h-4 w-4" /> Ripoti za Siri
+                  <AlertCircle className="mr-2 h-4 w-4" /> Anonymous Reporting
                 </Badge>
                 <Badge variant="outline" className="border-white/50 text-white text-base py-2 px-4 bg-background/10 backdrop-blur-sm">
-                  <BookOpen className="mr-2 h-4 w-4" /> Data Wazi
+                  <BookOpen className="mr-2 h-4 w-4" /> Open Data
                 </Badge>
               </div>
             </motion.div>
@@ -251,7 +251,7 @@ const Community = () => {
                           <category.icon className="h-8 w-8 text-primary" />
                         </div>
                         <Badge className="bg-primary/10 text-primary border-primary/20">
-                          Bure Kabisa
+                          Free Access
                         </Badge>
                       </div>
                       <CardTitle className="text-2xl">{category.title}</CardTitle>
@@ -263,7 +263,7 @@ const Community = () => {
                     <CardContent className="space-y-6 relative z-10">
                       <div>
                         <h4 className="font-semibold mb-3 text-sm text-muted-foreground uppercase tracking-wide">
-                          Unachopata:
+                          What You Get:
                         </h4>
                         <ul className="space-y-2">
                           {category.features.map((feature, i) => (
@@ -292,9 +292,9 @@ const Community = () => {
           {/* Student Research Portal */}
           <section id="research-portal" className="container mx-auto px-4 sm:px-6 lg:px-8 mb-16">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">Hifadhi ya Data kwa Wanafunzi (Student Research Portal)</h2>
+              <h2 className="text-3xl font-bold mb-4">Student Research Portal</h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Pakua datasets za satellite, takwimu za sensors, na data ya historia kwa miradi yako ya utafiti
+                Download forest health datasets, sensor readings, na historical data for your research projects
               </p>
             </div>
             
@@ -337,26 +337,26 @@ const Community = () => {
                 <Card className="border-primary/20">
                   <CardContent className="pt-12 pb-12 text-center">
                     <AlertCircle className="h-16 w-16 text-primary mx-auto mb-6" />
-                    <h2 className="text-3xl font-bold mb-4">Unaona Kitu? Sema Kitu.</h2>
+                    <h2 className="text-3xl font-bold mb-4">See Something? Say Something.</h2>
                     <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-                      Mfumo wetu wa ripoti za siri uliothibitishwa na blockchain unalinda utambulisho wako wakati 
-                      ripoti yako inafika kwa watu sahihi. Kila ripoti imefungwa, imewekwa muda, na haiwezi kubadilishwa.
+                      Our blockchain-verified anonymous reporting system protects your identity while ensuring your report reaches 
+                      the right people. Every report is encrypted, timestamped, na cannot be tampered with.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                       <Link to="/technology#blockchain">
                         <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
                           <AlertCircle className="mr-2 h-5 w-5" />
-                          Tuma Ripoti ya Siri
+                          Submit Anonymous Report
                         </Button>
                       </Link>
                       <Link to="/technology">
                         <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary/10">
-                          Jinsi Inavyofanya Kazi
+                          How It Works
                         </Button>
                       </Link>
                     </div>
                     <p className="text-xs text-muted-foreground mt-6">
-                      Utambulisho wako unalindwa na zero-knowledge proofs na usimbaji wa blockchain
+                      Your identity protected by zero-knowledge proofs and blockchain encryption
                     </p>
                   </CardContent>
                 </Card>
@@ -370,15 +370,14 @@ const Community = () => {
               <CardHeader className="text-center">
                 <CardTitle className="text-3xl mb-3">Track Forest Health Live</CardTitle>
                 <CardDescription className="text-base">
-                  See real-time health scores for Kenya's protected forests. Updated daily with satellite data.
+                  See real-time health scores for Kenya's protected forests. Updated daily from ground sensors na ranger reports.
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="text-center py-8">
                   <TrendingUp className="h-20 w-20 text-primary mx-auto mb-6 opacity-50" />
                   <p className="text-muted-foreground mb-6">
-                    Live forest health leaderboard with scores updated from satellite NDVI analysis, 
-                    ranger activity, and verified threat reports.
+                    Live forest health leaderboard with scores calculated from ranger activity, verified threat reports, na ground sensor data.
                   </p>
                   <Link to="/#leaderboard">
                     <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary/10">
@@ -403,14 +402,14 @@ const Community = () => {
                   }}
                 />
                 <CardContent className="p-8 md:p-12 flex flex-col justify-center">
-                  <h3 className="text-3xl font-bold mb-4">Jiunge na Jamii Yetu</h3>
+                  <h3 className="text-3xl font-bold mb-4">Join Our Community</h3>
                   <p className="text-muted-foreground mb-6">
-                    Unganisha na wapenda mazingira wengine, wanafunzi, na wanataaluma wa uhifadhi. 
-                    Shiriki uzoefu, jifunze kutoka kwa wengine, na changia katika juhudi za uhifadhi wa misitu ya Kenya.
+                    Connect with fellow environmental enthusiasts, students, and conservation experts. 
+                    Share experiences, learn from others, na contribute to Kenya's forest conservation efforts. Tuko pamoja!
                   </p>
                   <Button size="lg" className="w-full md:w-auto">
                     <MessageSquare className="mr-2 h-5 w-5" />
-                    Jiunge na Mazungumzo
+                    Join the Conversation
                   </Button>
                 </CardContent>
               </div>
@@ -421,14 +420,14 @@ const Community = () => {
             <Card className="border-primary/20 overflow-hidden">
               <div className="grid md:grid-cols-2 gap-0">
                 <CardContent className="p-8 md:p-12 flex flex-col justify-center order-2 md:order-1">
-                  <h3 className="text-3xl font-bold mb-4">Ushirikiano wa Vyombo vya Habari</h3>
+                  <h3 className="text-3xl font-bold mb-4">Media Partnership</h3>
                   <p className="text-muted-foreground mb-6">
-                    Wabunifu wa maudhui na waandishi wa habari—fikia data zilizohakikiwa za uhifadhi, picha za satellite, 
-                    na hadithi za walinzi shambani. Tuungane kueneza ujumbe wa uhifadhi wa misitu.
+                    Content creators and journalists—access verified conservation data, forest imagery, 
+                    na exclusive ranger field stories. Let's partner to amplify forest conservation messaging.
                   </p>
                   <Button size="lg" variant="outline" className="w-full md:w-auto border-primary text-primary">
                     <Camera className="mr-2 h-5 w-5" />
-                    Anza Ushirikiano
+                    Start Partnership
                   </Button>
                 </CardContent>
                 <div 
@@ -446,9 +445,9 @@ const Community = () => {
           {/* Educational Resources */}
           <section id="recognition" className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">Jifunze Kuhusu Uhifadhi wa Misitu</h2>
+              <h2 className="text-3xl font-bold mb-4">Learn About Forest Conservation</h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Rasilimali za elimu bila malipo kwa wanafunzi, walimu, na yeyote anayependezwa na ulinzi wa mazingira
+                Free educational resources for students, teachers, na anyone passionate about environmental protection
               </p>
             </div>
 
@@ -456,9 +455,9 @@ const Community = () => {
               <Card className="hover:shadow-lg transition-shadow">
                 <CardHeader>
                   <BookOpen className="h-10 w-10 text-primary mb-3" />
-                  <CardTitle>Maandiko ya Utafiti</CardTitle>
+                  <CardTitle>Research Papers</CardTitle>
                   <CardDescription>
-                    Fikia masomo yaliyochapishwa kuhusu mifumo ya ukataji misitu, ufuatiliaji wa satellite, na teknolojia ya uhifadhi
+                    Access published studies on deforestation patterns, monitoring technology, and conservation strategies
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -466,9 +465,9 @@ const Community = () => {
               <Card className="hover:shadow-lg transition-shadow">
                 <CardHeader>
                   <GraduationCap className="h-10 w-10 text-primary mb-3" />
-                  <CardTitle>Mwongozo wa Wanafunzi</CardTitle>
+                  <CardTitle>Student Guide</CardTitle>
                   <CardDescription>
-                    Mafunzo ya hatua kwa hatua kuhusu kutumia data za satellite, kuelewa NDVI, na kuchambua afya ya misitu
+                    Step-by-step tutorials on using forest data, understanding health metrics, and analyzing vegetation trends
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -476,9 +475,9 @@ const Community = () => {
               <Card className="hover:shadow-lg transition-shadow">
                 <CardHeader>
                   <Camera className="h-10 w-10 text-primary mb-3" />
-                  <CardTitle>Ripoti za Shambani</CardTitle>
+                  <CardTitle>Field Reports</CardTitle>
                   <CardDescription>
-                    Ripoti halisi za walinzi kutoka shambani, zikirekodi juhudi za uhifadhi na majibu ya vitisho
+                    Real ranger reports from the field, documenting conservation efforts and threat responses
                   </CardDescription>
                 </CardHeader>
               </Card>
