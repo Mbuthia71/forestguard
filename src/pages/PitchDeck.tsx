@@ -370,7 +370,7 @@ const PitchDeck = () => {
               <Card className="p-6 bg-card border-border">
                 <h3 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
                   <MessageSquare className="h-6 w-6 text-primary" />
-                  Judges Will Ask
+                  Addressing Key Concerns
                 </h3>
                 <div className="space-y-4">
                   <div>
