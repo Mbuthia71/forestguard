@@ -161,7 +161,7 @@ For every $1 invested:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/forestguard.git
+git clone https://github.com/Mbuthia71/forestguard.git
 cd forestguard
 
 # Install dependencies
@@ -306,8 +306,8 @@ Multi-disciplinary Founder
 - Geospatial Engineering Student, Technical University of Kenya  
 - Vice-Chair, Environmental Student Organization at TUK  
 - System Architect & Designer
+allan.mbuthia.nganga@gmail.com
 
-📧 allan.mbuthia@tuk.ac.ke  
 🌐 [ForestGuard Demo](https://forestguard.lovable.app)
 
 ---
