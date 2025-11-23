@@ -7,14 +7,14 @@
 ## 🔐 Demo Login Credentials
 
 ### Admin Account
-**Email:** `admin@forestguard.app`  
-**Password:** `ForestGuard2025!`
+**Email:** `mbut@gmail.com`  
+**Password:** `@Kiambutown1`
 
 *Access the admin dashboard at `/admin-auth` to manage rangers, review reports, and track forest health.*
 
 ### Ranger Account
-**Email:** `ranger@forestguard.app`  
-**Password:** `RangerField2025!`
+**Email:** `mbutiti@gmail.com`  
+**Password:** `@Kiambutown1`
 
 *Access the ranger interface at `/auth` then navigate to `/ranger` for mobile field tools.*
 
