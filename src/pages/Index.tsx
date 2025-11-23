@@ -4,6 +4,8 @@ import ForestHealthLeaderboard from "@/components/ForestHealthLeaderboard";
 import Footer from "@/components/Footer";
 import PageTransition from "@/components/PageTransition";
 import { motion } from "framer-motion";
+import tropicalForest from "@/assets/tropical-forest-backdrop.jpeg";
+import grassOverlay from "@/assets/grass-overlay.jpeg";
 
 const Index = () => {
   return (
@@ -18,7 +20,7 @@ const Index = () => {
             whileInView={{ opacity: 0.08, scale: 1 }}
             transition={{ duration: 1.2 }}
             viewport={{ once: true }}
-            src={require("@/assets/tropical-forest-backdrop.jpeg")}
+            src={tropicalForest}
             alt=""
             className="absolute inset-0 w-full h-full object-cover pointer-events-none"
           />
@@ -33,7 +35,7 @@ const Index = () => {
             whileInView={{ opacity: 0.15 }}
             transition={{ duration: 1 }}
             viewport={{ once: true }}
-            src={require("@/assets/grass-overlay.jpeg")}
+            src={grassOverlay}
             alt=""
             className="absolute bottom-0 left-0 w-full h-24 object-cover object-top pointer-events-none"
           />
