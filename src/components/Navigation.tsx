@@ -33,6 +33,7 @@ const Navigation = () => {
     { href: "/how-it-works", label: "How It Works", isRoute: true },
     { href: "/community", label: "Community", isRoute: true },
     { href: "/for-organizations", label: "For Organizations", isRoute: true },
+    { href: "/pitch-deck", label: "Pitch Deck", isRoute: true },
     { href: "/donate", label: "Invest", isRoute: true },
     { href: "#contact", label: "Contact", isRoute: false },
   ];
