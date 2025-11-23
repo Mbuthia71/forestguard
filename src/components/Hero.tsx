@@ -2,6 +2,10 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Play } from "lucide-react";
 import forestGuardLogo from "@/assets/forestguard-logo-new.png";
 import heroForestPath from "@/assets/hero-forest-path.jpg";
+import mountainLandscape from "@/assets/mountain-landscape.png";
+import tropicalForest from "@/assets/tropical-forest-backdrop.jpeg";
+import palmTree from "@/assets/palm-tree.png";
+import grassOverlay from "@/assets/grass-overlay.jpeg";
 import { motion } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +18,57 @@ const Hero = () => {
     <section id="home" className="relative min-h-screen bg-background overflow-hidden pt-20 md:pt-24">
       {/* Subtle background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-primary/10"></div>
+      
+      {/* Decorative nature elements - creative placements */}
+      {/* Tropical forest backdrop - top right with fade */}
+      <motion.img
+        initial={{ opacity: 0, x: 100 }}
+        animate={{ opacity: 0.15, x: 0 }}
+        transition={{ duration: 1.5, delay: 0.5 }}
+        src={tropicalForest}
+        alt=""
+        className="absolute top-0 right-0 w-1/2 h-auto pointer-events-none mix-blend-multiply"
+      />
+      
+      {/* Mountain landscape - bottom center for depth */}
+      <motion.img
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 0.2, y: 0 }}
+        transition={{ duration: 1.8, delay: 0.8 }}
+        src={mountainLandscape}
+        alt=""
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-auto pointer-events-none opacity-20"
+      />
+      
+      {/* Palm tree - left side decorative */}
+      <motion.img
+        initial={{ opacity: 0, x: -100, rotate: -10 }}
+        animate={{ opacity: 0.12, x: 0, rotate: 0 }}
+        transition={{ duration: 2, delay: 1.2 }}
+        src={palmTree}
+        alt=""
+        className="absolute bottom-20 left-0 w-48 md:w-64 h-auto pointer-events-none"
+      />
+      
+      {/* Palm tree - right side mirrored */}
+      <motion.img
+        initial={{ opacity: 0, x: 100, rotate: 10 }}
+        animate={{ opacity: 0.08, x: 0, rotate: 0 }}
+        transition={{ duration: 2, delay: 1.4 }}
+        src={palmTree}
+        alt=""
+        className="absolute bottom-32 right-0 w-40 md:w-56 h-auto pointer-events-none scale-x-[-1] opacity-50"
+      />
+      
+      {/* Grass overlay - bottom edge for natural transition */}
+      <motion.img
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 0.25, y: 0 }}
+        transition={{ duration: 1.5, delay: 1 }}
+        src={grassOverlay}
+        alt=""
+        className="absolute bottom-0 left-0 w-full h-32 object-cover object-top pointer-events-none"
+      />
       
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 min-h-[calc(100vh-5rem)] md:min-h-[calc(100vh-6rem)] flex items-center py-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 w-full items-center">
