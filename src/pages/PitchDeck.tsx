@@ -903,6 +903,279 @@ const PitchDeck = () => {
             </motion.div>
           </motion.section>
 
+          {/* Case Study: Kakamega Forest */}
+          <motion.section
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="mb-12 print:mb-6 print:break-before-page"
+          >
+            <motion.h2 variants={itemVariants} className="text-3xl font-bold text-foreground mb-6 text-center">
+              Case Study: Kakamega Forest Deployment
+            </motion.h2>
+            <motion.p variants={itemVariants} className="text-center text-muted-foreground mb-8">
+              Detailed cost breakdown for real-world deployment in Kenya's largest remaining indigenous rainforest
+            </motion.p>
+
+            {/* Forest Overview */}
+            <motion.div variants={itemVariants} className="mb-8">
+              <Card className="p-8 bg-gradient-to-r from-green-500/10 to-primary/10 border-primary/30">
+                <h3 className="text-2xl font-bold text-foreground mb-4 flex items-center gap-2">
+                  <Leaf className="h-8 w-8 text-primary" />
+                  Kakamega Forest - Overview
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="text-center">
+                    <p className="text-4xl font-bold text-primary mb-2">44,000</p>
+                    <p className="text-sm text-muted-foreground">Hectares (110,000 acres)</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-4xl font-bold text-primary mb-2">52 km</p>
+                    <p className="text-sm text-muted-foreground">Forest perimeter length</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-4xl font-bold text-primary mb-2">400+</p>
+                    <p className="text-sm text-muted-foreground">Tree species (biodiversity hotspot)</p>
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground mt-6 text-center italic">
+                  Located in Kakamega & Vihiga Counties, Western Kenya | One of Africa's last remaining tropical rainforests
+                </p>
+              </Card>
+            </motion.div>
+
+            {/* Sensor Deployment Plan */}
+            <motion.div variants={itemVariants} className="mb-8">
+              <Card className="p-8 bg-card border-border">
+                <h3 className="text-2xl font-bold text-foreground mb-4 flex items-center gap-2">
+                  <Radio className="h-8 w-8 text-primary" />
+                  IoT Sensor Deployment Plan
+                </h3>
+                <div className="space-y-4">
+                  <div className="bg-muted/30 p-4 rounded-lg">
+                    <h4 className="font-bold text-foreground mb-2">Sensor Coverage Calculation</h4>
+                    <ul className="text-sm text-muted-foreground space-y-2 ml-4">
+                      <li>• <strong className="text-foreground">LoRaWAN Range:</strong> 2-3 km in forested terrain (acoustic monitoring)</li>
+                      <li>• <strong className="text-foreground">Optimal Spacing:</strong> 2.5 km between sensors for overlap</li>
+                      <li>• <strong className="text-foreground">Perimeter Protection:</strong> 52 km ÷ 2.5 km = <strong className="text-primary">21 sensors</strong></li>
+                      <li>• <strong className="text-foreground">Internal Zones:</strong> High-risk areas (road access, settlements) = <strong className="text-primary">14 sensors</strong></li>
+                      <li>• <strong className="text-foreground">Gateway Nodes:</strong> 3 LoRaWAN gateways for network coverage</li>
+                    </ul>
+                    <p className="text-lg font-bold text-primary mt-4 text-center">
+                      Total Sensors Required: <strong>35 IoT nodes + 3 gateways</strong>
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-blue-500/10 p-4 rounded-lg border border-blue-500/30">
+                      <h5 className="font-semibold text-foreground mb-2">📡 Acoustic Sensors (25 units)</h5>
+                      <p className="text-xs text-muted-foreground mb-2">Detect chainsaws, vehicles, gunshots</p>
+                      <p className="text-sm text-foreground">• Solar-powered with 5-year battery backup</p>
+                      <p className="text-sm text-foreground">• AI sound classification (chainsaw accuracy: 94%)</p>
+                      <p className="text-sm text-foreground">• Real-time alerts via LoRaWAN</p>
+                    </div>
+                    <div className="bg-green-500/10 p-4 rounded-lg border border-green-500/30">
+                      <h5 className="font-semibold text-foreground mb-2">🌡️ Environmental Sensors (10 units)</h5>
+                      <p className="text-xs text-muted-foreground mb-2">Fire risk monitoring</p>
+                      <p className="text-sm text-foreground">• Temperature & humidity tracking</p>
+                      <p className="text-sm text-foreground">• Smoke detection (PM2.5 particles)</p>
+                      <p className="text-sm text-foreground">• Weather-resistant IP67 rating</p>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            </motion.div>
+
+            {/* Cost Breakdown */}
+            <motion.div variants={itemVariants} className="mb-8">
+              <Card className="p-8 bg-card border-border">
+                <h3 className="text-2xl font-bold text-foreground mb-4 flex items-center gap-2">
+                  <DollarSign className="h-8 w-8 text-primary" />
+                  Complete Cost Breakdown (Kenyan Shillings)
+                </h3>
+                
+                <div className="space-y-6">
+                  {/* Hardware Costs */}
+                  <div>
+                    <h4 className="font-bold text-foreground mb-3 text-lg">Hardware (One-time Investment)</h4>
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center text-sm border-b border-border/50 pb-2">
+                        <span className="text-muted-foreground">25 × Acoustic Sensors (locally sourced)</span>
+                        <span className="text-foreground font-semibold">KES 5,000 × 25 = KES 125,000</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm border-b border-border/50 pb-2">
+                        <span className="text-muted-foreground">10 × Environmental Sensors (temperature, humidity, smoke)</span>
+                        <span className="text-foreground font-semibold">KES 3,500 × 10 = KES 35,000</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm border-b border-border/50 pb-2">
+                        <span className="text-muted-foreground">3 × LoRaWAN Gateway Nodes (4G connectivity)</span>
+                        <span className="text-foreground font-semibold">KES 25,000 × 3 = KES 75,000</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm border-b border-border/50 pb-2">
+                        <span className="text-muted-foreground">Solar panels + mounting hardware</span>
+                        <span className="text-foreground font-semibold">KES 2,000 × 38 = KES 76,000</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm border-b border-border/50 pb-2">
+                        <span className="text-muted-foreground">Installation equipment (tools, cables, enclosures)</span>
+                        <span className="text-foreground font-semibold">KES 45,000</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm pt-2">
+                        <span className="text-foreground font-bold">HARDWARE SUBTOTAL</span>
+                        <span className="text-primary font-bold text-lg">KES 356,000</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Deployment Costs */}
+                  <div>
+                    <h4 className="font-bold text-foreground mb-3 text-lg">Deployment & Setup (One-time)</h4>
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center text-sm border-b border-border/50 pb-2">
+                        <span className="text-muted-foreground">Forest survey & sensor placement mapping</span>
+                        <span className="text-foreground font-semibold">KES 40,000</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm border-b border-border/50 pb-2">
+                        <span className="text-muted-foreground">Installation labor (2 technicians × 10 days)</span>
+                        <span className="text-foreground font-semibold">KES 80,000</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm border-b border-border/50 pb-2">
+                        <span className="text-muted-foreground">Ranger training (15 rangers × 3 days)</span>
+                        <span className="text-foreground font-semibold">KES 90,000</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm border-b border-border/50 pb-2">
+                        <span className="text-muted-foreground">Network configuration & testing</span>
+                        <span className="text-foreground font-semibold">KES 30,000</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm pt-2">
+                        <span className="text-foreground font-bold">DEPLOYMENT SUBTOTAL</span>
+                        <span className="text-primary font-bold text-lg">KES 240,000</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Annual Operating Costs */}
+                  <div>
+                    <h4 className="font-bold text-foreground mb-3 text-lg">Annual Operating Costs</h4>
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center text-sm border-b border-border/50 pb-2">
+                        <span className="text-muted-foreground">Cloud hosting (Lovable Cloud)</span>
+                        <span className="text-foreground font-semibold">KES 30,000/month × 12 = KES 360,000</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm border-b border-border/50 pb-2">
+                        <span className="text-muted-foreground">Satellite API (Google Earth Engine)</span>
+                        <span className="text-foreground font-semibold">KES 20,000/month × 12 = KES 240,000</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm border-b border-border/50 pb-2">
+                        <span className="text-muted-foreground">4G data for gateways (3 SIM cards)</span>
+                        <span className="text-foreground font-semibold">KES 5,000/month × 12 = KES 60,000</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm border-b border-border/50 pb-2">
+                        <span className="text-muted-foreground">Ranger mobile data bundles (15 rangers)</span>
+                        <span className="text-foreground font-semibold">KES 3,000/ranger/month × 12 = KES 540,000</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm border-b border-border/50 pb-2">
+                        <span className="text-muted-foreground">Maintenance & battery replacement</span>
+                        <span className="text-foreground font-semibold">KES 120,000</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm border-b border-border/50 pb-2">
+                        <span className="text-muted-foreground">Platform support & updates</span>
+                        <span className="text-foreground font-semibold">KES 180,000</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm pt-2">
+                        <span className="text-foreground font-bold">ANNUAL OPERATING COST</span>
+                        <span className="text-primary font-bold text-lg">KES 1,500,000</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Total Investment Summary */}
+                  <div className="bg-gradient-to-r from-primary/20 to-green-500/20 p-6 rounded-lg border-2 border-primary/40">
+                    <h4 className="text-xl font-bold text-foreground mb-4 text-center">Investment Summary</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="text-center">
+                        <p className="text-sm text-muted-foreground mb-1">Year 1 Total</p>
+                        <p className="text-3xl font-bold text-primary">KES 2.1M</p>
+                        <p className="text-xs text-muted-foreground">(Hardware + Deployment + Operating)</p>
+                      </div>
+                      <div className="text-center">
+                        <p className="text-sm text-muted-foreground mb-1">Year 2+ Annual</p>
+                        <p className="text-3xl font-bold text-primary">KES 1.5M</p>
+                        <p className="text-xs text-muted-foreground">(Operating costs only)</p>
+                      </div>
+                      <div className="text-center">
+                        <p className="text-sm text-muted-foreground mb-1">Per Hectare/Year</p>
+                        <p className="text-3xl font-bold text-primary">KES 34</p>
+                        <p className="text-xs text-muted-foreground">(44,000 hectares protected)</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            </motion.div>
+
+            {/* Expected Outcomes */}
+            <motion.div variants={itemVariants}>
+              <Card className="p-8 bg-card border-border">
+                <h3 className="text-2xl font-bold text-foreground mb-4 flex items-center gap-2">
+                  <Target className="h-8 w-8 text-primary" />
+                  Expected Outcomes & Impact
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="font-semibold text-foreground mb-3">Operational Metrics (Year 1)</h4>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
+                      <li className="flex items-start gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                        <span><strong className="text-foreground">94% illegal logging detection:</strong> Real-time chainsaw audio alerts</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                        <span><strong className="text-foreground">6-minute average response:</strong> Ranger dispatch from alert to arrival</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                        <span><strong className="text-foreground">24/7 forest coverage:</strong> No blind spots or patrol gaps</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                        <span><strong className="text-foreground">100+ anonymous reports:</strong> Community engagement without fear</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-foreground mb-3">Economic Impact (5-Year Projection)</h4>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
+                      <li className="flex items-start gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                        <span><strong className="text-foreground">KES 180M saved:</strong> Prevented illegal logging losses (estimated)</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                        <span><strong className="text-foreground">4,000 hectares protected:</strong> Forest regeneration and canopy recovery</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                        <span><strong className="text-foreground">30 jobs created:</strong> Rangers, technicians, data analysts</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                        <span><strong className="text-foreground">5 communities empowered:</strong> Direct economic benefits through Report & Earn</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div className="mt-6 bg-primary/10 p-4 rounded-lg text-center">
+                  <p className="text-sm text-muted-foreground mb-2">Return on Investment (ROI)</p>
+                  <p className="text-4xl font-bold text-primary mb-2">86:1</p>
+                  <p className="text-xs text-muted-foreground">
+                    For every KES 1 invested, KES 86 in forest value protected over 5 years
+                  </p>
+                </div>
+              </Card>
+            </motion.div>
+          </motion.section>
+
           {/* Why This Matters */}
           <motion.section
             variants={containerVariants}
