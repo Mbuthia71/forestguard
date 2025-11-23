@@ -19,55 +19,45 @@ const Hero = () => {
       {/* Subtle background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-primary/10"></div>
       
-      {/* Decorative nature elements - creative placements */}
-      {/* Tropical forest backdrop - top right with fade */}
+      {/* Decorative transparent nature overlays */}
+      {/* Tropical forest - top right corner accent */}
       <motion.img
-        initial={{ opacity: 0, x: 100 }}
-        animate={{ opacity: 0.15, x: 0 }}
+        initial={{ opacity: 0, x: 100, y: -50 }}
+        animate={{ opacity: 1, x: 0, y: 0 }}
         transition={{ duration: 1.5, delay: 0.5 }}
         src={tropicalForest}
         alt=""
-        className="absolute top-0 right-0 w-1/2 h-auto pointer-events-none mix-blend-multiply"
+        className="absolute top-0 right-0 w-2/5 md:w-1/3 h-auto pointer-events-none z-10"
       />
       
-      {/* Mountain landscape - bottom center for depth */}
+      {/* Mountain landscape - bottom as footer accent */}
       <motion.img
         initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 0.2, y: 0 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.8, delay: 0.8 }}
         src={mountainLandscape}
         alt=""
-        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-auto pointer-events-none opacity-20"
+        className="absolute bottom-0 left-0 right-0 w-full h-auto pointer-events-none z-5"
       />
       
-      {/* Palm tree - left side decorative */}
+      {/* Palm tree - left corner decorative */}
       <motion.img
-        initial={{ opacity: 0, x: -100, rotate: -10 }}
-        animate={{ opacity: 0.12, x: 0, rotate: 0 }}
-        transition={{ duration: 2, delay: 1.2 }}
+        initial={{ opacity: 0, x: -100 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 2, delay: 1 }}
         src={palmTree}
         alt=""
-        className="absolute bottom-20 left-0 w-48 md:w-64 h-auto pointer-events-none"
+        className="absolute top-1/4 left-0 w-32 md:w-48 h-auto pointer-events-none z-10"
       />
       
-      {/* Palm tree - right side mirrored */}
+      {/* Grass overlay - bottom natural border */}
       <motion.img
-        initial={{ opacity: 0, x: 100, rotate: 10 }}
-        animate={{ opacity: 0.08, x: 0, rotate: 0 }}
-        transition={{ duration: 2, delay: 1.4 }}
-        src={palmTree}
-        alt=""
-        className="absolute bottom-32 right-0 w-40 md:w-56 h-auto pointer-events-none scale-x-[-1] opacity-50"
-      />
-      
-      {/* Grass overlay - bottom edge for natural transition */}
-      <motion.img
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 0.25, y: 0 }}
-        transition={{ duration: 1.5, delay: 1 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.5, delay: 1.2 }}
         src={grassOverlay}
         alt=""
-        className="absolute bottom-0 left-0 w-full h-32 object-cover object-top pointer-events-none"
+        className="absolute bottom-0 left-0 w-full h-24 md:h-32 object-cover object-top pointer-events-none z-20"
       />
       
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 min-h-[calc(100vh-5rem)] md:min-h-[calc(100vh-6rem)] flex items-center py-8">
