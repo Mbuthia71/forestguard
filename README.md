@@ -4,6 +4,22 @@
 
 ---
 
+## 🔐 Demo Login Credentials
+
+### Admin Account
+**Email:** `admin@forestguard.app`  
+**Password:** `ForestGuard2025!`
+
+*Access the admin dashboard at `/admin-auth` to manage rangers, review reports, and track forest health.*
+
+### Ranger Account
+**Email:** `ranger@forestguard.app`  
+**Password:** `RangerField2025!`
+
+*Access the ranger interface at `/auth` then navigate to `/ranger` for mobile field tools.*
+
+---
+
 ## The Problem We're Solving
 
 Kenya loses 12,000 hectares of forest every year to illegal logging, land grabbing, and fires. Traditional monitoring depends on infrequent patrols that arrive too late. Whistleblowers who report illegal activity face threats, corruption, and retaliation.
@@ -253,6 +269,20 @@ ForestGuard uses advanced cryptographic techniques to guarantee reporter anonymi
 This isn't just about technology. It's about giving communities the power to protect their forests without fear. It's about making corruption visible. It's about using innovation to solve real problems in Kenya.
 
 **Every protected tree is a step toward the future Wangari Maathai envisioned.**
+
+---
+
+## 📊 Case Study: Kakamega Forest
+
+We've prepared a detailed deployment case study for **Kakamega Forest** (44,000 hectares), Kenya's largest remaining indigenous rainforest:
+
+- **35 IoT sensors + 3 LoRaWAN gateways** strategically deployed
+- **Year 1 Investment:** KES 2.1M (~$16,150)
+- **Annual Operating Cost:** KES 1.5M (~$11,540)
+- **Cost per hectare:** KES 34/year (~$0.26/year)
+- **Expected ROI:** 86:1 over 5 years
+
+Full breakdown with sensor placement, data collection plan, and impact metrics available in the pitch deck at `/pitch-deck`.
 
 ---
 
