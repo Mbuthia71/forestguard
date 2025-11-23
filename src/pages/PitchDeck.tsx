@@ -206,8 +206,8 @@ const PitchDeck = () => {
                 {
                   icon: DollarSign,
                   title: "'Report & Earn' Verified Whistleblower Rewards",
-                  description: "Anonymous M-PESA payouts (2,000-5,000 KES) for verified environmental reports, funded by 10% of carbon credit verification fees",
-                  impact: "Financial incentive transforms communities into active forest protectors",
+                  description: "Anonymous M-PESA payouts (KES 2,000-5,000) for verified environmental reports, funded by 10% of NGO partnership revenues",
+                  impact: "Financial incentive transforms communities into active forest protectors without revealing identity",
                   color: "text-blue-500"
                 }
               ].map((feature, index) => (
@@ -651,31 +651,35 @@ const PitchDeck = () => {
             <motion.div variants={containerVariants} className="space-y-6">
               <motion.div variants={itemVariants}>
                 <Card className="p-8 bg-card border-border">
-                  <h3 className="text-2xl font-bold text-foreground mb-4">Revenue Streams (5-Year Projection)</h3>
+                  <h3 className="text-2xl font-bold text-foreground mb-4">Revenue Streams - Kenyan Pricing (5-Year Projection)</h3>
+                  <p className="text-sm text-muted-foreground mb-4 italic">All figures in Kenyan Shillings (KES) - Affordable for local organizations</p>
                   <div className="space-y-4">
                     <div>
                       <h4 className="font-bold text-foreground mb-2">Year 1-2: Grant Funded Phase</h4>
                       <ul className="text-sm text-muted-foreground space-y-1 ml-4">
-                        <li>• Target: Kenya Forest Service, GEF, World Bank grants</li>
-                        <li>• Focus on proof of concept and pilot deployment</li>
-                        <li>• Operating cost: $3,100/year</li>
+                        <li>• Target: Kenya Forest Service, Greenbelt Movement, GEF, World Bank grants</li>
+                        <li>• Focus on proof of concept and pilot deployment in Karura Forest</li>
+                        <li>• Operating cost: <strong className="text-foreground">KES 400,000/year</strong> (Cloud + maintenance)</li>
                       </ul>
                     </div>
                     <div>
                       <h4 className="font-bold text-foreground mb-2">Year 3: Pilot Partnerships</h4>
                       <ul className="text-sm text-muted-foreground space-y-1 ml-4">
-                        <li>• <strong className="text-foreground">B2G Subscriptions:</strong> KFS monitoring - $50,000/year per county → 10 counties = <strong className="text-primary">$500,000</strong></li>
-                        <li>• <strong className="text-foreground">NGO Subscriptions:</strong> Conservation orgs pay for transparency dashboard → 20 NGOs × $5,000 = <strong className="text-primary">$100,000</strong></li>
-                        <li>• <strong className="text-foreground">Data Licensing:</strong> Forest health data for research institutions → <strong className="text-primary">$50,000</strong></li>
-                        <li className="font-bold text-primary mt-2">• Total Year 3 Revenue: $650,000</li>
+                        <li>• <strong className="text-foreground">B2G Subscriptions:</strong> KFS county monitoring - KES 800,000/year per county → 5 counties = <strong className="text-primary">KES 4,000,000</strong></li>
+                        <li>• <strong className="text-foreground">NGO Subscriptions:</strong> Greenbelt Movement, WWF Kenya, Nature Kenya - 10 orgs × KES 150,000 = <strong className="text-primary">KES 1,500,000</strong></li>
+                        <li>• <strong className="text-foreground">Community Partnerships:</strong> Local forest associations (Karura, Ngong) → <strong className="text-primary">KES 500,000</strong></li>
+                        <li>• <strong className="text-foreground">Data Licensing:</strong> University of Nairobi, TU-K research institutions → <strong className="text-primary">KES 300,000</strong></li>
+                        <li className="font-bold text-primary mt-2">• Total Year 3 Revenue: <strong>KES 6,300,000</strong> (~$48,500)</li>
                       </ul>
                     </div>
                     <div>
                       <h4 className="font-bold text-foreground mb-2">Year 4-5: Scale & Sustainability</h4>
                       <ul className="text-sm text-muted-foreground space-y-1 ml-4">
-                        <li>• <strong className="text-foreground">Regional Expansion:</strong> Uganda, Tanzania, Ethiopia forest services → <strong className="text-primary">$2M annual revenue</strong></li>
-                        <li>• <strong className="text-foreground">Data-as-a-Service:</strong> Sell anonymized forest health data to researchers → <strong className="text-primary">$200,000/year</strong></li>
-                        <li>• <strong className="text-foreground">Enterprise SaaS Model:</strong> White-label platform licensing → <strong className="text-primary">$500,000/year</strong></li>
+                        <li>• <strong className="text-foreground">National Expansion:</strong> All 47 counties × KES 600,000 = <strong className="text-primary">KES 28,200,000/year</strong></li>
+                        <li>• <strong className="text-foreground">Regional Expansion:</strong> Uganda, Tanzania forest services → <strong className="text-primary">KES 15,000,000/year</strong></li>
+                        <li>• <strong className="text-foreground">Data-as-a-Service:</strong> Anonymized forest health data to researchers → <strong className="text-primary">KES 5,000,000/year</strong></li>
+                        <li>• <strong className="text-foreground">Enterprise Partnerships:</strong> Safari Lodges, Tourism Board → <strong className="text-primary">KES 8,000,000/year</strong></li>
+                        <li className="font-bold text-primary mt-2">• Total Year 5 Revenue: <strong>KES 56,200,000</strong> (~$432,300)</li>
                       </ul>
                     </div>
                   </div>
@@ -684,15 +688,15 @@ const PitchDeck = () => {
 
               <motion.div variants={itemVariants}>
                 <Card className="p-8 bg-card border-border">
-                  <h3 className="text-2xl font-bold text-foreground mb-4">ROI Calculation</h3>
+                  <h3 className="text-2xl font-bold text-foreground mb-4">ROI Calculation (Kenyan Shillings)</h3>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
                     {[
-                      { label: "Investment needed", value: "$150,000", subtext: "Year 1-2 development + pilot" },
-                      { label: "Break-even", value: "Year 3 (Month 2)", subtext: null },
-                      { label: "5-Year Revenue", value: "$6.5M", subtext: null },
-                      { label: "Investor Return", value: "43x in 5 years", subtext: null },
-                      { label: "Profit Margin", value: "85-90%", subtext: "after break-even" },
-                      { label: "Social Impact", value: "$45 ROI per $1", subtext: "prevented logging losses" }
+                      { label: "Investment needed", value: "KES 3M", subtext: "Year 1-2 development + pilot" },
+                      { label: "Break-even", value: "Year 3 (Month 4)", subtext: null },
+                      { label: "5-Year Revenue", value: "KES 95M", subtext: "Cumulative" },
+                      { label: "Investor Return", value: "31x in 5 years", subtext: null },
+                      { label: "Profit Margin", value: "75-80%", subtext: "after break-even" },
+                      { label: "Social Impact", value: "KES 5,800 saved per KES 100", subtext: "prevented logging losses" }
                     ].map((metric, index) => (
                       <div key={index} className="text-center">
                         <p className="text-sm text-muted-foreground mb-1">{metric.label}</p>
@@ -706,14 +710,16 @@ const PitchDeck = () => {
 
               <motion.div variants={itemVariants}>
                 <Card className="p-8 bg-card border-border">
-                  <h3 className="text-2xl font-bold text-foreground mb-4">Cost Structure (Transparent & Sustainable)</h3>
+                  <h3 className="text-2xl font-bold text-foreground mb-4">Cost Structure - Kenyan Reality (Transparent & Affordable)</h3>
+                  <p className="text-sm text-muted-foreground mb-4 italic">Designed to be sustainable for Kenyan organizations</p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {[
-                      { item: "IoT Hardware", cost: "$50/sensor × 300 sensors = $15,000", type: "one-time" },
-                      { item: "Cloud Infrastructure", cost: "$500/month = $6,000/year", type: "annual" },
-                      { item: "Satellite API", cost: "$200/month = $2,400/year", type: "annual" },
-                      { item: "Ranger Support", cost: "$10,000/year (training, equipment)", type: "annual" },
-                      { item: "Platform Development", cost: "$30,000/year (maintenance, improvements)", type: "annual" }
+                      { item: "IoT Hardware (Locally Sourced)", cost: "KES 4,000/sensor × 50 sensors = KES 200,000", type: "one-time" },
+                      { item: "Cloud Infrastructure (Lovable Cloud)", cost: "KES 30,000/month = KES 360,000/year", type: "annual" },
+                      { item: "Satellite API (Google Earth Engine)", cost: "KES 20,000/month = KES 240,000/year", type: "annual" },
+                      { item: "Ranger Support & Training", cost: "KES 400,000/year (equipment, field gear)", type: "annual" },
+                      { item: "Platform Maintenance", cost: "KES 600,000/year (developer, hosting)", type: "annual" },
+                      { item: "Mobile Data for Rangers", cost: "KES 5,000/ranger/month × 10 = KES 600,000/year", type: "annual" }
                     ].map((item, index) => (
                       <div key={index} className="flex justify-between items-center text-sm">
                         <span className="text-foreground">{item.item}</span>
@@ -722,7 +728,39 @@ const PitchDeck = () => {
                     ))}
                   </div>
                   <p className="text-xl font-bold text-primary mt-6 text-center">
-                    Total Annual Operating Cost: $48,400/year
+                    Total Annual Operating Cost: <strong>KES 2,400,000/year</strong> (~$18,500)
+                  </p>
+                  <p className="text-sm text-center text-muted-foreground mt-2">
+                    75% cheaper than international alternatives while maintaining quality
+                  </p>
+                </Card>
+              </motion.div>
+
+              {/* Kenyan Affordability Callout */}
+              <motion.div variants={itemVariants}>
+                <Card className="p-8 bg-gradient-to-r from-green-500/10 to-primary/10 border-primary/30 text-center">
+                  <Leaf className="h-12 w-12 text-primary mx-auto mb-3" />
+                  <h3 className="text-2xl font-bold text-foreground mb-3">Built for Kenyan Organizations</h3>
+                  <p className="text-lg text-muted-foreground mb-4">
+                    ForestGuard pricing is designed to be accessible for Kenyan NGOs like <strong className="text-foreground">Greenbelt Movement</strong>, 
+                    local forest associations, and county governments - not Silicon Valley startups.
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                    <div className="bg-background/50 p-4 rounded-lg">
+                      <p className="text-3xl font-bold text-primary mb-1">75%</p>
+                      <p className="text-sm text-muted-foreground">Cheaper than international forest monitoring systems</p>
+                    </div>
+                    <div className="bg-background/50 p-4 rounded-lg">
+                      <p className="text-3xl font-bold text-primary mb-1">KES 800K</p>
+                      <p className="text-sm text-muted-foreground">Annual cost per county - affordable for KFS budget</p>
+                    </div>
+                    <div className="bg-background/50 p-4 rounded-lg">
+                      <p className="text-3xl font-bold text-primary mb-1">100%</p>
+                      <p className="text-sm text-muted-foreground">Local support - no foreign currency needed</p>
+                    </div>
+                  </div>
+                  <p className="text-sm text-muted-foreground italic mt-6">
+                    "Technology for Kenya, priced for Kenya, built by Kenyans"
                   </p>
                 </Card>
               </motion.div>
@@ -741,11 +779,11 @@ const PitchDeck = () => {
               Impact Metrics (Social Return)
             </motion.h2>
             <motion.p variants={itemVariants} className="text-lg text-center text-muted-foreground mb-8">
-              For every $1 invested in ForestGuard:
+              For every KES 100 invested in ForestGuard:
             </motion.p>
             <motion.div variants={containerVariants} className="grid grid-cols-1 md:grid-cols-4 gap-6">
               {[
-                { icon: DollarSign, value: "$45", label: "In prevented illegal logging losses", subtext: "Kenya loses $1.2B annually to illegal logging" },
+                { icon: DollarSign, value: "KES 5,800", label: "In prevented illegal logging losses", subtext: "Kenya loses KES 156B annually to illegal logging" },
                 { icon: Leaf, value: "500", label: "Hectares of forest protected", subtext: "at scale" },
                 { icon: Users, value: "5", label: "Communities empowered", subtext: "through anonymous reporting" },
                 { icon: TrendingUp, value: "15", label: "Jobs created", subtext: "rangers, technicians, analysts" }
@@ -819,14 +857,15 @@ const PitchDeck = () => {
                   ]
                 },
                 {
-                  phase: "Phase 2: Production Pilot",
-                  status: "Q2 2025 - Needs Funding",
+                  phase: "Phase 2: Production Pilot - Karura Forest",
+                  status: "Q2 2025 - Needs Funding (KES 750,000)",
                   items: [
-                    "🎯 Deploy 50 physical IoT sensors in Karura Forest (Cost: $2,500)",
-                    "🎯 Integrate Google Earth Engine API for live Sentinel-2 satellite data",
-                    "🎯 Partner with Kenya Forest Service for official pilot program",
-                    "🎯 Train 20 rangers on system usage and field protocols",
-                    "🎯 SMS alert integration via Africa's Talking"
+                    "🎯 Deploy 50 physical IoT sensors in Karura Forest (Cost: KES 200,000 - locally sourced)",
+                    "🎯 Integrate Google Earth Engine API for live Sentinel-2 satellite data (KES 120,000/year)",
+                    "🎯 Partner with Kenya Forest Service & Greenbelt Movement for official pilot",
+                    "🎯 Train 20 rangers on system usage and field protocols (KES 200,000)",
+                    "🎯 SMS alert integration via Africa's Talking (KES 50,000/year)",
+                    "🎯 Mobile data bundles for rangers (KES 180,000/year)"
                   ]
                 },
                 {
