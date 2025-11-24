@@ -3,20 +3,68 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
-import { Satellite, Radar, TrendingDown, Flame, TreeDeciduous } from "lucide-react";
+import { Satellite, Radar, TrendingDown, Flame, TreeDeciduous, Waves, Activity, AlertTriangle } from "lucide-react";
 import { useForestSelector } from "@/hooks/useForestSelector";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SatelliteAIVoiceover } from "@/components/SatelliteAIVoiceover";
+import { Progress } from "@/components/ui/progress";
 
 export default function SatelliteIntelligence() {
   const { selectedForest } = useForestSelector();
   const [sarComparison, setSarComparison] = useState(50);
   const [opticalTimeline, setOpticalTimeline] = useState(100);
+  const [selectedPolarization, setSelectedPolarization] = useState<"VV" | "VH">("VV");
+
+  // SAR Backscatter data (Sentinel-1 C-band typical values)
+  const sarBackscatter = {
+    VV: {
+      denseForest: -8.5,
+      moderateForest: -10.2,
+      degradedForest: -12.8,
+      clearedArea: -15.3,
+      current: -9.1,
+      baseline: -8.7,
+      change: -0.4, // dB change indicating slight degradation
+    },
+    VH: {
+      denseForest: -14.2,
+      moderateForest: -16.5,
+      degradedForest: -18.9,
+      clearedArea: -22.1,
+      current: -15.1,
+      baseline: -14.5,
+      change: -0.6, // dB change
+    }
+  };
 
   const sarAlerts = [
-    { type: "Possible Logging", severity: "high", area: "Northern Zone", confidence: 87 },
-    { type: "Ground Disturbance", severity: "medium", area: "Eastern Sector", confidence: 72 },
-    { type: "Vegetation Loss Zone", severity: "high", area: "Southern Boundary", confidence: 91 },
+    { 
+      type: "Possible Logging Activity", 
+      severity: "high", 
+      area: "Northern Zone", 
+      confidence: 87,
+      backscatterChange: -3.2,
+      method: "VV/VH Cross-polarization Analysis",
+      date: "2025-01-15"
+    },
+    { 
+      type: "Ground Disturbance Detected", 
+      severity: "medium", 
+      area: "Eastern Sector", 
+      confidence: 72,
+      backscatterChange: -1.8,
+      method: "Temporal Change Detection",
+      date: "2025-01-12"
+    },
+    { 
+      type: "Canopy Structure Loss", 
+      severity: "high", 
+      area: "Southern Boundary", 
+      confidence: 91,
+      backscatterChange: -4.1,
+      method: "SAR Coherence Analysis",
+      date: "2025-01-10"
+    },
   ];
 
   const forestHealth = {
@@ -25,6 +73,8 @@ export default function SatelliteIntelligence() {
     deforestationRate: 0.3,
     lastSARUpdate: selectedForest.lastUpdate,
     lastOpticalUpdate: selectedForest.lastUpdate,
+    sarRevisitDays: 6,
+    cloudPenetration: true,
   };
 
   return (
@@ -54,37 +104,208 @@ export default function SatelliteIntelligence() {
         </TabsList>
 
         <TabsContent value="sar" className="space-y-6">
+          {/* SAR Technical Overview */}
+          <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Satellite className="w-5 h-5 text-primary" />
+                Sentinel-1 SAR Monitoring
+              </CardTitle>
+              <CardDescription>
+                C-band Synthetic Aperture Radar • 5.4 GHz • 10m Resolution • All-Weather
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="space-y-1">
+                  <p className="text-xs text-muted-foreground">Sensor Type</p>
+                  <p className="text-sm font-semibold">C-band SAR</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-xs text-muted-foreground">Resolution</p>
+                  <p className="text-sm font-semibold">10m x 10m</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-xs text-muted-foreground">Revisit Cycle</p>
+                  <p className="text-sm font-semibold">6-12 Days</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-xs text-muted-foreground">Cloud Penetration</p>
+                  <p className="text-sm font-semibold text-green-600">✓ Active</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Polarization Selector */}
+          <div className="flex gap-2">
+            <Button 
+              variant={selectedPolarization === "VV" ? "default" : "outline"}
+              onClick={() => setSelectedPolarization("VV")}
+              className="flex-1"
+            >
+              <Waves className="w-4 h-4 mr-2" />
+              VV Polarization
+            </Button>
+            <Button 
+              variant={selectedPolarization === "VH" ? "default" : "outline"}
+              onClick={() => setSelectedPolarization("VH")}
+              className="flex-1"
+            >
+              <Activity className="w-4 h-4 mr-2" />
+              VH Cross-Polarization
+            </Button>
+          </div>
+
+          {/* Backscatter Analysis */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Radar className="w-5 h-5" />
+                Backscatter Intensity Analysis ({selectedPolarization})
+              </CardTitle>
+              <CardDescription>
+                Radar return strength in decibels (dB) - Lower values indicate forest loss
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Current Backscatter */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium">Current Backscatter</span>
+                    <Badge variant="secondary">{sarBackscatter[selectedPolarization].current} dB</Badge>
+                  </div>
+                  <Progress 
+                    value={Math.abs((sarBackscatter[selectedPolarization].current + 25) / 0.25)} 
+                    className="h-3"
+                  />
+                  
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium">Baseline (Historical)</span>
+                    <Badge variant="outline">{sarBackscatter[selectedPolarization].baseline} dB</Badge>
+                  </div>
+                  <Progress 
+                    value={Math.abs((sarBackscatter[selectedPolarization].baseline + 25) / 0.25)} 
+                    className="h-3"
+                  />
+
+                  <div className="flex items-center justify-between pt-2">
+                    <span className="text-sm font-medium">Change Detected</span>
+                    <Badge variant={sarBackscatter[selectedPolarization].change < -1 ? "destructive" : "secondary"}>
+                      {sarBackscatter[selectedPolarization].change} dB
+                    </Badge>
+                  </div>
+                </div>
+
+                {/* Reference Values */}
+                <div className="space-y-3 bg-muted/50 p-4 rounded-lg">
+                  <h4 className="text-sm font-semibold mb-3">Reference Backscatter Values</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">Dense Forest</span>
+                      <span className="font-mono font-semibold text-green-600">
+                        {sarBackscatter[selectedPolarization].denseForest} dB
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">Moderate Forest</span>
+                      <span className="font-mono font-semibold text-green-600">
+                        {sarBackscatter[selectedPolarization].moderateForest} dB
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">Degraded Forest</span>
+                      <span className="font-mono font-semibold text-orange-600">
+                        {sarBackscatter[selectedPolarization].degradedForest} dB
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">Cleared Area</span>
+                      <span className="font-mono font-semibold text-red-600">
+                        {sarBackscatter[selectedPolarization].clearedArea} dB
+                      </span>
+                    </div>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-3">
+                    {selectedPolarization === "VV" 
+                      ? "VV: Co-polarization, sensitive to volume scattering from canopy"
+                      : "VH: Cross-polarization, sensitive to structural changes and biomass"}
+                  </p>
+                </div>
+              </div>
+
+              {/* Status Indicator */}
+              {sarBackscatter[selectedPolarization].change < -1 && (
+                <div className="flex items-center gap-2 p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
+                  <AlertTriangle className="w-5 h-5 text-destructive" />
+                  <div>
+                    <p className="text-sm font-semibold text-destructive">Significant Backscatter Decrease Detected</p>
+                    <p className="text-xs text-muted-foreground">
+                      Change of {sarBackscatter[selectedPolarization].change} dB indicates possible canopy loss or structural degradation
+                    </p>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
           {/* SAR Change Map */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Radar className="w-5 h-5" />
-                SAR Change Map (Sentinel-1 Style)
+                SAR Change Detection Map
               </CardTitle>
               <CardDescription>
-                Compare radar backscatter before vs after - Slide to reveal changes
+                Temporal comparison - Red areas show significant backscatter decrease (forest loss)
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="relative h-96 bg-muted rounded-lg overflow-hidden border-2 border-border">
-                {/* Mock SAR imagery */}
-                <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-600" />
+                {/* Mock SAR imagery with realistic grayscale */}
+                <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700" />
                 <div 
-                  className="absolute inset-0 bg-gradient-to-br from-gray-700 to-gray-500"
+                  className="absolute inset-0 bg-gradient-to-br from-gray-800 via-gray-700 to-gray-600"
                   style={{ clipPath: `inset(0 ${100 - sarComparison}% 0 0)` }}
                 />
-                {/* Highlight suspicious areas */}
-                <div className="absolute top-1/3 left-1/4 w-20 h-20 bg-red-500/50 rounded-full blur-xl" />
-                <div className="absolute bottom-1/3 right-1/3 w-16 h-16 bg-orange-500/50 rounded-full blur-xl" />
+                {/* Deforestation hotspots - darker areas indicate lower backscatter */}
+                <div className="absolute top-1/3 left-1/4 w-24 h-24 bg-red-600/60 rounded-full blur-2xl animate-pulse" />
+                <div className="absolute bottom-1/3 right-1/3 w-20 h-20 bg-orange-500/50 rounded-full blur-xl" />
+                <div className="absolute top-1/2 right-1/4 w-16 h-16 bg-yellow-500/40 rounded-full blur-lg" />
                 
                 <div className="absolute top-4 left-4 space-y-2">
-                  <Badge variant="secondary">Before: {selectedForest.lastUpdate}</Badge>
-                  <Badge variant="default">After: 2025-01-19</Badge>
+                  <Badge variant="secondary" className="bg-background/80 backdrop-blur">
+                    Before: Dec 2024
+                  </Badge>
+                  <Badge variant="default" className="bg-background/80 backdrop-blur">
+                    After: Jan 2025
+                  </Badge>
+                  <Badge variant="outline" className="bg-background/80 backdrop-blur">
+                    {selectedPolarization} Band
+                  </Badge>
+                </div>
+
+                {/* Legend */}
+                <div className="absolute bottom-4 right-4 bg-background/90 backdrop-blur p-3 rounded-lg border space-y-1">
+                  <p className="text-xs font-semibold mb-2">Change Intensity</p>
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 bg-red-600 rounded-full" />
+                    <span className="text-xs">High Loss (&gt; -3 dB)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 bg-orange-500 rounded-full" />
+                    <span className="text-xs">Medium Loss (-1 to -3 dB)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 bg-yellow-500 rounded-full" />
+                    <span className="text-xs">Low Loss (&lt; -1 dB)</span>
+                  </div>
                 </div>
               </div>
               
               <div className="space-y-2">
-                <label className="text-sm font-medium">Timeline Comparison</label>
+                <label className="text-sm font-medium">Timeline Slider (Before ← → After)</label>
                 <Slider
                   value={[sarComparison]}
                   onValueChange={(v) => setSarComparison(v[0])}
@@ -92,6 +313,9 @@ export default function SatelliteIntelligence() {
                   step={1}
                   className="w-full"
                 />
+                <p className="text-xs text-muted-foreground">
+                  {sarComparison < 50 ? "Viewing: Before state" : "Viewing: After state with changes highlighted"}
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -99,29 +323,68 @@ export default function SatelliteIntelligence() {
           {/* SAR Alerts */}
           <Card>
             <CardHeader>
-              <CardTitle>SAR-Based Alerts</CardTitle>
-              <CardDescription>Automated detection from radar analysis</CardDescription>
+              <CardTitle>Automated SAR Detections</CardTitle>
+              <CardDescription>
+                Machine learning analysis of Sentinel-1 temporal signatures
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               {sarAlerts.map((alert, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center justify-between p-4 border-2 rounded-lg hover:bg-muted/50 transition-colors"
+                  className="flex flex-col md:flex-row md:items-center md:justify-between p-4 border-2 rounded-lg hover:bg-muted/50 transition-colors gap-3"
                 >
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
+                  <div className="space-y-2 flex-1">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <Badge variant={alert.severity === "high" ? "destructive" : "secondary"}>
                         {alert.severity.toUpperCase()}
                       </Badge>
                       <span className="font-semibold">{alert.type}</span>
+                      <Badge variant="outline" className="text-xs">
+                        {alert.date}
+                      </Badge>
                     </div>
                     <p className="text-sm text-muted-foreground">
-                      Location: {alert.area} • Confidence: {alert.confidence}%
+                      Location: <span className="font-medium">{alert.area}</span> • 
+                      Confidence: <span className="font-medium">{alert.confidence}%</span>
                     </p>
+                    <div className="flex items-center gap-2 text-xs">
+                      <Badge variant="secondary" className="font-mono">
+                        Δ {alert.backscatterChange} dB
+                      </Badge>
+                      <span className="text-muted-foreground">{alert.method}</span>
+                    </div>
                   </div>
-                  <Button size="sm" variant="outline">View on Map</Button>
+                  <Button size="sm" variant="outline" className="md:self-start">
+                    View on Map
+                  </Button>
                 </div>
               ))}
+            </CardContent>
+          </Card>
+
+          {/* Why SAR Info Card */}
+          <Card className="border-primary/30 bg-primary/5">
+            <CardHeader>
+              <CardTitle className="text-base">Why SAR for Forest Monitoring?</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2 text-sm">
+              <div className="flex items-start gap-2">
+                <span className="text-primary font-bold">•</span>
+                <p><strong>Cloud penetration:</strong> Works through clouds, rain, and smoke - ideal for tropical forests</p>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-primary font-bold">•</span>
+                <p><strong>Day/night monitoring:</strong> Active sensor doesn't require sunlight</p>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-primary font-bold">•</span>
+                <p><strong>Structural sensitivity:</strong> Detects canopy height, density, and biomass changes</p>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-primary font-bold">•</span>
+                <p><strong>Rapid detection:</strong> 6-12 day revisit enables early warning of illegal logging</p>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
