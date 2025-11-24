@@ -9,6 +9,9 @@ verify_jwt = false
 [functions.bootstrap-admin]
 verify_jwt = false
 
+[functions.fetch-sar-data]
+verify_jwt = false
+
 [functions.get-mapbox-key]
 verify_jwt = false
 
