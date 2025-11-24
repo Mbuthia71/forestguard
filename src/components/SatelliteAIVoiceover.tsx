@@ -26,7 +26,9 @@ export const SatelliteAIVoiceover = ({ forestName, satelliteData }: SatelliteAIV
     setIsGenerating(true);
     
     try {
-      // Step 1: Generate AI summary
+      console.log('[Voice] Generating AI summary for', forestName);
+      
+      // Step 1: Generate AI summary using Lovable AI
       const { data: summaryData, error: summaryError } = await supabase.functions.invoke(
         'ai-satellite-summary',
         {
@@ -34,51 +36,83 @@ export const SatelliteAIVoiceover = ({ forestName, satelliteData }: SatelliteAIV
         }
       );
 
-      if (summaryError) throw summaryError;
+      if (summaryError) {
+        console.error('[Voice] Summary error:', summaryError);
+        throw new Error(`Failed to generate summary: ${summaryError.message}`);
+      }
+
+      if (!summaryData?.summary) {
+        throw new Error('No summary generated');
+      }
       
       const generatedSummary = summaryData.summary;
+      console.log('[Voice] Summary generated:', generatedSummary.substring(0, 100) + '...');
       setSummary(generatedSummary);
 
-      // Step 2: Convert to speech
-      const { data: audioData, error: audioError } = await supabase.functions.invoke(
-        'text-to-speech',
-        {
-          body: { text: generatedSummary, voice: 'alloy' }
+      // Step 2: Use browser's built-in speech synthesis (no API key needed)
+      if ('speechSynthesis' in window) {
+        console.log('[Voice] Using browser speech synthesis');
+        
+        const utterance = new SpeechSynthesisUtterance(generatedSummary);
+        utterance.rate = 0.9;
+        utterance.pitch = 1.0;
+        utterance.volume = 1.0;
+        
+        // Try to use a high-quality voice
+        const voices = window.speechSynthesis.getVoices();
+        const preferredVoice = voices.find(v => 
+          v.lang.startsWith('en') && (v.name.includes('Google') || v.name.includes('Microsoft'))
+        ) || voices.find(v => v.lang.startsWith('en'));
+        
+        if (preferredVoice) {
+          utterance.voice = preferredVoice;
+          console.log('[Voice] Using voice:', preferredVoice.name);
         }
-      );
-
-      if (audioError) throw audioError;
-
-      // Step 3: Play audio
-      const audioBlob = new Blob(
-        [Uint8Array.from(atob(audioData.audioContent), c => c.charCodeAt(0))],
-        { type: 'audio/mp3' }
-      );
-      const audioUrl = URL.createObjectURL(audioBlob);
-      const audio = new Audio(audioUrl);
-      
-      setIsPlaying(true);
-      audio.onended = () => {
-        setIsPlaying(false);
-        URL.revokeObjectURL(audioUrl);
-      };
-      
-      await audio.play();
-
-      toast({
-        title: "AI Voice Summary Generated",
-        description: "Playing satellite analysis voice-over",
-      });
+        
+        setIsPlaying(true);
+        
+        utterance.onend = () => {
+          console.log('[Voice] Playback completed');
+          setIsPlaying(false);
+        };
+        
+        utterance.onerror = (event) => {
+          console.error('[Voice] Speech synthesis error:', event);
+          setIsPlaying(false);
+          toast({
+            title: "Playback Error",
+            description: "Failed to play voice summary",
+            variant: "destructive",
+          });
+        };
+        
+        window.speechSynthesis.speak(utterance);
+        
+        toast({
+          title: "AI Voice Summary Playing",
+          description: "Satellite analysis voice-over started",
+        });
+      } else {
+        throw new Error('Speech synthesis not supported in this browser');
+      }
 
     } catch (error) {
-      console.error('Error generating voiceover:', error);
+      console.error('[Voice] Error generating voiceover:', error);
       toast({
         title: "Error",
-        description: "Failed to generate AI voice summary",
+        description: error instanceof Error ? error.message : "Failed to generate AI voice summary",
         variant: "destructive",
       });
     } finally {
       setIsGenerating(false);
+    }
+  };
+
+  const stopPlayback = () => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      setIsPlaying(false);
+      console.log('[Voice] Playback stopped by user');
     }
   };
 
@@ -99,28 +133,38 @@ export const SatelliteAIVoiceover = ({ forestName, satelliteData }: SatelliteAIV
             </div>
           )}
         </div>
-        <Button
-          onClick={generateAndPlayVoiceover}
-          disabled={isGenerating || isPlaying}
-          className="shrink-0"
-        >
-          {isGenerating ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Generating...
-            </>
-          ) : isPlaying ? (
-            <>
-              <Volume2 className="mr-2 h-4 w-4 animate-pulse" />
-              Playing...
-            </>
-          ) : (
-            <>
-              <Volume2 className="mr-2 h-4 w-4" />
-              Generate Voice Summary
-            </>
+        <div className="flex gap-2 shrink-0">
+          {isPlaying && (
+            <Button
+              onClick={stopPlayback}
+              variant="outline"
+              size="sm"
+            >
+              Stop
+            </Button>
           )}
-        </Button>
+          <Button
+            onClick={generateAndPlayVoiceover}
+            disabled={isGenerating || isPlaying}
+          >
+            {isGenerating ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Generating...
+              </>
+            ) : isPlaying ? (
+              <>
+                <Volume2 className="mr-2 h-4 w-4 animate-pulse" />
+                Playing...
+              </>
+            ) : (
+              <>
+                <Volume2 className="mr-2 h-4 w-4" />
+                Generate Voice Summary
+              </>
+            )}
+          </Button>
+        </div>
       </div>
     </Card>
   );
