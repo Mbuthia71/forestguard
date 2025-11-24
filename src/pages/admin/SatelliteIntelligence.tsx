@@ -1,22 +1,86 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
-import { Satellite, Radar, TrendingDown, Flame, TreeDeciduous, Waves, Activity, AlertTriangle } from "lucide-react";
+import { Satellite, Radar, TrendingDown, Flame, TreeDeciduous, Waves, Activity, AlertTriangle, Loader2 } from "lucide-react";
 import { useForestSelector } from "@/hooks/useForestSelector";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SatelliteAIVoiceover } from "@/components/SatelliteAIVoiceover";
 import { Progress } from "@/components/ui/progress";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 export default function SatelliteIntelligence() {
   const { selectedForest } = useForestSelector();
+  const { toast } = useToast();
   const [sarComparison, setSarComparison] = useState(50);
   const [opticalTimeline, setOpticalTimeline] = useState(100);
   const [selectedPolarization, setSelectedPolarization] = useState<"VV" | "VH">("VV");
+  const [isLoading, setIsLoading] = useState(false);
+  const [sarData, setSarData] = useState<any>(null);
+  const [isDemo, setIsDemo] = useState(true);
 
-  // SAR Backscatter data (Sentinel-1 C-band typical values)
-  const sarBackscatter = {
+  // Fetch real SAR data when forest changes
+  useEffect(() => {
+    const fetchSARData = async () => {
+      setIsLoading(true);
+      try {
+        console.log('Fetching SAR data for:', selectedForest.name);
+        
+        const { data, error } = await supabase.functions.invoke('fetch-sar-data', {
+          body: {
+            forestId: selectedForest.id,
+            forestName: selectedForest.name,
+            coordinates: selectedForest.coordinates
+          }
+        });
+
+        if (error) {
+          console.error('Error fetching SAR data:', error);
+          toast({
+            title: "SAR Data Error",
+            description: "Failed to fetch Sentinel-1 data. Using demo mode.",
+            variant: "destructive"
+          });
+          return;
+        }
+
+        console.log('SAR data received:', data);
+        setSarData(data.data);
+        setIsDemo(data.demo || false);
+
+        if (data.demo) {
+          toast({
+            title: "Demo Mode",
+            description: data.data.metadata?.note || "Using simulated SAR data",
+            variant: "default"
+          });
+        } else {
+          toast({
+            title: "Real Data Loaded",
+            description: `Sentinel-1 data from ${data.data.metadata?.source}`,
+            variant: "default"
+          });
+        }
+
+      } catch (error) {
+        console.error('Exception fetching SAR data:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load SAR data",
+          variant: "destructive"
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchSARData();
+  }, [selectedForest.id, toast]);
+
+  // Use real data if available, otherwise use defaults
+  const sarBackscatter = sarData || {
     VV: {
       denseForest: -8.5,
       moderateForest: -10.2,
@@ -24,7 +88,7 @@ export default function SatelliteIntelligence() {
       clearedArea: -15.3,
       current: -9.1,
       baseline: -8.7,
-      change: -0.4, // dB change indicating slight degradation
+      change: -0.4,
     },
     VH: {
       denseForest: -14.2,
@@ -33,11 +97,11 @@ export default function SatelliteIntelligence() {
       clearedArea: -22.1,
       current: -15.1,
       baseline: -14.5,
-      change: -0.6, // dB change
+      change: -0.6,
     }
   };
 
-  const sarAlerts = [
+  const sarAlerts = sarData?.alerts || [
     { 
       type: "Possible Logging Activity", 
       severity: "high", 
@@ -84,11 +148,24 @@ export default function SatelliteIntelligence() {
           <h1 className="text-3xl font-bold flex items-center gap-3">
             <Satellite className="w-8 h-8 text-primary" />
             Satellite Intelligence (SAR & Optical)
+            {isLoading && <Loader2 className="w-6 h-6 animate-spin text-primary" />}
           </h1>
           <p className="text-muted-foreground mt-1">
             Monitoring {selectedForest.name} - Last updated: {selectedForest.lastUpdate}
+            {isDemo && (
+              <Badge variant="outline" className="ml-2 text-orange-600 border-orange-600">
+                DEMO MODE
+              </Badge>
+            )}
           </p>
         </div>
+        <Button 
+          onClick={() => window.location.reload()} 
+          variant="outline"
+          disabled={isLoading}
+        >
+          {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Refresh Data"}
+        </Button>
       </div>
 
       <SatelliteAIVoiceover 
@@ -134,6 +211,29 @@ export default function SatelliteIntelligence() {
                   <p className="text-sm font-semibold text-green-600">✓ Active</p>
                 </div>
               </div>
+              
+              {/* Data Source Info */}
+              {sarData?.metadata && (
+                <div className="mt-4 pt-4 border-t">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-muted-foreground mb-1">Data Source</p>
+                      <p className="text-sm font-semibold">{sarData.metadata.source}</p>
+                      {sarData.metadata.note && (
+                        <p className="text-xs text-muted-foreground mt-1">{sarData.metadata.note}</p>
+                      )}
+                    </div>
+                    <Badge variant={isDemo ? "outline" : "default"}>
+                      {isDemo ? "Demo Data" : "Live Data"}
+                    </Badge>
+                  </div>
+                  {sarData.metadata.processed && (
+                    <p className="text-xs text-muted-foreground mt-2">
+                      Processed: {new Date(sarData.metadata.processed).toLocaleString()}
+                    </p>
+                  )}
+                </div>
+              )}
             </CardContent>
           </Card>
 
